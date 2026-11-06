@@ -1,0 +1,110 @@
+---
+// Fondo sutil tipo "red de plano técnico": puntos conectados por líneas finas,
+// en el mismo azul de acento del sitio. Decorativo, aria-hidden, nunca compite
+// con el contenido. Respeta prefers-reduced-motion (un solo frame, sin loop).
+---
+<canvas id="blueprint-canvas" aria-hidden="true"></canvas>
+
+<script>
+  import * as THREE from 'three';
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const canvas = document.getElementById('blueprint-canvas') as HTMLCanvasElement | null;
+  if (canvas) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isSmall = window.innerWidth < 640;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.z = 11;
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    // Nodos dispersos en un volumen poco profundo, como puntos de un esquema.
+    const count = isSmall ? 34 : 64;
+    const positions: THREE.Vector3[] = [];
+    for (let i = 0; i < count; i++) {
+      positions.push(
+        new THREE.Vector3(
+          (Math.random() - 0.5) * 14,
+          (Math.random() - 0.5) * 9,
+          (Math.random() - 0.5) * 4
+        )
+      );
+    }
+
+    const accent = new THREE.Color(0x5aa9e6);
+
+    const pointsGeo = new THREE.BufferGeometry().setFromPoints(positions);
+    const pointsMat = new THREE.PointsMaterial({ color: accent, size: 0.05, transparent: true, opacity: 0.55 });
+    group.add(new THREE.Points(pointsGeo, pointsMat));
+
+    // Conecta cada nodo con sus vecinos más cercanos, como un esquema de red.
+    const linePositions: number[] = [];
+    const maxDist = isSmall ? 3.6 : 3.1;
+    for (let i = 0; i < positions.length; i++) {
+      let links = 0;
+      for (let j = i + 1; j < positions.length && links < 2; j++) {
+        if (positions[i].distanceTo(positions[j]) < maxDist) {
+          linePositions.push(positions[i].x, positions[i].y, positions[i].z, positions[j].x, positions[j].y, positions[j].z);
+          links++;
+        }
+      }
+    }
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+    const lineMat = new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.16 });
+    group.add(new THREE.LineSegments(lineGeo, lineMat));
+
+    function resize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    group.rotation.x = 0.08;
+
+    if (reduceMotion) {
+      renderer.render(scene, camera);
+    } else {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Deriva lenta, independiente del scroll: la señal de que esto está "vivo".
+      gsap.to(group.rotation, { y: '+=0.25', duration: 40, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
+      // Un único recorrido continuo ligado al scroll de toda la página,
+      // no una animación repetida por sección.
+      gsap.to(group.rotation, {
+        x: 0.08 + 0.18,
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+      });
+      gsap.to(camera.position, {
+        z: 9,
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+      });
+
+      renderer.setAnimationLoop(() => renderer.render(scene, camera));
+    }
+  }
+</script>
+
+<style>
+  #blueprint-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+</style>

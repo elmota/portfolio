@@ -1,11 +1,12 @@
 ---
-// Hero con tres lentes (Diseño · Ambos · Ingeniería). Los tres textos están en el HTML:
-// sin JavaScript se ve la lente "Ambos"; con JavaScript se puede cambiar y compartir con ?lente=
+// Hero con tres lentes (Diseño · Ambos · Ingeniería), leído como el sello de un plano técnico.
+// Los tres textos están en el HTML: sin JavaScript se ve la lente "Ambos";
+// con JavaScript se puede cambiar y compartir con ?lente=
 const lentes = [
   {
     id: 'diseno',
     etiqueta: 'Diseño',
-    eyebrow: 'Product / UX Design',
+    rol: 'Product / UX Design',
     titular: 'Sé qué construir: productos complejos claros, del problema al flujo.',
     bajada:
       'Product Thinking, UX Strategy, research con usuarios, flujos, prototipado y Design Systems. Lidero el diseño UX/UI de Fraudia y he diseñado producto en fintech, banca, minería y sector público.',
@@ -18,7 +19,7 @@ const lentes = [
   {
     id: 'ambos',
     etiqueta: 'Ambos',
-    eyebrow: 'Senior Product / UX Designer · UX Design Engineer',
+    rol: 'Senior Product / UX Designer',
     titular: 'Diseño productos complejos y los construyo: del flujo al frontend en producción.',
     bajada:
       'Más de 15 años diseñando productos digitales con base en ingeniería frontend. Lo que diseño lo sé implementar, y conecto usuarios, negocio y tecnología para convertir problemas complejos en experiencias simples.',
@@ -31,7 +32,7 @@ const lentes = [
   {
     id: 'ingenieria',
     etiqueta: 'Ingeniería',
-    eyebrow: 'UX / Design Engineering',
+    rol: 'UX / Design Engineering',
     titular: 'Sé cómo construirlo: interfaces listas para producción, de la API al despliegue.',
     bajada:
       'Desarrollo frontend con TypeScript, Angular, Next.js y React Native, y lo conecto a CMS headless y servicios vía REST APIs. Configuro entrega continua (CI/CD) y despliegue. Diseño con criterio de implementación.',
@@ -42,11 +43,21 @@ const lentes = [
     ],
   },
 ];
+
+const inicial = lentes[1];
 ---
 
 <section class="hero" data-hero>
+  <dl class="titleblock" data-titleblock>
+    <dt>Nombre</dt>
+    <dd>Alejandro Pérez Rocha</dd>
+    <dt>Rol</dt>
+    <dd data-tb-rol>{inicial.rol}</dd>
+    <dt>Rev.</dt>
+    <dd>{new Date().getFullYear()}</dd>
+  </dl>
+
   <div class="lentes" role="group" aria-label="Elige cómo leer mi perfil">
-    <span class="lentes-label">Lee mi perfil como</span>
     {lentes.map((l) => (
       <button type="button" class="lente" data-lente={l.id} aria-pressed={l.id === 'ambos' ? 'true' : 'false'}>
         {l.etiqueta}
@@ -55,32 +66,37 @@ const lentes = [
   </div>
 
   {lentes.map((l) => (
-    <div class="panel" data-panel={l.id} hidden={l.id !== 'ambos'}>
-      <p class="eyebrow">{l.eyebrow}</p>
-      <h1>{l.titular}</h1>
-      <p class="lead">{l.bajada}</p>
-      <ul class="facts">
+    <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
+      <h1 data-reveal>{l.titular}</h1>
+      <p class="lead" data-reveal>{l.bajada}</p>
+      <ul class="specs" data-reveal>
         {l.datos.map(([t, d]) => <li><strong>{t}</strong><span>{d}</span></li>)}
       </ul>
     </div>
   ))}
 
   <div class="cta">
-    <a class="btn" href="#casos">Ver casos de estudio</a>
-    <a class="btn btn-ghost" href="#contacto">Hablemos</a>
+    <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
+    <a class="btn" href="#contacto">Hablemos</a>
   </div>
 </section>
 
 <script>
+  import { gsap } from 'gsap';
+
   const validas = ['diseno', 'ambos', 'ingenieria'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function activar(lente: string, actualizarUrl: boolean) {
     document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
       b.setAttribute('aria-pressed', String(b.dataset.lente === lente));
     });
+    const panelActivo = document.querySelector<HTMLElement>(`[data-panel="${lente}"]`);
     document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
       p.hidden = p.dataset.panel !== lente;
     });
+    const tbRol = document.querySelector('[data-tb-rol]');
+    if (tbRol && panelActivo) tbRol.textContent = panelActivo.dataset.rol ?? '';
     // Resalta las capacidades que corresponden a la lente elegida
     document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
       const propias = (c.dataset.lentes ?? '').split(' ');
@@ -94,10 +110,20 @@ const lentes = [
     }
   }
 
-  const inicial = new URLSearchParams(location.search).get('lente') ?? 'ambos';
-  activar(validas.includes(inicial) ? inicial : 'ambos', false);
+  const inicialParam = new URLSearchParams(location.search).get('lente') ?? 'ambos';
+  activar(validas.includes(inicialParam) ? inicialParam : 'ambos', false);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
     b.addEventListener('click', () => activar(b.dataset.lente ?? 'ambos', true));
   });
+
+  // Único momento orquestado de la página: el sello del plano se traza al cargar,
+  // y el titular/bajada/ficha técnica aparecen en secuencia. No se repite por sección.
+  if (!reduceMotion) {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('[data-titleblock]', { opacity: 0, y: -8, duration: 0.5 })
+      .from('.lentes', { opacity: 0, duration: 0.4 }, '-=0.25')
+      .from('[data-panel="ambos"] [data-reveal]', { opacity: 0, y: 14, duration: 0.55, stagger: 0.12 }, '-=0.2')
+      .from('.hero .cta', { opacity: 0, duration: 0.4 }, '-=0.2');
+  }
 </script>
