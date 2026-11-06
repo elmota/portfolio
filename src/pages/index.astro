@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CaseCard from '../components/CaseCard.astro';
+import Texto from '../components/Texto.astro';
+
+const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
+
+const capacidades = [
+  { titulo: 'Estrategia y producto', items: ['Product Thinking', 'UX Strategy', 'Arquitectura de información', 'Definición de flujos'] },
+  { titulo: 'Diseño', items: ['Product Design', 'UX/UI', 'Diseño de interacción', 'Prototipado', 'Design Systems'] },
+  { titulo: 'Desarrollo frontend', items: ['TypeScript', 'JavaScript', 'Angular', 'Next.js', 'React Native', 'Tailwind CSS', 'WordPress', 'Arquitectura frontend'] },
+  { titulo: 'IA en el proceso', items: ['Coding agents', 'Diseño asistido', 'Implementación', 'QA'] },
+];
+
+const trayectoria = [
+  { cuando: 'Desde mar. 2024', titulo: 'Fraudia', rol: 'Líder UX/UI Design y Front End Developer', texto: 'Diseño UX/UI y desarrollo frontend de un producto del sector financiero.' },
+  { cuando: '[Completar: periodo]', pendiente: true, titulo: 'Paybest', rol: 'Diseño de producto y desarrollo frontend', texto: 'Billetera digital: diseño de producto y desarrollo frontend.' },
+  { cuando: 'Desde may. 2015', titulo: 'Base Dos', rol: 'Front End Architect / Designer Lead', texto: 'Arquitectura frontend, dirección de diseño y diseño UX para clientes financieros, entre ellos Banco de Chile (2013–2015) y Banco Security (2017–2019).' },
+  { cuando: '2015', titulo: 'Porta SA', rol: 'Front End Developer', texto: '' },
+  { cuando: '2013–2015', titulo: 'CodeBase Chile', rol: 'Front End Engineer', texto: '' },
+  { cuando: '2010–2013', titulo: 'Imagemaker', rol: 'Diseñador y desarrollador web', texto: '' },
+  { cuando: '2009–2010', titulo: 'monotono.cl', rol: 'Diseño web, diseño gráfico y desarrollo', texto: '' },
+  { cuando: '2008–2013', titulo: 'Freelance', rol: 'Diseño y desarrollo de aplicaciones y sitios', texto: 'El punto de partida: diseño y código desde el primer día.' },
+];
+
+const formacion = [
+  { anio: '2020', titulo: 'Diplomado en Diseño y Medición de Experiencia de Usuario en Entornos Digitales', lugar: 'Pontificia Universidad Católica de Chile' },
+  { anio: '2014–2016', titulo: 'Analista Programador', lugar: 'INACAP' },
+  { anio: '2011', titulo: 'Diplomado en Gestión de Proyectos Web', lugar: 'Universidad de Chile' },
+  { anio: '2009–2010', titulo: 'Diplomado en Programación Web', lugar: 'Universidad del Pacífico' },
+  { anio: '2005–2008', titulo: 'Diseño Gráfico', lugar: 'INACAP' },
+];
+---
+
+<Base>
+  <section class="hero">
+    <p class="eyebrow">Product Designer · Frontend Architect</p>
+    <h1>Convierto problemas complejos en experiencias simples e implementables.</h1>
+    <p class="lead">
+      Más de 15 años creando productos digitales, con una base profunda en ingeniería frontend. Conecto necesidades de usuarios, negocio y tecnología, y acompaño el diseño hasta que está construido y probado.
+    </p>
+    <div class="cta">
+      <a class="btn" href="#casos">Ver casos de estudio</a>
+      <a class="btn btn-ghost" href="#contacto">Hablemos</a>
+    </div>
+    <ul class="facts">
+      <li><strong>15+</strong><span>años creando productos digitales</span></li>
+      <li><strong>Fintech y banca</strong><span>Fraudia, Paybest, Banco de Chile y Banco Security</span></li>
+      <li><strong>Design + Code</strong><span>de la estrategia al frontend en producción</span></li>
+    </ul>
+  </section>
+
+  <section id="enfoque" class="section">
+    <h2>Por qué un perfil híbrido importa</h2>
+    <div class="grid3">
+      <article class="card">
+        <h3>Diseño con criterio de producto</h3>
+        <p>Parto de Product Thinking y UX Strategy: qué problema vale la pena resolver, para quién y cómo se verá el éxito, antes de dibujar pantallas.</p>
+      </article>
+      <article class="card">
+        <h3>Menos fricción con ingeniería</h3>
+        <p>Vengo del código. Lo que diseño es implementable, y puedo implementar y hacer QA junto al equipo de ingeniería cuando hace falta.</p>
+      </article>
+      <article class="card">
+        <h3>Sistemas coherentes y escalables</h3>
+        <p>Design Systems, arquitectura de información y arquitectura frontend para que el producto crezca sin perder coherencia.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="casos" class="section">
+    <h2>Casos de estudio</h2>
+    <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, identidad y confianza.</p>
+    {casos.map((c) => <CaseCard slug={c.id} {...c.data} />)}
+  </section>
+
+  <section id="skills" class="section">
+    <h2>Lo que puedo hacer por tu equipo</h2>
+    <div class="grid2">
+      {capacidades.map((h) => (
+        <div class="card">
+          <h3>{h.titulo}</h3>
+          <ul class="chips">{h.items.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+    <p class="section-intro" style="margin-top:20px">Incorporo IA y coding agents en el diseño, la implementación y el QA, siempre con criterio humano al frente.</p>
+  </section>
+
+  <section id="trayectoria" class="section">
+    <h2>Trayectoria</h2>
+    <ol class="timeline">
+      {trayectoria.map((t) => (
+        <li>
+          <span class="when">{t.pendiente ? <Texto text={t.cuando} /> : t.cuando}</span>
+          <div>
+            <h3>{t.titulo} <span class="rol">· {t.rol}</span></h3>
+            {t.texto && <p>{t.texto}</p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>Otros proyectos</h2>
+    <article class="card">
+      <h3>Barrio Alonso de Córdova</h3>
+      <p>Proyecto digital para un entorno de boutiques de moda, diseño, regalos y restaurantes. <span class="todo">[Completar: tu rol, enlace y capturas]</span></p>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Formación</h2>
+    <ol class="timeline">
+      {formacion.map((f) => (
+        <li>
+          <span class="when">{f.anio}</span>
+          <div><h3>{f.titulo}</h3><p>{f.lugar}</p></div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="section about">
+    <h2>Sobre mí</h2>
+    <p>Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
+    <p>Hablo y escribo inglés. <span class="todo">[Completar: una historia personal o motivación en 2 líneas]</span></p>
+  </section>
+
+  <section id="contacto" class="section contact">
+    <h2>¿Construimos algo juntos?</h2>
+    <p>Busco roles de Senior / Lead Product Designer, UX Designer o UX/Front-end Developer.</p>
+    <div class="cta">
+      <a class="btn" href="mailto:TU_CORREO">TU_CORREO</a>
+      <a class="btn btn-ghost" href="TU_LINKEDIN">LinkedIn</a>
+      <a class="btn btn-ghost" href="TU_GITHUB">GitHub</a>
+    </div>
+  </section>
+</Base>

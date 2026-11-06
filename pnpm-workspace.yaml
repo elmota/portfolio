@@ -1,0 +1,7 @@
+# Seguridad de la cadena de suministro
+# No instalar versiones publicadas hace menos de 3 días (valor en minutos).
+minimumReleaseAge: 4320
+
+# Ningún script de instalación de dependencias se ejecuta salvo los listados aquí.
+# Añadir paquetes solo si el build lo exige y se ha revisado por qué.
+onlyBuiltDependencies: []

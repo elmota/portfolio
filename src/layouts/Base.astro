@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = '[Tu nombre] — Product Designer y Frontend Architect',
+  description = 'Más de 15 años creando productos digitales con base en ingeniería frontend: Product Thinking, UX Strategy, Design Systems e implementación.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="/">[Tu nombre]</a>
+      <nav>
+        <a href="/#casos">Casos</a>
+        <a href="/#enfoque">Enfoque</a>
+        <a href="/#skills">Skills</a>
+        <a href="/#trayectoria">Trayectoria</a>
+        <a class="btn btn-small" href="/#contacto">Contacto</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>© {new Date().getFullYear()} [Tu nombre]</p>
+    </footer>
+  </body>
+</html>

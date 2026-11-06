@@ -1,0 +1,10 @@
+---
+// Renderiza texto resaltando los marcadores "[Completar: ...]" para no olvidarlos antes de publicar.
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const partes = text.split(/(\[Completar[^\]]*\])/g).filter(Boolean);
+---
+
+{partes.map((p) => (p.startsWith('[Completar') ? <span class="todo">{p}</span> : p))}

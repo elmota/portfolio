@@ -1,0 +1,31 @@
+---
+import Texto from './Texto.astro';
+
+interface Props {
+  slug: string;
+  titulo: string;
+  etiquetas: string[];
+  problema: string;
+  rol: string;
+  proceso?: string;
+  resultado: string;
+}
+const { slug, titulo, etiquetas, problema, rol, proceso, resultado } = Astro.props;
+---
+
+<article class="case">
+  <div class="case-meta">
+    {etiquetas.map((e) => <span class="tag">{e}</span>)}
+  </div>
+  <h3><a href={`/casos/${slug}/`}>{titulo}</a></h3>
+  <dl>
+    <dt>Problema</dt>
+    <dd><Texto text={problema} /></dd>
+    <dt>Mi rol</dt>
+    <dd><Texto text={rol} /></dd>
+    {proceso && (<><dt>Proceso</dt><dd><Texto text={proceso} /></dd></>)}
+    <dt>Resultado</dt>
+    <dd><Texto text={resultado} /></dd>
+  </dl>
+  <p class="more"><a href={`/casos/${slug}/`}>Ver caso completo →</a></p>
+</article>
