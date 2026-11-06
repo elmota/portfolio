@@ -2,7 +2,7 @@
 titulo: "MTT — llevar un trámite de la sucursal a 100% digital"
 resumen: "Discovery, pruebas de usuario y sistema de diseño para migrar trámites del Ministerio de Transportes y Telecomunicaciones desde atención presencial a un portal digital."
 etiquetas: ["Sector público", "Discovery", "Pruebas de usuario", "Angular", "Design System"]
-orden: 6
+orden: 7
 problema: "Trámites del Ministerio de Transportes y Telecomunicaciones (MTT) que solo podían hacerse en sucursal necesitaban migrar a un portal 100% digital, sin perder a las personas que dependían de la atención presencial."
 rol: "UX: discovery, pruebas de usuario, sistema de diseño y prototipos, con integración a la implementación en Angular."
 proceso: "Levanté el trámite con los usuarios actuales en sucursal, validé hipótesis con pruebas de usuario, diseñé un sistema de diseño y los prototipos del portal, y trabajé junto al equipo de desarrollo en Angular para llevarlo a producción."

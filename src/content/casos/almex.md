@@ -2,7 +2,7 @@
 titulo: "Almex — del reporte de una falla a la mantención certificada"
 resumen: "UX y frontend de una plataforma de inventario y mantención de maquinaria minera, desde el levantamiento con el usuario hasta la publicación."
 etiquetas: ["Minería", "Inventario de activos", "UX Research", "Design Systems", "Webapp"]
-orden: 5
+orden: 6
 problema: "Operarios de faenas mineras necesitaban reportar problemas en maquinaria y equipos (como bandejas transportadoras) de forma clara, para que esos reportes derivaran en mantenciones reales y en certificados verificables, sin perderse en el camino."
 rol: "Diseño UX e implementación frontend de punta a punta: levantamiento del problema con el usuario, research, flujos, prototipos, diseño de interfaz y desarrollo."
 proceso: "Levanté el problema directamente con el usuario en faena, lo traduje en flujos de usuario y prototipos, diseñé la interfaz para web app, escritorio y el módulo de sistema, y la llevé a producción."
