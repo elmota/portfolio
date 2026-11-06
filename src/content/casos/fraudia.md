@@ -60,7 +60,7 @@ Este caso muestra el perfil híbrido en la práctica. El mismo criterio que defi
 
 ## Aprendizajes
 
-<span class="todo">[Completar: qué aprendiste, qué cambiarías y qué viene después. Por ejemplo, validar con analistas reales el perfil de usuario, hoy definido como provisional.]</span>
+<span class="todo">[qué aprendiste, qué cambiarías y qué viene después. Por ejemplo, validar con analistas reales el perfil de usuario, hoy definido como provisional.]</span>
 
 <!--
 PENDIENTE ANTES DE PUBLICAR

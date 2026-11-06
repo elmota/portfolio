@@ -5,7 +5,7 @@ etiquetas: ["Banca", "UX", "Front-end", "React Native", "Larga relación de serv
 orden: 4
 problema: "A lo largo de casi una década, Banco de Chile y sus marcas (Banco Edwards, Banchile) necesitaron resolver problemas distintos: vender seguros online, hacer que el sitio funcionara en navegadores antiguos, coordinar a cientos de funcionarios en un proceso interno anual, y mantener su app de pagos."
 rol: "Distintos roles en distintos momentos: diseño y prototipado en HTML/CSS/JS, especificación de compatibilidad para el equipo de desarrollo en Java, arquitectura de información y diseño de un sistema interno, y desarrollo móvil en React Native."
-resultado: "Un portal de seguros propuesto para el banco y sus marcas, especificaciones de compatibilidad entregadas a desarrollo, un sistema interno de inscripción para la Teletón que se mantuvo y mejoró durante seis años y que el banco sigue usando hasta hoy, e integraciones móviles en la app Mi Pago. [Completar: resultados o métricas que se puedan compartir de cada encargo]"
+resultado: "Un portal de seguros propuesto para el banco y sus marcas, especificaciones de compatibilidad entregadas a desarrollo, un sistema interno de inscripción para la Teletón que se mantuvo y mejoró durante seis años y que el banco sigue usando hasta hoy, e integraciones móviles en la app Mi Pago. [resultados o métricas que se puedan compartir de cada encargo]"
 ---
 
 ## En una frase
@@ -38,4 +38,4 @@ Estos cuatro encargos muestran una relación de servicio sostenida en el tiempo 
 
 ## Aprendizajes
 
-<span class="todo">[Completar: qué aprendiste de sostener un mismo sistema interno durante seis años, y qué cambiarías de cómo evolucionó.]</span>
+<span class="todo">[qué aprendiste de sostener un mismo sistema interno durante seis años, y qué cambiarías de cómo evolucionó.]</span>

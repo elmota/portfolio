@@ -1,10 +1,12 @@
 ---
-// Renderiza texto resaltando los marcadores "[Completar: ...]" para no olvidarlos antes de publicar.
+// Renderiza texto resaltando los fragmentos pendientes "[...]" para no olvidarlos antes de publicar.
+// (El marcador antes decía "[Completar: ...]"; se quitó la palabra "Completar" pero el corchete
+// sigue marcando qué falta, y aquí se sigue resaltando igual.)
 interface Props {
   text: string;
 }
 const { text } = Astro.props;
-const partes = text.split(/(\[Completar[^\]]*\])/g).filter(Boolean);
+const partes = text.split(/(\[[^\]]*\])/g).filter(Boolean);
 ---
 
-{partes.map((p) => (p.startsWith('[Completar') ? <span class="todo">{p}</span> : p))}
+{partes.map((p) => (p.startsWith('[') && p.endsWith(']') ? <span class="todo">{p}</span> : p))}

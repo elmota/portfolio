@@ -38,10 +38,10 @@
       );
     }
 
-    const accent = new THREE.Color(0x5aa9e6);
+    const accent = new THREE.Color(0x00767d);
 
     const pointsGeo = new THREE.BufferGeometry().setFromPoints(positions);
-    const pointsMat = new THREE.PointsMaterial({ color: accent, size: 0.05, transparent: true, opacity: 0.55 });
+    const pointsMat = new THREE.PointsMaterial({ color: accent, size: 0.045, transparent: true, opacity: 0.4 });
     group.add(new THREE.Points(pointsGeo, pointsMat));
 
     // Conecta cada nodo con sus vecinos más cercanos, como un esquema de red.
@@ -58,7 +58,7 @@
     }
     const lineGeo = new THREE.BufferGeometry();
     lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
-    const lineMat = new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.16 });
+    const lineMat = new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.1 });
     group.add(new THREE.LineSegments(lineGeo, lineMat));
 
     function resize() {
@@ -105,6 +105,6 @@
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.55;
   }
 </style>

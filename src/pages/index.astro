@@ -1,11 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CaseCard from '../components/CaseCard.astro';
+import CaseDetail from '../components/CaseDetail.astro';
+import CaseModal from '../components/CaseModal.astro';
 import Texto from '../components/Texto.astro';
 import Hero from '../components/Hero.astro';
 
-const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
+const casosOrdenados = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
+const casos = await Promise.all(
+  casosOrdenados.map(async (caso) => ({ caso, Content: (await render(caso)).Content }))
+);
 
 // `lentes` indica con qué vista del hero se resalta cada grupo (diseno · ingenieria; ambos resalta todo)
 const capacidades = [
@@ -19,7 +24,7 @@ const capacidades = [
 
 const trayectoria = [
   { cuando: 'Desde mar. 2024', titulo: 'Fraudia', rol: 'Líder UX/UI Design y Front End Developer', texto: 'Diseño UX/UI y desarrollo frontend de un producto del sector financiero.' },
-  { cuando: '[Completar: periodo]', pendiente: true, titulo: 'Paybest', rol: 'Diseño de producto y desarrollo frontend', texto: 'Billetera digital: diseño de producto y desarrollo frontend.' },
+  { cuando: '[periodo]', pendiente: true, titulo: 'Paybest', rol: 'Diseño de producto y desarrollo frontend', texto: 'Billetera digital: diseño de producto y desarrollo frontend.' },
   { cuando: 'Desde may. 2015', titulo: 'Base Dos', rol: 'Front End Architect / Designer Lead', texto: 'Arquitectura frontend, dirección de diseño y diseño UX para clientes financieros, entre ellos Banco Security (2017–2019).' },
   { cuando: '2011–2020', titulo: 'Banco de Chile', rol: 'Cuatro encargos distintos', texto: 'Portal de seguros, especificación de compatibilidad IE6, un sistema interno para la Teletón (2012–2018) y la app Mi Pago (React Native, 2020).' },
   { cuando: '2015', titulo: 'Porta SA', rol: 'Front End Developer', texto: '' },
@@ -65,8 +70,21 @@ const formacion = [
   <section id="casos" class="section">
     <h2>Casos de estudio</h2>
     <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
-    {casos.map((c) => <CaseCard slug={c.id} {...c.data} />)}
+    <div class="case-grid">
+      {casos.map(({ caso }) => (
+        <CaseCard slug={caso.id} titulo={caso.data.titulo} resumen={caso.data.resumen} etiquetas={caso.data.etiquetas} />
+      ))}
+    </div>
   </section>
+
+  {casos.map(({ caso, Content }) => (
+    <template data-case-tpl={caso.id}>
+      <CaseDetail {...caso.data}>
+        <Content />
+      </CaseDetail>
+    </template>
+  ))}
+  <CaseModal />
 
   <section id="skills" class="section">
     <h2>Lo que puedo hacer por tu equipo</h2>
@@ -100,7 +118,7 @@ const formacion = [
     <h2>Otros proyectos</h2>
     <article class="card">
       <h3>Barrio Alonso de Córdova</h3>
-      <p>Proyecto digital para un entorno de boutiques de moda, diseño, regalos y restaurantes. <span class="todo">[Completar: tu rol, enlace y capturas]</span></p>
+      <p>Proyecto digital para un entorno de boutiques de moda, diseño, regalos y restaurantes. <span class="todo">[tu rol, enlace y capturas]</span></p>
     </article>
   </section>
 
@@ -119,7 +137,7 @@ const formacion = [
   <section class="section about">
     <h2>Sobre mí</h2>
     <p>Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
-    <p>Hablo y escribo inglés. <span class="todo">[Completar: una historia personal o motivación en 2 líneas]</span></p>
+    <p>Hablo y escribo inglés. <span class="todo">[una historia personal o motivación en 2 líneas]</span></p>
   </section>
 
   <section id="contacto" class="section contact">

@@ -6,7 +6,7 @@ orden: 7
 problema: "Trámites de permisos de transporte del Ministerio de Transportes y Telecomunicaciones (MTT), para personas naturales y empresas privadas, que solo podían hacerse en sucursal y necesitaban migrar a un portal 100% digital, sin perder a quienes dependían de la atención presencial."
 rol: "UX: discovery, pruebas de usuario, sistema de diseño y prototipos, con integración a la implementación en Angular."
 proceso: "Levanté el trámite con los usuarios actuales en sucursal, validé hipótesis con pruebas de usuario, diseñé un sistema de diseño y los prototipos del portal, y trabajé junto al equipo de desarrollo en Angular para llevarlo a producción."
-resultado: "Un portal digital para trámites de permisos de transporte, con autenticación vía Clave Única y los flujos de inicio y trámite especificados en prototipo. [Completar: estado de lanzamiento y adopción]"
+resultado: "Un portal digital para trámites de permisos de transporte, con autenticación vía Clave Única y los flujos de inicio y trámite especificados en prototipo. [estado de lanzamiento y adopción]"
 ---
 
 ## En una frase
@@ -38,6 +38,6 @@ No se trataba de digitalizar un formulario en papel. Había que entender a quié
 
 ## Aprendizajes
 
-<span class="todo">[Completar: qué aprendiste de diseñar un trámite de gobierno para personas con distintos niveles de familiaridad digital.]</span>
+<span class="todo">[qué aprendiste de diseñar un trámite de gobierno para personas con distintos niveles de familiaridad digital.]</span>
 
 <!-- PENDIENTE: confirmar qué pantallas del Figma del MTT se pueden mostrar públicamente antes de publicar. -->
