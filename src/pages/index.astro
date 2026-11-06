@@ -3,14 +3,17 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CaseCard from '../components/CaseCard.astro';
 import Texto from '../components/Texto.astro';
+import Hero from '../components/Hero.astro';
 
 const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
 
+// `lentes` indica con qué vista del hero se resalta cada grupo (diseno · ingenieria; ambos resalta todo)
 const capacidades = [
-  { titulo: 'Estrategia y producto', items: ['Product Thinking', 'UX Strategy', 'Arquitectura de información', 'Definición de flujos'] },
-  { titulo: 'Diseño', items: ['Product Design', 'UX/UI', 'Diseño de interacción', 'Prototipado', 'Design Systems'] },
-  { titulo: 'IA en el proceso', items: ['Research y auditorías con IA', 'Prototipos con coding agents', 'Implementación y QA'] },
-  { titulo: 'Implementación frontend', items: ['TypeScript', 'JavaScript', 'Angular', 'Next.js', 'React Native', 'Tailwind CSS', 'WordPress', 'Arquitectura frontend'] },
+  { titulo: 'Estrategia y producto', lentes: 'diseno', items: ['Product Thinking', 'UX Strategy', 'Arquitectura de información', 'Definición de flujos'] },
+  { titulo: 'Diseño', lentes: 'diseno', items: ['Product Design', 'UX/UI', 'Diseño de interacción', 'Prototipado', 'Design Systems'] },
+  { titulo: 'Implementación frontend', lentes: 'ingenieria', items: ['TypeScript', 'JavaScript', 'Angular', 'Next.js', 'React Native', 'Tailwind CSS', 'WordPress'] },
+  { titulo: 'Integración y entrega', lentes: 'ingenieria', items: ['REST APIs', 'Configuración de servicios', 'CI/CD', 'Despliegue'] },
+  { titulo: 'IA en el proceso', lentes: 'diseno ingenieria', items: ['Research y auditorías con IA', 'Prototipos con coding agents', 'Implementación y QA'] },
 ];
 
 const trayectoria = [
@@ -34,37 +37,25 @@ const formacion = [
 ---
 
 <Base>
-  <section class="hero">
-    <p class="eyebrow">Senior Product / UX Designer</p>
-    <h1>Diseño productos financieros y los construyo: del flujo al frontend en producción.</h1>
-    <p class="lead">
-      Más de 15 años diseñando productos digitales con Product Thinking, UX Strategy y Design Systems. Mi base es la ingeniería frontend: lo que diseño, sé construirlo, y conecto usuarios, negocio y tecnología para convertir problemas complejos en experiencias simples.
-    </p>
-    <div class="cta">
-      <a class="btn" href="#casos">Ver casos de estudio</a>
-      <a class="btn btn-ghost" href="#contacto">Hablemos</a>
-    </div>
-    <ul class="facts">
-      <li><strong>15+</strong><span>años creando productos digitales</span></li>
-      <li><strong>Fintech y banca</strong><span>Fraudia, Paybest, Banco de Chile y Banco Security</span></li>
-      <li><strong>Design + Code</strong><span>de la estrategia al frontend en producción</span></li>
-    </ul>
-  </section>
+  <Hero />
 
   <section id="enfoque" class="section">
     <h2>Diseño que sabe cómo se construye</h2>
+    <p class="section-intro">
+      Los productos financieros son complejos y están regulados. Entre el diseño y el código suele perderse fidelidad. Se evita con alguien que domina los dos lados, y por eso mi perfil combina ambos.
+    </p>
     <div class="grid3">
-      <article class="card">
-        <h3>Diseño con criterio de producto</h3>
-        <p>Parto de Product Thinking y UX Strategy: qué problema vale la pena resolver, para quién y cómo se verá el éxito, antes de dibujar pantallas.</p>
+      <article class="card" data-lentes="diseno">
+        <h3>1 · Sé qué construir</h3>
+        <p>Product Thinking y UX Strategy: qué problema vale la pena resolver, para quién y cómo se verá el éxito, antes de dibujar pantallas.</p>
       </article>
-      <article class="card">
-        <h3>Menos fricción con ingeniería</h3>
-        <p>Vengo del código. Lo que diseño es implementable, y puedo implementar y hacer QA junto al equipo de ingeniería cuando hace falta.</p>
+      <article class="card" data-lentes="ingenieria">
+        <h3>2 · Sé cómo construirlo</h3>
+        <p>Desarrollo frontend, integración con REST APIs y despliegue con CI/CD. Conozco el stack y sus límites, y diseño con criterio de implementación.</p>
       </article>
-      <article class="card">
-        <h3>Sistemas coherentes y escalables</h3>
-        <p>Design Systems, arquitectura de información y arquitectura frontend para que el producto crezca sin perder coherencia.</p>
+      <article class="card" data-lentes="diseno ingenieria">
+        <h3>3 · Cierro la brecha entre ambos</h3>
+        <p>Menos fricción con ingeniería: lo que se diseña es implementable, y puedo implementar y hacer QA junto al equipo cuando hace falta.</p>
       </article>
     </div>
   </section>
@@ -79,7 +70,7 @@ const formacion = [
     <h2>Lo que puedo hacer por tu equipo</h2>
     <div class="grid2">
       {capacidades.map((h) => (
-        <div class="card">
+        <div class="card" data-lentes={h.lentes}>
           <h3>{h.titulo}</h3>
           <ul class="chips">{h.items.map((i) => <li>{i}</li>)}</ul>
         </div>
@@ -131,7 +122,7 @@ const formacion = [
 
   <section id="contacto" class="section contact">
     <h2>¿Construimos algo juntos?</h2>
-    <p>Busco roles de Senior Product Designer o UX Designer. También UX Engineer o Design Engineer, cuando el rol cruza diseño y código.</p>
+    <p>Busco roles de Senior Product / UX Designer o UX Design Engineer, donde el diseño y el código se cruzan.</p>
     <div class="cta">
       <a class="btn" href="mailto:TU_CORREO">TU_CORREO</a>
       <a class="btn btn-ghost" href="TU_LINKEDIN">LinkedIn</a>

@@ -1,0 +1,103 @@
+---
+// Hero con tres lentes (Diseño · Ambos · Ingeniería). Los tres textos están en el HTML:
+// sin JavaScript se ve la lente "Ambos"; con JavaScript se puede cambiar y compartir con ?lente=
+const lentes = [
+  {
+    id: 'diseno',
+    etiqueta: 'Diseño',
+    eyebrow: 'Product / UX Design',
+    titular: 'Sé qué construir: productos financieros claros, del problema al flujo.',
+    bajada:
+      'Product Thinking, UX Strategy, arquitectura de información, flujos, prototipado y Design Systems. Lidero el diseño UX/UI de Fraudia y he diseñado producto en Paybest y en banca.',
+    datos: [
+      ['Product Thinking', 'qué problema vale la pena resolver'],
+      ['UX Strategy', 'flujos y arquitectura de información'],
+      ['Design Systems', 'coherencia a medida que crece el producto'],
+    ],
+  },
+  {
+    id: 'ambos',
+    etiqueta: 'Ambos',
+    eyebrow: 'Senior Product / UX Designer · UX Design Engineer',
+    titular: 'Diseño productos financieros y los construyo: del flujo al frontend en producción.',
+    bajada:
+      'Más de 15 años diseñando productos digitales con base en ingeniería frontend. Lo que diseño lo sé implementar, y conecto usuarios, negocio y tecnología para convertir problemas complejos en experiencias simples.',
+    datos: [
+      ['15+', 'años creando productos digitales'],
+      ['Fintech y banca', 'Fraudia, Paybest, Banco de Chile y Banco Security'],
+      ['Design + Code', 'de la estrategia al frontend en producción'],
+    ],
+  },
+  {
+    id: 'ingenieria',
+    etiqueta: 'Ingeniería',
+    eyebrow: 'UX / Design Engineering',
+    titular: 'Sé cómo construirlo: interfaces listas para producción, de la API al despliegue.',
+    bajada:
+      'Desarrollo frontend con TypeScript, Angular, Next.js y React Native. Integro servicios con REST APIs y configuro entrega continua (CI/CD) y despliegue. Diseño con criterio de implementación.',
+    datos: [
+      ['TypeScript', 'Angular, Next.js y React Native'],
+      ['REST APIs', 'integración y configuración de servicios'],
+      ['CI/CD y deploy', 'entrega continua y despliegue'],
+    ],
+  },
+];
+---
+
+<section class="hero" data-hero>
+  <div class="lentes" role="group" aria-label="Elige cómo leer mi perfil">
+    <span class="lentes-label">Lee mi perfil como</span>
+    {lentes.map((l) => (
+      <button type="button" class="lente" data-lente={l.id} aria-pressed={l.id === 'ambos' ? 'true' : 'false'}>
+        {l.etiqueta}
+      </button>
+    ))}
+  </div>
+
+  {lentes.map((l) => (
+    <div class="panel" data-panel={l.id} hidden={l.id !== 'ambos'}>
+      <p class="eyebrow">{l.eyebrow}</p>
+      <h1>{l.titular}</h1>
+      <p class="lead">{l.bajada}</p>
+      <ul class="facts">
+        {l.datos.map(([t, d]) => <li><strong>{t}</strong><span>{d}</span></li>)}
+      </ul>
+    </div>
+  ))}
+
+  <div class="cta">
+    <a class="btn" href="#casos">Ver casos de estudio</a>
+    <a class="btn btn-ghost" href="#contacto">Hablemos</a>
+  </div>
+</section>
+
+<script>
+  const validas = ['diseno', 'ambos', 'ingenieria'];
+
+  function activar(lente: string, actualizarUrl: boolean) {
+    document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.lente === lente));
+    });
+    document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
+      p.hidden = p.dataset.panel !== lente;
+    });
+    // Resalta las capacidades que corresponden a la lente elegida
+    document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
+      const propias = (c.dataset.lentes ?? '').split(' ');
+      c.classList.toggle('dim', lente !== 'ambos' && !propias.includes(lente));
+    });
+    if (actualizarUrl) {
+      const u = new URL(location.href);
+      if (lente === 'ambos') u.searchParams.delete('lente');
+      else u.searchParams.set('lente', lente);
+      history.replaceState(null, '', u);
+    }
+  }
+
+  const inicial = new URLSearchParams(location.search).get('lente') ?? 'ambos';
+  activar(validas.includes(inicial) ? inicial : 'ambos', false);
+
+  document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
+    b.addEventListener('click', () => activar(b.dataset.lente ?? 'ambos', true));
+  });
+</script>

@@ -110,3 +110,25 @@ footer { border-top: 1px solid var(--line); padding: 28px; text-align: center; c
   .nav nav a:not(.btn) { display: none; }
   .brand { white-space: nowrap; }
 }
+
+/* Selector de lentes del hero */
+.lentes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 28px; }
+.lentes-label { color: var(--muted); font-size: .85rem; margin-right: 4px; }
+.lente {
+  font: inherit; font-size: .9rem; cursor: pointer;
+  padding: 7px 16px; border-radius: 999px;
+  background: transparent; color: var(--muted); border: 1px solid var(--line);
+  transition: color .2s, border-color .2s, background .2s;
+}
+.lente:hover { color: var(--text); border-color: var(--accent); }
+.lente[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.lente:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.panel[hidden] { display: none; }
+.panel { animation: aparecer .35s ease; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.card { transition: opacity .3s; }
+.card.dim { opacity: .4; }
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation: none; }
+  .card, .lente { transition: none; }
+}
