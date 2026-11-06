@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { url } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -23,17 +24,17 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
   </head>
   <body>
     <header class="nav">
-      <a class="brand" href="/">[Tu nombre]</a>
+      <a class="brand" href={url()}>[Tu nombre]</a>
       <nav>
-        <a href="/#casos">Casos</a>
-        <a href="/#enfoque">Enfoque</a>
-        <a href="/#skills">Skills</a>
-        <a href="/#trayectoria">Trayectoria</a>
-        <a class="btn btn-small" href="/#contacto">Contacto</a>
+        <a href={url('#casos')}>Casos</a>
+        <a href={url('#enfoque')}>Enfoque</a>
+        <a href={url('#skills')}>Skills</a>
+        <a href={url('#trayectoria')}>Trayectoria</a>
+        <a class="btn btn-small" href={url('#contacto')}>Contacto</a>
       </nav>
     </header>
     <main>

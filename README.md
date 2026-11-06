@@ -1,43 +1,46 @@
-# Astro Starter Kit: Minimal
+# Portafolio
 
-```sh
-pnpm create astro@latest -- --template minimal
+Sitio estático hecho con [Astro](https://astro.build) y publicado en GitHub Pages.
+
+## Desarrollo
+
+Requiere Node 22.23.4 o superior. El gestor de paquetes es **pnpm 10** (fijado en `package.json` y activado con corepack).
+
+```bash
+corepack enable
+pnpm install
+pnpm dev        # http://localhost:4321
+pnpm build      # genera dist/
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Contenido
 
-## 🚀 Project Structure
+- Landing: `src/pages/index.astro`
+- Casos de estudio: un archivo Markdown por caso en `src/content/casos/`. Los datos pendientes están marcados como `[Completar: ...]` y se resaltan en amarillo; búscalos antes de publicar:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+grep -rn "Completar\|TU_CORREO\|TU_LINKEDIN\|TU_GITHUB\|Tu nombre" src
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Seguridad de la cadena de suministro
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- `pnpm-workspace.yaml`: `minimumReleaseAge` de 3 días y ningún script de instalación permitido.
+- Las versiones de Astro y pnpm están fijadas; el lockfile se versiona y el CI instala con `--frozen-lockfile`.
+- Las GitHub Actions del workflow están fijadas por SHA.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Despliegue en GitHub Pages
 
-## 🧞 Commands
+1. Crea el repositorio en GitHub y sube la rama `main`.
+2. En **Settings → Pages**, elige **Source: GitHub Actions**.
+3. Cada push a `main` ejecuta `.github/workflows/deploy.yml` y publica el sitio.
 
-All commands are run from the root of the project, from a terminal:
+La URL depende del nombre del repositorio:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+| Repositorio | URL |
+|---|---|
+| `portfolio` | `https://<usuario>.github.io/portfolio/` |
+| `<usuario>.github.io` | `https://<usuario>.github.io/` |
 
-## 👀 Want to learn more?
+El workflow calcula `SITE_URL` y `BASE_PATH` automáticamente; no hay que editar `astro.config.mjs`.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+`legacy/` conserva la primera versión en HTML plano y puede borrarse.

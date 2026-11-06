@@ -1,5 +1,6 @@
 ---
 import Texto from './Texto.astro';
+import { url } from '../lib/url';
 
 interface Props {
   slug: string;
@@ -17,7 +18,7 @@ const { slug, titulo, etiquetas, problema, rol, proceso, resultado } = Astro.pro
   <div class="case-meta">
     {etiquetas.map((e) => <span class="tag">{e}</span>)}
   </div>
-  <h3><a href={`/casos/${slug}/`}>{titulo}</a></h3>
+  <h3><a href={url(`casos/${slug}/`)}>{titulo}</a></h3>
   <dl>
     <dt>Problema</dt>
     <dd><Texto text={problema} /></dd>
@@ -27,5 +28,5 @@ const { slug, titulo, etiquetas, problema, rol, proceso, resultado } = Astro.pro
     <dt>Resultado</dt>
     <dd><Texto text={resultado} /></dd>
   </dl>
-  <p class="more"><a href={`/casos/${slug}/`}>Ver caso completo →</a></p>
+  <p class="more"><a href={url(`casos/${slug}/`)}>Ver caso completo →</a></p>
 </article>
