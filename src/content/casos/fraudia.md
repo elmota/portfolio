@@ -1,11 +1,59 @@
 ---
-titulo: "Fraudia — UX/UI y frontend de un producto financiero"
-resumen: "Liderazgo del diseño UX/UI y desarrollo frontend, desde marzo de 2024."
-etiquetas: ["Fintech", "Liderazgo UX/UI", "Frontend"]
+titulo: "Fraudia — la mesa de trabajo de un analista de compliance"
+resumen: "Diseño y frontend de una plataforma de fraude y compliance: del flujo de Alertas a un sistema de diseño gobernado por decisiones documentadas."
+etiquetas: ["Fintech", "Compliance", "Design Systems", "Liderazgo UX/UI", "Angular"]
 orden: 1
-problema: "Producto del sector financiero. [Completar: problema de negocio y usuarios involucrados]"
-rol: "Líder UX/UI Design desde marzo de 2024, con implementación frontend propia del diseño. [Completar: equipo y nivel de decisión]"
-resultado: "[Completar: resultados, métricas o aprendizajes autorizados]"
+problema: "Un analista debe decidir con rapidez y evidencia si una alerta de riesgo es real, y dejar esa decisión trazable. La interfaz tenía que reducir la carga cognitiva sin esconder evidencia ni aparentar certezas que no existen."
+rol: "Líder UX/UI Design desde marzo de 2024, con implementación frontend propia. Estrategia de producto y UX, flujos de Alertas, Casos y Reglas, sistema de diseño y migración técnica del frontend. [Completar: tamaño del equipo y nivel de decisión]"
+proceso: "Definí un blueprint de producto como fuente única de verdad (fundamentos, sistema de diseño, componentes, patrones, flujos, contenido e implementación), con auditorías de UX sobre las pantallas existentes y un registro de decisiones."
+resultado: "Un blueprint de producto con registro de decisiones, un flujo de decisión de alertas y un sistema de diseño implementado en Angular. [Completar: resultado medible o cualitativo autorizado]"
 ---
 
-[Completar: alcance del producto o módulo, flujos, wireframes, prototipos o interfaces publicables, y decisiones de diseño e implementación.]
+## En una frase
+
+Diseñé cómo un analista pasa de una cola de alertas a una decisión justificada, y construí el sistema de diseño y el frontend que lo sostienen, con cada decisión de producto documentada para que el equipo, y las herramientas de IA que usa, trabajen con el mismo criterio.
+
+## Contexto
+
+Fraudia es una plataforma para detectar e investigar fraude y cumplimiento normativo. Sus dominios son **alertas**, **casos**, **reglas de detección**, **workflows** de acción, reportes y exploración de datos. Quien la usa es un analista de riesgo y compliance que revisa señales, contrasta evidencia y ejecuta una acción autorizada.
+
+El modelo que ordena todo el producto es una cadena de trabajo completa:
+
+> Señal → Contexto → Comprensión → Evidencia → Investigación → Decisión → Acción → Trazabilidad → Aprendizaje
+
+## El problema de diseño
+
+El trabajo del analista se resume en un *job to be done*: cuando recibe una alerta, quiere saber por qué se generó, qué hechos la sostienen o la contradicen, qué falta y qué acción corresponde, para producir una decisión trazable sin perder el contexto de su carga de trabajo.
+
+Eso exige una interfaz que explique la prioridad, no solo que muestre un puntaje; que permita pasar de la cola a un resumen y al detalle sin perder filtros ni posición; y que distinga con claridad un dato de una inferencia de la IA.
+
+## Decisiones clave
+
+1. **La IA ayuda, pero no se confunde con los hechos.** La asistencia se muestra con divulgación progresiva: primero un anticipo compacto (*sneak peek*) y, solo si el analista lo pide, el análisis completo. Los datos, las inferencias, las limitaciones y las recomendaciones se diferencian visualmente.
+2. **Ninguna acción con consecuencias se ejecuta en silencio.** Elegir un workflow abre primero un contexto intermedio donde se ven sus requisitos y su efecto. Las acciones bloqueadas muestran por qué lo están y qué falta para habilitarlas.
+3. **Móvil no recorta capacidad.** Se puede cambiar el orden y el patrón de interacción, pero la vista móvil ofrece el panorama completo y todas las acciones.
+4. **Cada componente alimenta el sistema de diseño.** Toda pieza nueva se evalúa para reutilizarse y se incorpora al sistema en la misma tarea, para evitar sistemas paralelos.
+5. **La evidencia manda sobre la intuición.** El blueprint separa lo observado, lo confirmado por el negocio, lo inferido, lo propuesto y lo pendiente de validar. Una captura, un texto generado por IA o un nombre de botón no bastan para fijar una regla de negocio.
+
+## Lo que entregué
+
+- **Flujo de Alertas:** una cola con vistas "Mis alertas" y "Todas", filtros y columnas configurables, una vista rápida lateral con flujos de trabajo e historial, y un detalle con resumen, línea de tiempo, actividad transaccional, documentos, notas y bitácora.
+- **Blueprint de producto:** fundamentos y usuarios, sistema de diseño (layout, tipografía, color, motion, estados y responsivo), componentes y patrones (UI optimista, operaciones asíncronas, flujos contextuales, asistencia IA, espacios de datos densos), páginas y flujos, contenido y gobernanza.
+- **Auditorías de UX** de las pantallas existentes, con hallazgos y propuestas de mejora separados de las decisiones normativas.
+- **Registro de decisiones** con estados (propuesta, aceptada) y los documentos que cada decisión afecta.
+- **Implementación frontend:** Angular con Tailwind y DaisyUI, y un plan de migración progresiva (Angular 19 → 20 → 21 y Tailwind 3 → 4) separado en un track visual y otro técnico.
+
+## Diseño y código en el mismo equipo
+
+Este caso muestra el perfil híbrido en la práctica. El mismo criterio que define cómo se presenta una sugerencia de IA define cómo se estructuran los componentes y cómo se migra el frontend. El blueprint declara que la implementación es "traducción técnica, nunca redefinición de UX", y esa regla evita que las decisiones de diseño se degraden al construirlas.
+
+## Aprendizajes
+
+<span class="todo">[Completar: qué aprendiste, qué cambiarías y qué viene después. Por ejemplo, validar con analistas reales el perfil de usuario, hoy definido como provisional.]</span>
+
+<!--
+PENDIENTE ANTES DE PUBLICAR
+- Las capturas del producto contienen datos de prueba (nombres, RUT, montos). No publicarlas sin anonimizar o rehacerlas con datos ficticios.
+- Confirmar con Fraudia qué se puede mostrar públicamente (producto, capturas, nombre del cliente).
+- Añadir 2 o 3 imágenes: cola de alertas, detalle de alerta y un componente del sistema de diseño.
+-->

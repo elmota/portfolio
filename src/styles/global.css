@@ -137,3 +137,13 @@ footer { border-top: 1px solid var(--line); padding: 28px; text-align: center; c
 @media (max-width: 640px) {
   .lentes-label { flex-basis: 100%; margin: 0 0 2px; }
 }
+
+/* Texto largo de los casos (Markdown) */
+.detalle .body h2 { font-size: 1.5rem; margin: 2.2em 0 .6em; color: var(--text); }
+.detalle .body h3 { font-size: 1.15rem; margin: 1.6em 0 .4em; color: var(--text); }
+.detalle .body ul, .detalle .body ol { padding-left: 1.3em; margin: 0 0 1.2em; }
+.detalle .body li { margin-bottom: .6em; }
+.detalle .body strong { color: var(--text); }
+.detalle .body blockquote { margin: 1.4em 0; padding: 14px 20px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0; color: var(--text); }
+.detalle .body blockquote p { margin: 0; }
+.detalle .body em { color: var(--text); }
