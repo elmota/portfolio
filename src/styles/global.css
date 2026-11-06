@@ -132,3 +132,8 @@ footer { border-top: 1px solid var(--line); padding: 28px; text-align: center; c
   .panel { animation: none; }
   .card, .lente { transition: none; }
 }
+
+/* Móvil: etiqueta del selector en su propia línea para que los tres botones queden juntos */
+@media (max-width: 640px) {
+  .lentes-label { flex-basis: 100%; margin: 0 0 2px; }
+}
