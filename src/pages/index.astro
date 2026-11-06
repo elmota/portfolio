@@ -9,10 +9,11 @@ const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.dat
 
 // `lentes` indica con qué vista del hero se resalta cada grupo (diseno · ingenieria; ambos resalta todo)
 const capacidades = [
+  { titulo: 'Investigación y discovery', lentes: 'diseno', items: ['Research con usuarios', 'Pruebas de usuario', 'Discovery en terreno', 'Validación de hipótesis'] },
   { titulo: 'Estrategia y producto', lentes: 'diseno', items: ['Product Thinking', 'UX Strategy', 'Arquitectura de información', 'Definición de flujos'] },
   { titulo: 'Diseño', lentes: 'diseno', items: ['Product Design', 'UX/UI', 'Diseño de interacción', 'Prototipado', 'Design Systems'] },
   { titulo: 'Implementación frontend', lentes: 'ingenieria', items: ['TypeScript', 'JavaScript', 'Angular', 'Next.js', 'React Native', 'Tailwind CSS', 'WordPress'] },
-  { titulo: 'Integración y entrega', lentes: 'ingenieria', items: ['REST APIs', 'Configuración de servicios', 'CI/CD', 'Despliegue'] },
+  { titulo: 'Integración y entrega', lentes: 'ingenieria', items: ['CMS headless (Strapi)', 'REST APIs', 'Configuración de servicios', 'CI/CD', 'Despliegue'] },
   { titulo: 'IA en el proceso', lentes: 'diseno ingenieria', items: ['Research y auditorías con IA', 'Prototipos con coding agents', 'Implementación y QA'] },
 ];
 
@@ -42,7 +43,7 @@ const formacion = [
   <section id="enfoque" class="section">
     <h2>Diseño que sabe cómo se construye</h2>
     <p class="section-intro">
-      Los productos financieros son complejos y están regulados. Entre el diseño y el código suele perderse fidelidad. Se evita con alguien que domina los dos lados, y por eso mi perfil combina ambos.
+      Los productos sobre los que suelo trabajar —dinero, maquinaria crítica, trámites de gobierno— son complejos y tienen poco margen de error. Entre el diseño y el código suele perderse fidelidad. Se evita con alguien que domina los dos lados, y por eso mi perfil combina ambos.
     </p>
     <div class="grid3">
       <article class="card" data-lentes="diseno">
@@ -62,7 +63,7 @@ const formacion = [
 
   <section id="casos" class="section">
     <h2>Casos de estudio</h2>
-    <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, regulación y confianza.</p>
+    <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
     {casos.map((c) => <CaseCard slug={c.id} {...c.data} />)}
   </section>
 
