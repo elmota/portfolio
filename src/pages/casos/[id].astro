@@ -14,7 +14,7 @@ const { Content } = await render(caso);
 const d = caso.data;
 ---
 
-<Base title={`${d.titulo} — [Tu nombre]`} description={d.resumen}>
+<Base title={`${d.titulo} — Alejandro Pérez Rocha`} description={d.resumen}>
   <article class="detalle">
     <a class="back" href={url('#casos')}>← Todos los casos</a>
     <div class="case-meta" style="margin-top:24px">{d.etiquetas.map((e) => <span class="tag">{e}</span>)}</div>

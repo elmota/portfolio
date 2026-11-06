@@ -8,7 +8,7 @@ interface Props {
 }
 
 const {
-  title = '[Tu nombre] — Senior Product / UX Designer y UX Design Engineer',
+  title = 'Alejandro Pérez Rocha — Senior Product / UX Designer y UX Design Engineer',
   description = 'Más de 15 años diseñando productos digitales con base en ingeniería frontend: Product Thinking, UX Strategy, Design Systems, REST APIs y CI/CD.',
 } = Astro.props;
 ---
@@ -28,7 +28,7 @@ const {
   </head>
   <body>
     <header class="nav">
-      <a class="brand" href={url()}>[Tu nombre]</a>
+      <a class="brand" href={url()}>Alejandro Pérez</a>
       <nav>
         <a href={url('#casos')}>Casos</a>
         <a href={url('#enfoque')}>Enfoque</a>
@@ -41,7 +41,7 @@ const {
       <slot />
     </main>
     <footer>
-      <p>© {new Date().getFullYear()} [Tu nombre]</p>
+      <p>© {new Date().getFullYear()} Alejandro Pérez Rocha</p>
     </footer>
   </body>
 </html>
