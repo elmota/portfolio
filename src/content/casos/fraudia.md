@@ -6,7 +6,7 @@ orden: 1
 problema: "Un analista debe decidir con rapidez y evidencia si una alerta de riesgo es real, y dejar esa decisión trazable. La interfaz tenía que reducir la carga cognitiva sin esconder evidencia ni aparentar certezas que no existen."
 rol: "Líder UX/UI Design desde marzo de 2024, en un equipo de 2 o 3 personas, con implementación frontend propia. Estrategia de producto y UX, flujos de Alertas, Casos y Reglas, sistema de diseño y migración técnica del frontend."
 proceso: "Definí un blueprint de producto como fuente única de verdad (fundamentos, sistema de diseño, componentes, patrones, flujos, contenido e implementación), con auditorías de UX sobre las pantallas existentes y un registro de decisiones. Lo trabajé con apoyo de coding agents para redactar, ordenar y mantener la documentación."
-resultado: "El flujo de Alertas ya está en uso en producción; el sistema de diseño y la migración técnica siguen en curso. El blueprint permite que el equipo y los coding agents trabajen con el mismo criterio. [Completar: feedback cualitativo de usuarios o del equipo, si lo hay]"
+resultado: "El producto está en marcha blanca: construido y en ajuste interno, sin pruebas en entornos reales todavía. El blueprint permite que el equipo y los coding agents trabajen con el mismo criterio mientras avanza esa etapa."
 ---
 
 ## En una frase
@@ -46,7 +46,7 @@ Eso exige una interfaz que explique la prioridad, no solo que muestre un puntaje
 
 ## Estado actual
 
-El flujo de Alertas está en uso en producción. El sistema de diseño y la migración técnica avanzan por etapas, y lo pendiente quedó decidido y documentado en el registro: el comportamiento en tablet y pantallas ultraanchas pasa a la siguiente versión de Alertas, y las pruebas entre navegadores y las integraciones se difirieron.
+El producto está en **marcha blanca**: el flujo de Alertas y el sistema de diseño están construidos y en ajuste interno, pero todavía no hay pruebas en entornos reales con analistas. Lo pendiente quedó decidido y documentado en el registro: el comportamiento en tablet y pantallas ultraanchas pasa a la siguiente versión de Alertas, y las pruebas entre navegadores y las integraciones se difirieron.
 
 ## Sistema: quién puede hacer qué
 

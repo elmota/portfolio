@@ -4,9 +4,9 @@ resumen: "Diseño y frontend del onboarding KYC/KYB y del retiro de fondos de un
 etiquetas: ["Fintech", "Onboarding KYC/KYB", "Retiro de fondos", "Design Systems", "Next.js"]
 orden: 2
 problema: "Una empresa internacional que quiere abrir una cuenta digital en USD debe completar un onboarding largo, regulado y de alto riesgo (empresa, representantes, beneficiarios y documentos), y después necesita retirar dinero entendiendo con claridad qué ocurre con él."
-rol: "Diseño de producto y desarrollo frontend: auditoría UX/UI del KYC, diseño e implementación de las mejoras de KYC, onboarding, retiro de fondos y dashboard, y el blueprint que las gobierna. [Completar: periodo completo y tamaño del equipo]"
-proceso: "Partí de una auditoría de la experiencia existente, la convertí en un plan por fases con protocolo de validación y contrato de medición, y la llevé a código en Next.js con pruebas automatizadas. Trabajé con apoyo de coding agents."
-resultado: "Un KYC reorganizado en tareas guiadas, un flujo de retiro especificado de punta a punta y un blueprint con más de 40 decisiones registradas. [Completar: estado en producción, feedback cualitativo de usuarios o del equipo]"
+rol: "Product Designer y desarrollador Front End: auditoría UX/UI del KYC, diseño e implementación de las mejoras de KYC, onboarding y retiro de fondos, integración con el negocio, con APIs y con MongoDB, y el blueprint que las gobierna. [Completar: periodo completo y tamaño del equipo]"
+proceso: "Partí de una auditoría de la experiencia existente, la convertí en un plan por fases con protocolo de validación y contrato de medición, y la llevé a código en Next.js con pruebas automatizadas, con integración directa a MongoDB y a los sistemas de negocio. Trabajé con apoyo de coding agents."
+resultado: "Un KYC reorganizado en tareas guiadas y un flujo de retiro especificado de punta a punta, en etapa de campaña de lanzamiento y en producción."
 ---
 
 ## En una frase
@@ -52,7 +52,7 @@ Con esa regla la interfaz pide el mínimo de decisiones y hace visible qué ocur
 
 El mismo criterio de diseño llega al código y a la entrega:
 
-- **Integración con APIs.** El onboarding guarda borradores por API, procesa el envío completo y persiste el expediente, con subida de documentos a almacenamiento externo. La autenticación usa Auth0.
+- **Integración con APIs y MongoDB.** El onboarding guarda borradores por API, procesa el envío completo y persiste el expediente en MongoDB, con subida de documentos a almacenamiento externo. La autenticación usa Auth0.
 - **Calidad automatizada.** Pruebas unitarias con Jest y pruebas de extremo a extremo con Playwright; análisis estático con SonarQube; TypeScript y lint.
 - **Entrega.** Pipeline en Bitbucket, imagen de Docker y despliegue en Vercel. <span class="todo">[Confirmar qué parte de la configuración de entrega fue tuya]</span>
 - **Despliegue gradual.** La experiencia guiada del KYC se activa con un *feature flag*, sin retirar la versión anterior.
@@ -69,6 +69,5 @@ La corrección final de la navegación del KYC se comprobó con 4 suites y 17 pr
 PENDIENTE ANTES DE PUBLICAR
 - Confirmar con Paybest qué se puede mostrar públicamente (producto, capturas, nombre).
 - Anonimizar o rehacer las capturas con datos ficticios; hay capturas de dashboard y retiro en las carpetas del proyecto.
-- Confirmar el estado en producción de la experiencia guiada de KYC (depende de un feature flag).
 - NO usar cifras de marketing del sitio comercial como resultados propios.
 -->

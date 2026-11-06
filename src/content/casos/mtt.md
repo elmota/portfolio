@@ -3,10 +3,10 @@ titulo: "MTT — llevar un trámite de la sucursal a 100% digital"
 resumen: "Discovery, pruebas de usuario y sistema de diseño para migrar trámites del Ministerio de Transportes y Telecomunicaciones desde atención presencial a un portal digital."
 etiquetas: ["Sector público", "Discovery", "Pruebas de usuario", "Angular", "Design System"]
 orden: 7
-problema: "Trámites del Ministerio de Transportes y Telecomunicaciones (MTT) que solo podían hacerse en sucursal necesitaban migrar a un portal 100% digital, sin perder a las personas que dependían de la atención presencial."
+problema: "Trámites de permisos de transporte del Ministerio de Transportes y Telecomunicaciones (MTT), para personas naturales y empresas privadas, que solo podían hacerse en sucursal y necesitaban migrar a un portal 100% digital, sin perder a quienes dependían de la atención presencial."
 rol: "UX: discovery, pruebas de usuario, sistema de diseño y prototipos, con integración a la implementación en Angular."
 proceso: "Levanté el trámite con los usuarios actuales en sucursal, validé hipótesis con pruebas de usuario, diseñé un sistema de diseño y los prototipos del portal, y trabajé junto al equipo de desarrollo en Angular para llevarlo a producción."
-resultado: "Un portal de trámites digital (portal de bonos) con autenticación vía Clave Única y los flujos de inicio y trámite especificados en prototipo. [Completar: trámites específicos cubiertos, estado de lanzamiento y adopción]"
+resultado: "Un portal digital para trámites de permisos de transporte, con autenticación vía Clave Única y los flujos de inicio y trámite especificados en prototipo. [Completar: estado de lanzamiento y adopción]"
 ---
 
 ## En una frase
@@ -15,7 +15,7 @@ Llevé un trámite que solo existía en sucursal a un portal digital, validando 
 
 ## Contexto
 
-El Ministerio de Transportes y Telecomunicaciones ofrecía ciertos trámites solo de forma presencial en sucursal. El objetivo del proyecto fue migrar esa atención a un portal 100% digital, manteniendo la confianza y la claridad que un trámite de gobierno exige.
+El Ministerio de Transportes y Telecomunicaciones ofrecía trámites de **permisos de transporte** —para personas naturales y para empresas privadas— solo de forma presencial en sucursal. El objetivo del proyecto fue migrar esa atención a un portal 100% digital, manteniendo la confianza y la claridad que un trámite de gobierno exige.
 
 ## El problema de diseño
 

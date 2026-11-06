@@ -5,7 +5,7 @@ etiquetas: ["Banca", "UX", "Front-end", "React Native", "Larga relación de serv
 orden: 4
 problema: "A lo largo de casi una década, Banco de Chile y sus marcas (Banco Edwards, Banchile) necesitaron resolver problemas distintos: vender seguros online, hacer que el sitio funcionara en navegadores antiguos, coordinar a cientos de funcionarios en un proceso interno anual, y mantener su app de pagos."
 rol: "Distintos roles en distintos momentos: diseño y prototipado en HTML/CSS/JS, especificación de compatibilidad para el equipo de desarrollo en Java, arquitectura de información y diseño de un sistema interno, y desarrollo móvil en React Native."
-resultado: "Un portal de seguros propuesto para el banco y sus marcas, especificaciones de compatibilidad entregadas a desarrollo, un sistema interno de inscripción para la Teletón que se mantuvo y mejoró durante seis años, e integraciones móviles en la app Mi Pago. [Completar: resultados o métricas que se puedan compartir de cada encargo]"
+resultado: "Un portal de seguros propuesto para el banco y sus marcas, especificaciones de compatibilidad entregadas a desarrollo, un sistema interno de inscripción para la Teletón que se mantuvo y mejoró durante seis años y que el banco sigue usando hasta hoy, e integraciones móviles en la app Mi Pago. [Completar: resultados o métricas que se puedan compartir de cada encargo]"
 ---
 
 ## En una frase
@@ -24,9 +24,9 @@ Definí y entregué al equipo de desarrollo, que trabajaba en Java, especificaci
 
 Un proyecto interno para que los funcionarios del banco pudieran postular a participar en las sucursales del banco durante los periodos de la Teletón, y para que los jefes de sucursal revisaran y confirmaran esas postulaciones.
 
-Definí la arquitectura de información, el diseño y los prototipos, y entregué en HTML, CSS y JS con jQuery y KendoUI. Trabajé directamente con el usuario —la contraparte del banco— tanto en el diseño inicial como en las fases posteriores de mantención y mejora, que se extendieron durante los siguientes años hasta 2018.
+Definí la arquitectura de información, el diseño y los prototipos, y entregué en HTML, CSS y JS con jQuery y KendoUI. Trabajé directamente con el usuario —la contraparte del banco— tanto en el diseño inicial como en las fases posteriores de mantención y mejora, que se extendieron hasta 2018.
 
-Es el encargo de mayor continuidad de los cuatro: seis años sosteniendo un mismo sistema, no solo construyéndolo.
+Es el encargo de mayor continuidad de los cuatro: seis años sosteniendo un mismo sistema, no solo construyéndolo, y **el banco sigue usando el sistema hasta el día de hoy**, bastante más allá del periodo en que yo participé.
 
 ## Encargo 4 · App Mi Pago (2020)
 
