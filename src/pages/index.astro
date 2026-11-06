@@ -9,8 +9,8 @@ const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.dat
 const capacidades = [
   { titulo: 'Estrategia y producto', items: ['Product Thinking', 'UX Strategy', 'Arquitectura de información', 'Definición de flujos'] },
   { titulo: 'Diseño', items: ['Product Design', 'UX/UI', 'Diseño de interacción', 'Prototipado', 'Design Systems'] },
-  { titulo: 'Desarrollo frontend', items: ['TypeScript', 'JavaScript', 'Angular', 'Next.js', 'React Native', 'Tailwind CSS', 'WordPress', 'Arquitectura frontend'] },
-  { titulo: 'IA en el proceso', items: ['Coding agents', 'Diseño asistido', 'Implementación', 'QA'] },
+  { titulo: 'IA en el proceso', items: ['Research y auditorías con IA', 'Prototipos con coding agents', 'Implementación y QA'] },
+  { titulo: 'Implementación frontend', items: ['TypeScript', 'JavaScript', 'Angular', 'Next.js', 'React Native', 'Tailwind CSS', 'WordPress', 'Arquitectura frontend'] },
 ];
 
 const trayectoria = [
@@ -35,10 +35,10 @@ const formacion = [
 
 <Base>
   <section class="hero">
-    <p class="eyebrow">Product Designer · Frontend Architect</p>
-    <h1>Convierto problemas complejos en experiencias simples e implementables.</h1>
+    <p class="eyebrow">Senior Product / UX Designer</p>
+    <h1>Diseño productos financieros y los construyo: del flujo al frontend en producción.</h1>
     <p class="lead">
-      Más de 15 años creando productos digitales, con una base profunda en ingeniería frontend. Conecto necesidades de usuarios, negocio y tecnología, y acompaño el diseño hasta que está construido y probado.
+      Más de 15 años diseñando productos digitales con Product Thinking, UX Strategy y Design Systems. Mi base es la ingeniería frontend: lo que diseño, sé construirlo, y conecto usuarios, negocio y tecnología para convertir problemas complejos en experiencias simples.
     </p>
     <div class="cta">
       <a class="btn" href="#casos">Ver casos de estudio</a>
@@ -52,7 +52,7 @@ const formacion = [
   </section>
 
   <section id="enfoque" class="section">
-    <h2>Por qué un perfil híbrido importa</h2>
+    <h2>Diseño que sabe cómo se construye</h2>
     <div class="grid3">
       <article class="card">
         <h3>Diseño con criterio de producto</h3>
@@ -71,7 +71,7 @@ const formacion = [
 
   <section id="casos" class="section">
     <h2>Casos de estudio</h2>
-    <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, identidad y confianza.</p>
+    <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, regulación y confianza.</p>
     {casos.map((c) => <CaseCard slug={c.id} {...c.data} />)}
   </section>
 
@@ -131,7 +131,7 @@ const formacion = [
 
   <section id="contacto" class="section contact">
     <h2>¿Construimos algo juntos?</h2>
-    <p>Busco roles de Senior / Lead Product Designer, UX Designer o UX/Front-end Developer.</p>
+    <p>Busco roles de Senior Product Designer o UX Designer. También UX Engineer o Design Engineer, cuando el rol cruza diseño y código.</p>
     <div class="cta">
       <a class="btn" href="mailto:TU_CORREO">TU_CORREO</a>
       <a class="btn btn-ghost" href="TU_LINKEDIN">LinkedIn</a>

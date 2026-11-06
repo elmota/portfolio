@@ -4,7 +4,7 @@ resumen: "Desarrollo frontend, arquitectura y diseño UX para dos bancos, a trav
 etiquetas: ["Banca", "Arquitectura frontend", "Dirección de diseño"]
 orden: 3
 problema: "Productos bancarios con exigencias de seguridad, accesibilidad, integración y escalabilidad. [Completar: producto, canal o iniciativa específica por banco]"
-rol: "Front End Architect / Designer Lead en Base Dos: arquitectura frontend y dirección de diseño, con TypeScript, WebKit y React Native. Banco de Chile (2013–2015) y Banco Security (2017–2019)."
+rol: "Designer Lead y Front End Architect en Base Dos: dirección de diseño y arquitectura frontend, con TypeScript, WebKit y React Native. Banco de Chile (2013–2015) y Banco Security (2017–2019)."
 resultado: "[Completar: entregables y resultados que se puedan contar sin exponer información confidencial]"
 ---
 
