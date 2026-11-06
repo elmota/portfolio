@@ -42,10 +42,17 @@ Eso exige una interfaz que explique la prioridad, no solo que muestre un puntaje
 - **Auditorías de UX** de las pantallas existentes, con hallazgos y propuestas de mejora separados de las decisiones normativas.
 - **Registro de decisiones** con estados (propuesta, aceptada) y los documentos que cada decisión afecta.
 - **Implementación frontend:** Angular con Tailwind y DaisyUI, y un plan de migración progresiva (Angular 19 → 20 → 21 y Tailwind 3 → 4) separado en un track visual y otro técnico.
+- **Auditoría del módulo de Sistema:** gestión de agentes y equipos (invitación, estados, permisos directos y heredados por equipo) y configuración de datos (tipo de movimiento, umbrales de riesgo del cliente), con hallazgos priorizados y una propuesta de rediseño para escritorio, tablet y móvil.
 
 ## Estado actual
 
 El flujo de Alertas está en uso en producción. El sistema de diseño y la migración técnica avanzan por etapas, y lo pendiente quedó decidido y documentado en el registro: el comportamiento en tablet y pantallas ultraanchas pasa a la siguiente versión de Alertas, y las pruebas entre navegadores y las integraciones se difirieron.
+
+## Sistema: quién puede hacer qué
+
+Alertas no es el único lugar donde la claridad importa. Audité **Sistema** (agentes y equipos) y la configuración de datos (tipo de movimiento, riesgo del cliente) con el mismo estándar: separar lo observado en el código de lo que falta validar con negocio.
+
+El hallazgo más importante fue de confianza, no solo de layout: un agente puede tener permisos **directos** y permisos **heredados de sus equipos**, y el código ya distingue esas dos colecciones, pero la interfaz no siempre deja claro de dónde viene cada permiso. Propuse un panel de detalle que separa ambos orígenes en vez de mostrarlos mezclados, y dejé una lista de preguntas de negocio sin responder (por ejemplo, qué hace exactamente "sincronizar" en tipo de movimiento) en lugar de asumir una respuesta.
 
 ## Diseño y código en el mismo equipo
 
