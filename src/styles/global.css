@@ -109,7 +109,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
 /* Blanco de base, pero con los bordes y titulares en el acento, no en negro. */
 .bg-light-accent { --line-strong: var(--accent); }
 .bg-light-accent h2 { color: var(--accent); }
-.section { padding: 140px 0 0; }
+.section { padding-top: 140px; }
 .section-intro { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
 
 /* ---------- Escenas a pantalla completa y cabeceras ancladas a los extremos ----------
