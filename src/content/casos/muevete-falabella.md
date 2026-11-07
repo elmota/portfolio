@@ -6,7 +6,7 @@ orden: 5
 problema: "Falabella necesitaba un sitio de atracción de talento (Muévete) cuyo contenido —artículos, categorías, autores, secciones de landing— lo pudiera actualizar el equipo de RR. HH. sin depender de un despliegue de código para cada cambio de texto o imagen."
 rol: "Diseñador UX y desarrollador Front End, en Base Dos para Falabella, entre marzo y agosto de 2025."
 proceso: "Diseñé la UX e implementé el frontend en React, lo conecté a Strapi como CMS headless para que el contenido fuera editable, y empecé la migración de esa base a Next.js."
-resultado: "El sitio con integración a Strapi quedó funcionando: home, navbar, footer, secciones de landing y contenido editorial (artículos, categorías, autores) servidos desde el CMS. La migración que inicié se completó posteriormente en Next.js 14. [métricas de uso del sitio, si las hay]"
+resultado: "El sitio con integración a Strapi quedó funcionando: home, navbar, footer, secciones de landing y contenido editorial (artículos, categorías, autores) servidos desde el CMS. La migración que inicié se completó posteriormente en Next.js 14."
 ---
 
 ## En una frase
@@ -38,6 +38,3 @@ Un sitio de contenido que depende de desarrollo para cada actualización se qued
 
 La integración con Strapi está en uso: el sitio en React sirvió contenido real durante varios meses, con iteraciones de landing hasta octubre. La migración a Next.js, que dejé iniciada en una etapa temprana, se completó después: el sitio terminó corriendo en **Next.js 14** sobre la misma integración con Strapi.
 
-## Aprendizajes
-
-<span class="todo">[qué aprendiste de modelar contenido para un equipo no técnico, y qué harías distinto en la migración.]</span>

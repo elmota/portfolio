@@ -6,7 +6,7 @@ orden: 6
 problema: "Operarios de faenas mineras necesitaban reportar problemas en maquinaria y equipos (como bandejas transportadoras) de forma clara, para que esos reportes derivaran en mantenciones reales y en certificados verificables, sin perderse en el camino."
 rol: "Diseño UX e implementación frontend de punta a punta: levantamiento del problema con el usuario, research, flujos, prototipos, diseño de interfaz y desarrollo."
 proceso: "Levanté el problema directamente con el usuario en faena, lo traduje en flujos de usuario y prototipos, diseñé la interfaz para web app, escritorio y el módulo de sistema, y la llevé a producción."
-resultado: "La plataforma está en producción, con tres frentes de interfaz (web app, escritorio y sistema) que cubren reporte de problemas, mantenciones y generación de certificados. Las mantenciones actuales son operativas —del proceso de mantención en sí— más que del frontend. [adopción o feedback de los operarios]"
+resultado: "La plataforma está en producción, con tres frentes de interfaz (web app, escritorio y sistema) que cubren reporte de problemas, mantenciones y generación de certificados. Las mantenciones actuales son operativas —del proceso de mantención en sí— más que del frontend."
 ---
 
 ## En una frase
@@ -38,8 +38,5 @@ Un reporte que no deriva en una mantención certificada no sirve. La plataforma 
 
 La plataforma está en producción. El trabajo de mantención que sigue hoy es principalmente **operativo** —de los procesos de inventario y mantención en sí, no del código frontend—, lo que sugiere que la base construida quedó estable.
 
-## Aprendizajes
-
-<span class="todo">[qué aprendiste de diseñar para un contexto de terreno/industrial, y qué cambiarías.]</span>
 
 <!-- PENDIENTE: confirmar qué capturas del Figma de Almex se pueden mostrar públicamente antes de publicar. -->

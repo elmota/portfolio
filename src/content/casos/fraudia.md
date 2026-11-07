@@ -58,9 +58,6 @@ El hallazgo más importante fue de confianza, no solo de layout: un agente puede
 
 Este caso muestra el perfil híbrido en la práctica. El mismo criterio que define cómo se presenta una sugerencia de IA define cómo se estructuran los componentes y cómo se migra el frontend. El blueprint declara que la implementación es "traducción técnica, nunca redefinición de UX", y esa regla evita que las decisiones de diseño se degraden al construirlas.
 
-## Aprendizajes
-
-<span class="todo">[qué aprendiste, qué cambiarías y qué viene después. Por ejemplo, validar con analistas reales el perfil de usuario, hoy definido como provisional.]</span>
 
 <!--
 PENDIENTE ANTES DE PUBLICAR
