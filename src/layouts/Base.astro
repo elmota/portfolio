@@ -36,14 +36,16 @@ const {
   <body>
     <BlueprintScene />
     <header class="nav">
-      <a class="brand" href={url()}>Alejandro Pérez</a>
-      <nav>
-        <a href={url('#casos')}>Casos</a>
-        <a href={url('#enfoque')}>Enfoque</a>
-        <a href={url('#skills')}>Skills</a>
-        <a href={url('#trayectoria')}>Trayectoria</a>
-        <a class="btn btn-small" href={url('#contacto')}>Contacto</a>
-      </nav>
+      <div class="nav-inner">
+        <a class="brand" href={url()}>Alejandro Pérez</a>
+        <nav>
+          <a href={url('#casos')}>Casos</a>
+          <a href={url('#enfoque')}>Enfoque</a>
+          <a href={url('#skills')}>Skills</a>
+          <a href={url('#trayectoria')}>Trayectoria</a>
+          <a class="btn btn-small" href={url('#contacto')}>Contacto</a>
+        </nav>
+      </div>
     </header>
     <main>
       <slot />
