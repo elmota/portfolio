@@ -326,7 +326,7 @@ html[data-theme="diseno"] {
   --radius: 10px;
 }
 html[data-theme="diseno"] h1, html[data-theme="diseno"] h2 {
-  font-weight: 700; letter-spacing: -.01em;
+  letter-spacing: -.01em;
 }
 html[data-theme="diseno"] .lead { line-height: 1.75; }
 html[data-theme="diseno"] .btn, html[data-theme="diseno"] .tag, html[data-theme="diseno"] .chips li { border-radius: 10px; }
