@@ -81,14 +81,16 @@ const formacion = [
     </div>
   </section>
 
-  {casos.map(({ caso, Content }) => (
-    <template data-case-tpl={caso.id}>
-      <CaseDetail {...caso.data}>
-        <Content />
-      </CaseDetail>
-    </template>
-  ))}
-  <CaseModal />
+  <Fragment slot="overlay">
+    {casos.map(({ caso, Content }) => (
+      <template data-case-tpl={caso.id}>
+        <CaseDetail {...caso.data}>
+          <Content />
+        </CaseDetail>
+      </template>
+    ))}
+    <CaseModal />
+  </Fragment>
 
   <section id="skills" class="section bg-dark-accent">
     <div class="section-head">
