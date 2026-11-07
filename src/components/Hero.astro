@@ -1,15 +1,17 @@
 ---
-// Hero con tres lentes (Diseño · Ambos · Ingeniería), leído como el sello de un plano técnico.
-// Los tres textos están en el HTML: sin JavaScript se ve la lente "Ambos";
-// con JavaScript se puede cambiar y compartir con ?lente=
+// El fold es la elección: tres cards grandes (Diseño · Ambos · Ingeniería) son lo primero
+// que se ve. Elegir una no solo cambia el texto de abajo: cambia el tema visual de todo
+// el sitio (data-theme en <html>), para que la narrativa se sienta distinta según
+// la lente — más editorial en Diseño, balanceada en Ambos, más técnica en Ingeniería.
 const lentes = [
   {
     id: 'diseno',
     etiqueta: 'Diseño',
+    tagline: 'Producto, research y sistemas.',
     rol: 'Product / UX Design',
-    titular: 'Sé qué construir: productos complejos claros, del problema al flujo.',
+    titular: 'Diseño lo que vale la pena construir.',
     bajada:
-      'Product Thinking, UX Strategy, research con usuarios, flujos, prototipado y Design Systems. Lidero el diseño UX/UI de Fraudia y he diseñado producto en fintech, banca, minería y sector público.',
+      'Product Thinking, UX Strategy, research con usuarios —incluido discovery en terreno— y Design Systems. Lidero el diseño UX/UI de Fraudia y he diseñado producto en fintech, banca, minería y sector público.',
     datos: [
       ['Product Thinking', 'qué problema vale la pena resolver'],
       ['Research con usuarios', 'discovery y validación en terreno'],
@@ -19,8 +21,9 @@ const lentes = [
   {
     id: 'ambos',
     etiqueta: 'Ambos',
+    tagline: 'Diseño y código, a la vez.',
     rol: 'Senior Product / UX Designer',
-    titular: 'Diseño productos complejos y los construyo: del flujo al frontend en producción.',
+    titular: 'Diseño el producto y también el código.',
     bajada:
       'Más de 15 años diseñando productos digitales con base en ingeniería frontend. Lo que diseño lo sé implementar, y conecto usuarios, negocio y tecnología para convertir problemas complejos en experiencias simples.',
     datos: [
@@ -32,8 +35,9 @@ const lentes = [
   {
     id: 'ingenieria',
     etiqueta: 'Ingeniería',
+    tagline: 'Frontend listo para producción.',
     rol: 'UX / Design Engineering',
-    titular: 'Sé cómo construirlo: interfaces listas para producción, de la API al despliegue.',
+    titular: 'Construyo lo que se diseña, de la API al deploy.',
     bajada:
       'Desarrollo frontend con TypeScript, Angular, Next.js y React Native, y lo conecto a CMS headless y servicios vía REST APIs. Configuro entrega continua (CI/CD) y despliegue. Diseño con criterio de implementación.',
     datos: [
@@ -43,21 +47,21 @@ const lentes = [
     ],
   },
 ];
-
-const inicial = lentes[1];
 ---
 
 <section class="hero" data-hero>
   <dl class="titleblock" data-titleblock>
     <div><dt>Nombre</dt><dd>Alejandro Pérez Rocha</dd></div>
-    <div><dt>Rol</dt><dd data-tb-rol>{inicial.rol}</dd></div>
+    <div><dt>Rol</dt><dd data-tb-rol>{lentes[1].rol}</dd></div>
     <div><dt>Rev.</dt><dd>{new Date().getFullYear()}</dd></div>
   </dl>
 
+  <p class="lentes-intro">Elige cómo quieres leer mi perfil</p>
   <div class="lentes" role="group" aria-label="Elige cómo leer mi perfil">
     {lentes.map((l) => (
       <button type="button" class="lente" data-lente={l.id} aria-pressed={l.id === 'ambos' ? 'true' : 'false'}>
-        {l.etiqueta}
+        <span class="lente-label">{l.etiqueta}</span>
+        <span class="lente-tagline">{l.tagline}</span>
       </button>
     ))}
   </div>
@@ -84,16 +88,42 @@ const inicial = lentes[1];
   const validas = ['diseno', 'ambos', 'ingenieria'];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function activar(lente: string, actualizarUrl: boolean) {
+  function activar(lente: string, actualizarUrl: boolean, animar: boolean) {
     document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
       b.setAttribute('aria-pressed', String(b.dataset.lente === lente));
     });
     const panelActivo = document.querySelector<HTMLElement>(`[data-panel="${lente}"]`);
-    document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
-      p.hidden = p.dataset.panel !== lente;
-    });
-    const tbRol = document.querySelector('[data-tb-rol]');
-    if (tbRol && panelActivo) tbRol.textContent = panelActivo.dataset.rol ?? '';
+    const panelAnterior = document.querySelector<HTMLElement>('[data-panel]:not([hidden])');
+
+    const mostrar = () => {
+      document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
+        p.hidden = p.dataset.panel !== lente;
+      });
+      const tbRol = document.querySelector('[data-tb-rol]');
+      if (tbRol && panelActivo) tbRol.textContent = panelActivo.dataset.rol ?? '';
+      if (animar && !reduceMotion && panelActivo) {
+        gsap.fromTo(
+          panelActivo.querySelectorAll('[data-reveal]'),
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.05 }
+        );
+      }
+    };
+
+    if (animar && !reduceMotion && panelAnterior && panelAnterior !== panelActivo) {
+      gsap.to(panelAnterior, {
+        opacity: 0,
+        duration: 0.15,
+        ease: 'power1.in',
+        onComplete: mostrar,
+      });
+    } else {
+      mostrar();
+    }
+
+    document.documentElement.dataset.theme = lente;
+    document.dispatchEvent(new CustomEvent('lentechange', { detail: { lente } }));
+
     // Resalta las capacidades que corresponden a la lente elegida
     document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
       const propias = (c.dataset.lentes ?? '').split(' ');
@@ -108,19 +138,20 @@ const inicial = lentes[1];
   }
 
   const inicialParam = new URLSearchParams(location.search).get('lente') ?? 'ambos';
-  activar(validas.includes(inicialParam) ? inicialParam : 'ambos', false);
+  activar(validas.includes(inicialParam) ? inicialParam : 'ambos', false, false);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
-    b.addEventListener('click', () => activar(b.dataset.lente ?? 'ambos', true));
+    b.addEventListener('click', () => activar(b.dataset.lente ?? 'ambos', true, true));
   });
 
-  // Único momento orquestado de la página: el sello del plano se traza al cargar,
-  // y el titular/bajada/ficha técnica aparecen en secuencia. No se repite por sección.
+  // Único momento orquestado de la página: el bloque de título y el selector
+  // aparecen al cargar; el panel inicial ya se resuelve arriba, sin animación propia.
   if (!reduceMotion) {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.from('[data-titleblock]', { opacity: 0, y: -8, duration: 0.5 })
-      .from('.lentes', { opacity: 0, duration: 0.4 }, '-=0.25')
-      .from('[data-panel="ambos"] [data-reveal]', { opacity: 0, y: 14, duration: 0.55, stagger: 0.12 }, '-=0.2')
-      .from('.hero .cta', { opacity: 0, duration: 0.4 }, '-=0.2');
+      .from('.lentes-intro', { opacity: 0, duration: 0.3 }, '-=0.3')
+      .from('.lente', { opacity: 0, y: 14, duration: 0.45, stagger: 0.08 }, '-=0.15')
+      .from('[data-panel="ambos"] [data-reveal]', { opacity: 0, y: 14, duration: 0.5, stagger: 0.1 }, '-=0.1')
+      .from('.hero .cta', { opacity: 0, duration: 0.4 }, '-=0.15');
   }
 </script>

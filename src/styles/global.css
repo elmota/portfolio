@@ -192,21 +192,56 @@ footer { border-top: 2px solid var(--line-strong); padding: 32px clamp(20px, 4vw
 .titleblock dt { color: var(--muted); font-weight: 500; margin-bottom: 2px; }
 .titleblock dd { margin: 0; font-weight: 700; }
 
-/* Selector de lentes: pestañas de texto con subrayado, no píldoras */
-.lentes { display: flex; gap: 32px; margin-bottom: 44px; }
-.lente {
-  font: inherit; font-weight: 700; font-size: .98rem; cursor: pointer;
-  padding: 0 0 10px; background: transparent; color: var(--muted);
-  border: none; border-bottom: 3px solid transparent;
-  transition: color .15s, border-color .15s;
+/* Selector de lentes: el centro del fold. Tres cards grandes, no pestañas chicas. */
+.lentes-intro { color: var(--muted); font-size: .95rem; margin: 0 0 14px; }
+.lentes {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  background: var(--line-strong); border: 2px solid var(--line-strong);
+  margin-bottom: 56px;
 }
-.lente:hover { color: var(--text); }
-.lente[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--accent); }
-.lente:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.lente {
+  font: inherit; cursor: pointer; text-align: left;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 28px 24px; background: #fff; color: var(--text);
+  border: none;
+  transition: background .18s, color .18s;
+}
+.lente:hover { background: var(--accent-tint); }
+.lente[aria-pressed="true"] { background: var(--accent); }
+.lente[aria-pressed="true"] .lente-label,
+.lente[aria-pressed="true"] .lente-tagline { color: var(--accent-ink); }
+.lente:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.lente-label { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 2.4vw, 1.7rem); letter-spacing: -.01em; }
+.lente-tagline { color: var(--muted); font-size: .92rem; }
+.lente[aria-pressed="true"] .lente-tagline { opacity: .85; }
 .panel[hidden] { display: none; }
 
 .lead { font-size: clamp(1.1rem, 1.6vw, 1.35rem); color: var(--muted); max-width: 64ch; }
 
-@media (max-width: 640px) {
-  .lentes { gap: 20px; flex-wrap: wrap; }
+@media (max-width: 760px) {
+  .lentes { grid-template-columns: 1fr; }
+}
+
+/* ---------- Tema por lente: misma marca, distinto carácter tipográfico ----------
+   "Diseño" se lee más editorial (más redondeo, más aire entre líneas).
+   "Ingeniería" se lee más técnica (ángulos rectos, tracking más cerrado).
+   "Ambos" es el punto medio, y es el estado por defecto. */
+html[data-theme="diseno"] {
+  --radius: 10px;
+}
+html[data-theme="diseno"] h1, html[data-theme="diseno"] h2 {
+  font-weight: 700; letter-spacing: -.01em;
+}
+html[data-theme="diseno"] .lead { line-height: 1.75; }
+html[data-theme="diseno"] .btn, html[data-theme="diseno"] .tag, html[data-theme="diseno"] .chips li { border-radius: 10px; }
+
+html[data-theme="ingenieria"] {
+  --radius: 0px;
+}
+html[data-theme="ingenieria"] h1, html[data-theme="ingenieria"] h2 {
+  letter-spacing: -.035em;
+}
+html[data-theme="ingenieria"] .specs strong { font-variant-numeric: tabular-nums; }
+html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
+  letter-spacing: .02em;
 }

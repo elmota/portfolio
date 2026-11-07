@@ -73,6 +73,26 @@
 
     group.rotation.x = 0.08;
 
+    // Reacciona al cambio de lente: más denso/nítido en Ingeniería, más suave en Diseño.
+    const temas: Record<string, { points: number; lines: number; size: number }> = {
+      diseno: { points: 0.3, lines: 0.06, size: 0.055 },
+      ambos: { points: 0.4, lines: 0.1, size: 0.045 },
+      ingenieria: { points: 0.55, lines: 0.16, size: 0.04 },
+    };
+    document.addEventListener('lentechange', (e: Event) => {
+      const lente = (e as CustomEvent<{ lente: string }>).detail?.lente ?? 'ambos';
+      const t = temas[lente] ?? temas.ambos;
+      if (reduceMotion) {
+        pointsMat.opacity = t.points;
+        lineMat.opacity = t.lines;
+        pointsMat.size = t.size;
+        renderer.render(scene, camera);
+      } else {
+        gsap.to(pointsMat, { opacity: t.points, size: t.size, duration: 0.6, ease: 'power2.out' });
+        gsap.to(lineMat, { opacity: t.lines, duration: 0.6, ease: 'power2.out' });
+      }
+    });
+
     if (reduceMotion) {
       renderer.render(scene, camera);
     } else {
