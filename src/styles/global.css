@@ -17,6 +17,9 @@
   --amber-tint: #fbf1de;
   --radius: 0px;
   --max: 1560px;
+  /* Alto de una "escena" a pantalla completa: usa el viewport real (100dvh),
+     con un piso para landscape chico y un tope para monitores muy altos (1440p/4K). */
+  --stage: clamp(560px, 100dvh, 960px);
   --font-display: "Archivo", system-ui, sans-serif;
   --font-body: "Archivo", system-ui, sans-serif;
   --font-mono: "Archivo", system-ui, sans-serif;
@@ -32,9 +35,9 @@ body {
   position: relative;
 }
 a { color: inherit; }
-h1, h2, h3 { font-family: var(--font-display); line-height: 1.02; margin: 0 0 .5em; letter-spacing: -.02em; font-weight: 800; }
-h1 { font-size: clamp(2.8rem, 7vw, 6.4rem); max-width: 22ch; }
-h2 { font-size: clamp(2rem, 4.2vw, 3.4rem); }
+h1, h2, h3 { font-family: var(--font-display); line-height: .98; margin: 0 0 .5em; letter-spacing: -.02em; font-weight: 800; }
+h1 { font-size: clamp(2.8rem, 7vw, 6.4rem); font-weight: 900; max-width: 22ch; }
+h2 { font-size: clamp(2.3rem, 5.4vw, 4.4rem); font-weight: 900; }
 h3 { font-size: 1.2rem; font-weight: 700; }
 p { margin: 0 0 1em; }
 
@@ -51,8 +54,93 @@ p { margin: 0 0 1em; }
 .nav nav a:hover { color: var(--text); }
 
 main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px); position: relative; z-index: 1; }
+
+/* ---------- Variantes de fondo por sección ----------
+   El sitio es blanco por defecto; estas cuatro variantes rompen ese default a propósito,
+   para que la página tenga ritmo en vez de una sola superficie repetida. Como todo el
+   sistema (cards, chips, tags, línea de tiempo) lee sus colores de estas variables, con
+   solo redefinirlas el resto de los estilos se adapta sin tocar cada regla por separado.
+   El "full-bleed" saca la sección del ancho del contenedor para que el color llegue
+   de borde a borde de la ventana, no solo del bloque de contenido. */
+.bg-dark, .bg-accent, .bg-dark-accent, .bg-light-accent {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding-left: clamp(20px, 4vw, 56px);
+  padding-right: clamp(20px, 4vw, 56px);
+}
+.bg-dark, .bg-accent, .bg-dark-accent { position: relative; z-index: 1; }
+
+.bg-dark {
+  --bg: #0a0a0a;
+  --text: #ffffff;
+  --muted: #a3a3a3;
+  --line-strong: #ffffff;
+  --accent-tint: rgba(0, 118, 125, .3);
+  --amber-tint: rgba(181, 117, 10, .22);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.bg-accent {
+  --bg: var(--accent);
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, .78);
+  --line-strong: #ffffff;
+  --accent-ink: var(--accent);
+  --accent-tint: rgba(255, 255, 255, .18);
+  background: var(--bg);
+  color: var(--text);
+}
+.bg-accent .btn-primary { background: #fff; color: var(--bg); border-color: #fff; }
+.bg-accent .btn-primary:hover { background: #fff; filter: brightness(.95); }
+
+.bg-dark-accent {
+  --bg: #0a0a0a;
+  --text: #ffffff;
+  --muted: #a3a3a3;
+  --line-strong: var(--accent);
+  --accent-tint: rgba(0, 118, 125, .3);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Blanco de base, pero con los bordes y titulares en el acento, no en negro. */
+.bg-light-accent { --line-strong: var(--accent); }
+.bg-light-accent h2 { color: var(--accent); }
 .section { padding: 140px 0 0; }
 .section-intro { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+
+/* ---------- Escenas a pantalla completa y cabeceras ancladas a los extremos ----------
+   Las secciones con poco contenido (hero, enfoque, sobre mí, contacto) ocupan casi
+   toda la altura visible, con el contenido repartido entre el borde superior y el
+   inferior — composición distinta en cada una, no la misma tarjeta repetida.
+   Las secciones con mucho contenido (casos, skills, trayectoria, formación) no se
+   fuerzan a una altura: solo su cabecera queda anclada a los extremos horizontales. */
+.stage {
+  min-height: var(--stage);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  padding-top: 88px;
+  padding-bottom: 88px;
+}
+.stage-bottom-right { align-self: flex-end; text-align: right; max-width: 56ch; }
+
+.section-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 32px 48px; flex-wrap: wrap; margin-bottom: 48px;
+}
+.section-head h2 { margin: 0; }
+.section-head .section-intro { text-align: right; margin: 0; }
+
+@media (max-width: 760px) {
+  .stage { min-height: auto; padding-top: 64px; padding-bottom: 64px; gap: 32px; }
+  .stage-bottom-right { align-self: flex-start; text-align: left; }
+  .section-head { flex-direction: column; align-items: flex-start; }
+  .section-head .section-intro { text-align: left; }
+}
 
 /* Botones: rectos, sin radio, contraste total */
 .cta { display: flex; flex-wrap: wrap; gap: 14px; margin: 36px 0; }
@@ -62,7 +150,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   font-weight: 700; text-decoration: none; border: 2px solid var(--line-strong);
   transition: background .15s, color .15s, border-color .15s;
 }
-.btn:hover { background: var(--text); color: #fff; }
+.btn:hover { background: var(--text); color: var(--bg); }
 .btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .btn-primary:hover { background: #024d52; border-color: #024d52; color: #fff; }
 .btn-small { padding: 9px 18px; font-size: .9rem; border-width: 1.5px; }
@@ -183,28 +271,32 @@ footer { border-top: 2px solid var(--line-strong); padding: 32px clamp(20px, 4vw
 }
 
 /* ---------- Hero ---------- */
-.hero { padding: 64px 0 40px; }
+.hero.stage { padding-top: 36px; padding-bottom: 36px; gap: 20px; }
+.hero-elige { display: flex; flex-direction: column; }
+.hero-resultado { display: flex; flex-direction: column; }
 .titleblock {
   display: flex; flex-wrap: wrap; gap: 40px;
   border-bottom: 2px solid var(--line-strong);
-  padding-bottom: 20px;
-  margin-bottom: 40px;
-  font-size: .92rem;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  font-size: .9rem;
 }
 .titleblock dt { color: var(--muted); font-weight: 500; margin-bottom: 2px; }
 .titleblock dd { margin: 0; font-weight: 700; }
 
-/* Selector de lentes: el centro del fold. Tres cards grandes, no pestañas chicas. */
-.lentes-intro { color: var(--muted); font-size: .95rem; margin: 0 0 14px; }
+/* Selector de lentes: el centro del fold. Tres cards grandes, no pestañas chicas.
+   Son siempre una caja blanca, pase lo que pase con el tema de la sección (incluida
+   una escena de fondo oscuro), así que su color de texto no depende del tema. */
+.lentes-intro { color: var(--muted); font-size: .92rem; margin: 0 0 10px; }
 .lentes {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-  background: var(--line-strong); border: 2px solid var(--line-strong);
-  margin-bottom: 56px;
+  background: #0a0a0a; border: 2px solid #0a0a0a;
+  margin-bottom: 20px;
 }
 .lente {
   font: inherit; cursor: pointer; text-align: left;
-  display: flex; flex-direction: column; gap: 10px;
-  padding: 28px 24px; background: #fff; color: var(--text);
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px 20px; background: #fff; color: #0a0a0a;
   border: none;
   transition: background .18s, color .18s;
 }
@@ -213,11 +305,13 @@ footer { border-top: 2px solid var(--line-strong); padding: 32px clamp(20px, 4vw
 .lente[aria-pressed="true"] .lente-label,
 .lente[aria-pressed="true"] .lente-tagline { color: var(--accent-ink); }
 .lente:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-.lente-label { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 2.4vw, 1.7rem); letter-spacing: -.01em; }
-.lente-tagline { color: var(--muted); font-size: .92rem; }
+.lente-label { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.25rem, 2.2vw, 1.6rem); letter-spacing: -.01em; }
+.lente-tagline { color: #595959; font-size: .9rem; }
 .panel[hidden] { display: none; }
 
-.lead { font-size: clamp(1.1rem, 1.6vw, 1.35rem); color: var(--muted); max-width: 64ch; }
+.lead { font-size: clamp(1.05rem, 1.5vw, 1.3rem); color: var(--muted); max-width: 64ch; }
+.hero .specs { margin-top: 20px; }
+.hero .cta { margin-top: 16px; margin-bottom: 0; }
 
 @media (max-width: 760px) {
   .lentes { grid-template-columns: 1fr; }

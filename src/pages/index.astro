@@ -46,11 +46,13 @@ const formacion = [
 <Base>
   <Hero />
 
-  <section id="enfoque" class="section">
-    <h2>Diseño que sabe cómo se construye</h2>
-    <p class="section-intro">
-      Los productos sobre los que suelo trabajar —dinero, maquinaria crítica, trámites de gobierno— son complejos y tienen poco margen de error. Entre el diseño y el código suele perderse fidelidad. Se evita con alguien que domina los dos lados, y por eso mi perfil combina ambos.
-    </p>
+  <section id="enfoque" class="section stage bg-light-accent">
+    <div class="section-head">
+      <h2>Diseño que sabe cómo se construye</h2>
+      <p class="section-intro">
+        Los productos sobre los que suelo trabajar —dinero, maquinaria crítica, trámites de gobierno— son complejos y tienen poco margen de error. Entre el diseño y el código suele perderse fidelidad. Se evita con alguien que domina los dos lados, y por eso mi perfil combina ambos.
+      </p>
+    </div>
     <div class="grid3">
       <article class="card" data-lentes="diseno">
         <h3>Sé qué construir</h3>
@@ -68,8 +70,10 @@ const formacion = [
   </section>
 
   <section id="casos" class="section">
-    <h2>Casos de estudio</h2>
-    <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
+    <div class="section-head">
+      <h2>Casos de estudio</h2>
+      <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
+    </div>
     <div class="case-grid">
       {casos.map(({ caso }) => (
         <CaseCard slug={caso.id} titulo={caso.data.titulo} resumen={caso.data.resumen} etiquetas={caso.data.etiquetas} />
@@ -86,8 +90,11 @@ const formacion = [
   ))}
   <CaseModal />
 
-  <section id="skills" class="section">
-    <h2>Lo que puedo hacer por tu equipo</h2>
+  <section id="skills" class="section bg-dark-accent">
+    <div class="section-head">
+      <h2>Lo que puedo hacer por tu equipo</h2>
+      <p class="section-intro">Incorporo IA y coding agents en el diseño, la implementación y el QA, siempre con criterio humano al frente.</p>
+    </div>
     <div class="grid2">
       {capacidades.map((h) => (
         <div class="card" data-lentes={h.lentes}>
@@ -96,11 +103,13 @@ const formacion = [
         </div>
       ))}
     </div>
-    <p class="section-intro" style="margin-top:20px">Incorporo IA y coding agents en el diseño, la implementación y el QA, siempre con criterio humano al frente.</p>
   </section>
 
   <section id="trayectoria" class="section">
-    <h2>Trayectoria</h2>
+    <div class="section-head">
+      <h2>Trayectoria</h2>
+      <p class="section-intro">2008 — hoy</p>
+    </div>
     <ol class="timeline">
       {trayectoria.map((t) => (
         <li>
@@ -123,7 +132,10 @@ const formacion = [
   </section>
 
   <section class="section">
-    <h2>Formación</h2>
+    <div class="section-head">
+      <h2>Formación</h2>
+      <p class="section-intro">2005 — 2020</p>
+    </div>
     <ol class="timeline">
       {formacion.map((f) => (
         <li>
@@ -134,14 +146,16 @@ const formacion = [
     </ol>
   </section>
 
-  <section class="section about">
+  <section class="section about stage bg-accent">
     <h2>Sobre mí</h2>
-    <p>Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
+    <p class="stage-bottom-right">Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
   </section>
 
-  <section id="contacto" class="section contact">
-    <h2>¿Construimos algo juntos?</h2>
-    <p>Busco roles de Senior Product / UX Designer o UX Design Engineer, donde el diseño y el código se cruzan.</p>
+  <section id="contacto" class="section contact stage">
+    <div class="contact-top">
+      <h2>¿Construimos algo juntos?</h2>
+      <p>Busco roles de Senior Product / UX Designer o UX Design Engineer, donde el diseño y el código se cruzan.</p>
+    </div>
     <div class="cta">
       <a class="btn btn-primary" href="https://www.linkedin.com/in/alejandro-p%C3%A9rez-2ba53415/" target="_blank" rel="noopener">Escríbeme por LinkedIn</a>
     </div>

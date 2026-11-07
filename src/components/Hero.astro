@@ -49,36 +49,40 @@ const lentes = [
 ];
 ---
 
-<section class="hero" data-hero>
+<section class="hero stage bg-dark" data-hero>
   <dl class="titleblock" data-titleblock>
     <div><dt>Nombre</dt><dd>Alejandro Pérez Rocha</dd></div>
     <div><dt>Rol</dt><dd data-tb-rol>{lentes[1].rol}</dd></div>
     <div><dt>Rev.</dt><dd>{new Date().getFullYear()}</dd></div>
   </dl>
 
-  <p class="lentes-intro">Elige cómo quieres leer mi perfil</p>
-  <div class="lentes" role="group" aria-label="Elige cómo leer mi perfil">
-    {lentes.map((l) => (
-      <button type="button" class="lente" data-lente={l.id} aria-pressed={l.id === 'ambos' ? 'true' : 'false'}>
-        <span class="lente-label">{l.etiqueta}</span>
-        <span class="lente-tagline">{l.tagline}</span>
-      </button>
-    ))}
+  <div class="hero-elige">
+    <p class="lentes-intro">Elige cómo quieres leer mi perfil</p>
+    <div class="lentes" role="group" aria-label="Elige cómo leer mi perfil">
+      {lentes.map((l) => (
+        <button type="button" class="lente" data-lente={l.id} aria-pressed={l.id === 'ambos' ? 'true' : 'false'}>
+          <span class="lente-label">{l.etiqueta}</span>
+          <span class="lente-tagline">{l.tagline}</span>
+        </button>
+      ))}
+    </div>
   </div>
 
-  {lentes.map((l) => (
-    <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
-      <h1 data-reveal>{l.titular}</h1>
-      <p class="lead" data-reveal>{l.bajada}</p>
-      <ul class="specs" data-reveal>
-        {l.datos.map(([t, d]) => <li><strong>{t}</strong><span>{d}</span></li>)}
-      </ul>
-    </div>
-  ))}
+  <div class="hero-resultado">
+    {lentes.map((l) => (
+      <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
+        <h1 data-reveal>{l.titular}</h1>
+        <p class="lead" data-reveal>{l.bajada}</p>
+        <ul class="specs" data-reveal>
+          {l.datos.map(([t, d]) => <li><strong>{t}</strong><span>{d}</span></li>)}
+        </ul>
+      </div>
+    ))}
 
-  <div class="cta">
-    <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
-    <a class="btn" href="#contacto">Hablemos</a>
+    <div class="cta">
+      <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
+      <a class="btn" href="#contacto">Hablemos</a>
+    </div>
   </div>
 </section>
 
