@@ -35,7 +35,7 @@ body {
   position: relative;
 }
 a { color: inherit; }
-h1, h2, h3 { font-family: var(--font-display); line-height: .98; margin: 0 0 .5em; letter-spacing: -.02em; font-weight: 800; }
+h1, h2, h3 { font-family: var(--font-display); line-height: .98; margin: 0 0 .5em; letter-spacing: -.01em; font-weight: 800; }
 h1 { font-size: clamp(2.8rem, 7vw, 6.4rem); font-weight: 900; max-width: 22ch; }
 h2 { font-size: clamp(2.3rem, 5.4vw, 4.4rem); font-weight: 900; }
 h3 { font-size: 1.2rem; font-weight: 700; }
@@ -326,7 +326,7 @@ html[data-theme="diseno"] {
   --radius: 10px;
 }
 html[data-theme="diseno"] h1, html[data-theme="diseno"] h2 {
-  letter-spacing: -.01em;
+  letter-spacing: -.005em;
 }
 html[data-theme="diseno"] .lead { line-height: 1.75; }
 html[data-theme="diseno"] .btn, html[data-theme="diseno"] .tag, html[data-theme="diseno"] .chips li { border-radius: 10px; }
@@ -335,7 +335,7 @@ html[data-theme="ingenieria"] {
   --radius: 0px;
 }
 html[data-theme="ingenieria"] h1, html[data-theme="ingenieria"] h2 {
-  letter-spacing: -.035em;
+  letter-spacing: -.015em;
 }
 html[data-theme="ingenieria"] .specs strong { font-variant-numeric: tabular-nums; }
 html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
