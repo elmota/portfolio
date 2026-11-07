@@ -127,7 +127,8 @@ const lentes = [
     // Resalta las capacidades que corresponden a la lente elegida
     document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
       const propias = (c.dataset.lentes ?? '').split(' ');
-      c.classList.toggle('dim', lente !== 'ambos' && !propias.includes(lente));
+      // Resalta las que aplican, en vez de apagar las que no: así nunca se pierde legibilidad.
+      c.classList.toggle('destacado', lente !== 'ambos' && propias.includes(lente));
     });
     if (actualizarUrl) {
       const u = new URL(location.href);

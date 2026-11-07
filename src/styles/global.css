@@ -76,9 +76,11 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
 /* Secciones de contenido */
 .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 48px 36px; }
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px 36px; }
-.card { border-top: 2px solid var(--line-strong); padding-top: 22px; transition: opacity .3s; }
+.card { border-top: 2px solid var(--line-strong); padding-top: 22px; transition: border-color .2s; }
 .card p { color: var(--muted); margin: 0; }
-.card.dim { opacity: .3; }
+/* Resalta las que aplican a la lente elegida; nunca apaga las que no, para no perder contraste. */
+.card.destacado { border-top-color: var(--accent); border-top-width: 3px; }
+.card.destacado h3 { color: var(--accent); }
 
 .chips { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
 .chips li { padding: 6px 12px; border: 1.5px solid var(--line-strong); font-size: .85rem; font-weight: 500; border-radius: var(--radius); }
