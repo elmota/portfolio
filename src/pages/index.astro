@@ -43,7 +43,7 @@ const formacion = [
 <Base>
   <Hero />
 
-  <section id="casos" class="panel section" data-panel="casos" hidden>
+  <section id="casos" class="section">
     <div class="section-head fold">
       <h2>Casos de estudio</h2>
       <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
@@ -63,7 +63,7 @@ const formacion = [
     </div>
   </section>
 
-  <section id="enfoque" class="panel section stage" data-panel="enfoque" hidden>
+  <section id="enfoque" class="section stage">
     <div class="section-head fold">
       <h2>Diseño que sabe cómo se construye</h2>
       <p class="section-intro">
@@ -86,7 +86,7 @@ const formacion = [
     </div>
   </section>
 
-  <section id="skills" class="panel section" data-panel="skills" hidden>
+  <section id="skills" class="section">
     <div class="section-head fold">
       <h2>De la investigación al código en producción</h2>
       <p class="section-intro">Incorporo IA y coding agents en el diseño, la implementación y el QA, siempre con criterio humano al frente.</p>
@@ -101,11 +101,12 @@ const formacion = [
     </div>
   </section>
 
-  <section id="trayectoria" class="panel section" data-panel="trayectoria" hidden>
+  <section id="trayectoria" class="section">
     <div class="section-head fold">
       <h2>Trayectoria</h2>
       <p class="section-intro">2008 — hoy</p>
     </div>
+    <p class="sobre-mi">Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
     <ol class="timeline">
       {trayectoria.map((t) => (
         <li>
@@ -132,11 +133,10 @@ const formacion = [
     </ol>
   </section>
 
-  <section id="contacto" class="panel section contact stage" data-panel="contacto" hidden>
-    <p class="sobre-mi">Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
+  <section id="contacto" class="section contact stage">
     <div class="contact-top fold">
-      <h2>¿Tu producto necesita a alguien que diseñe y también lo construya?</h2>
-      <p>Busco roles de Senior Product / UX Designer o UX Design Engineer, donde el diseño y el código se cruzan.</p>
+      <h2>¿Tu producto necesita a alguien que lo siga desde la primera pregunta hasta la pantalla final?</h2>
+      <p>Busco roles de Senior Product / UX Designer o UX Design Engineer: formular el problema, investigarlo con quienes lo viven, y acompañar cada decisión hasta que el producto funciona en producción.</p>
     </div>
     <div class="cta">
       <a class="btn btn-primary" href="https://www.linkedin.com/in/alejandro-p%C3%A9rez-2ba53415/" target="_blank" rel="noopener">Escríbeme por LinkedIn</a>

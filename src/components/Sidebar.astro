@@ -2,9 +2,13 @@
 // Sidebar fijo con los 8 items unificados (3 perfiles + 5 secciones), todos
 // el mismo componente visual: bloques apilados que flotan sin contenedor
 // propio, cada uno con su paleta fija (ver sidebarItems.ts). Vive en
-// Base.astro, así que aparece en todas las páginas; el home (vía Hero y los
-// paneles de sección) reacciona mostrando/ocultando paneles, en las demás
-// páginas los botones solo actualizan el tema global y el hash.
+// Base.astro, así que aparece en todas las páginas.
+//
+// Los perfiles (Diseño/Ambos/Ingeniería) son vistas alternativas del mismo
+// hero — se eligen con un clic, no tiene sentido "scrollearlos". Las 5
+// secciones, en cambio, son contenido real apilado en una sola página larga
+// (como therawmaterials.com/work): el sidebar seguil el scroll (scrollspy)
+// y un clic solo hace scroll hasta ahí, no oculta nada.
 import { url } from '../lib/url';
 import { sidebarItems } from '../lib/sidebarItems';
 ---
@@ -51,11 +55,16 @@ import { sidebarItems } from '../lib/sidebarItems';
   import { gsap } from 'gsap';
 
   const perfiles = ['diseno', 'ambos', 'ingenieria'];
-  const ids = [...perfiles, 'casos', 'enfoque', 'skills', 'trayectoria', 'contacto'];
+  const secciones = ['casos', 'enfoque', 'skills', 'trayectoria', 'contacto'];
+  const ids = [...perfiles, ...secciones];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items = document.querySelectorAll<HTMLButtonElement>('[data-id]');
   const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
   const itemsNav = document.querySelector<HTMLElement>('.items');
+
+  let ultimoPerfil = 'ambos'; // qué perfil restaurar al volver a scrollear hasta el Hero
+  let ultimoActivo = 'ambos'; // último id activo, sea perfil o sección — para páginas sin ninguno de los dos (un caso de estudio)
+  let observando = true; // se apaga un instante durante un scroll-to-click, para que el observer no "pelee" con el clic
 
   function cerrarMenu() {
     itemsNav?.classList.remove('abierto');
@@ -66,36 +75,44 @@ import { sidebarItems } from '../lib/sidebarItems';
     menuToggle.setAttribute('aria-expanded', String(!!abierto));
   });
 
-  function activar(id: string, actualizarHash: boolean, animar: boolean) {
+  // Aplica el color/estado del item activo a TODA la página (bg/text/accent),
+  // sin tocar qué contenido está visible — eso lo decide el scroll (secciones)
+  // o el toggle del Hero (perfiles).
+  function aplicarEstilo(id: string, actualizarHash: boolean) {
     const btn = document.querySelector<HTMLButtonElement>(`[data-id="${id}"]`);
     if (!btn) return;
+    ultimoActivo = id;
     items.forEach((b) => {
       const esEste = b === btn;
       b.classList.toggle('activo', esEste);
       b.setAttribute('aria-pressed', String(esEste));
     });
 
-    // El item activo gobierna TODA la página: su bg/ink pasan a ser el fondo
-    // y texto del área de contenido, y detail/detailInk el acento — ya no
-    // hay una paleta de sitio aleatoria por separado (ver sidebarItems.ts).
     const root = document.documentElement;
     root.style.setProperty('--bg', btn.dataset.bg ?? '');
     root.style.setProperty('--text', btn.dataset.ink ?? '');
     root.style.setProperty('--accent', btn.dataset.detail ?? '');
     root.style.setProperty('--accent-ink', btn.dataset.detailInk ?? '');
 
+    document.documentElement.dataset.theme = id;
+    document.dispatchEvent(new CustomEvent('lentechange', { detail: { lente: id } }));
+
+    document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
+      const propias = (c.dataset.lentes ?? '').split(' ');
+      c.classList.toggle('destacado', id !== 'ambos' && propias.includes(id));
+    });
+
+    if (actualizarHash) history.replaceState(null, '', '#' + id);
+  }
+
+  // Perfiles: alternan entre los 3 paneles del Hero (nunca se "scrollean",
+  // son la misma sección contada distinto) y siempre vuelven arriba.
+  function seleccionarPerfil(id: string, actualizarHash: boolean, animar: boolean) {
+    ultimoPerfil = id;
+    aplicarEstilo(id, actualizarHash);
+
     const panelActivo = document.querySelector<HTMLElement>(`[data-panel="${id}"]`);
     const yaEstabaActivo = !!panelActivo && !panelActivo.hidden;
-
-    // El Hero (y sus CTA, siempre presentes) solo ocupa pantalla cuando el
-    // item activo es un perfil; en una sección queda oculto por completo
-    // para que el panel de esa sección sea lo único visible.
-    const hero = document.querySelector<HTMLElement>('[data-hero]');
-    if (hero) hero.hidden = !perfiles.includes(id);
-
-    // El cambio de panel es siempre inmediato y síncrono (nunca depende de que
-    // una animación termine). En páginas sin panel (casos de estudio) estas
-    // consultas simplemente no encuentran nada y no hacen efecto.
     document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
       p.hidden = p.dataset.panel !== id;
     });
@@ -113,43 +130,89 @@ import { sidebarItems } from '../lib/sidebarItems';
         gsap.set(reveal, { clearProps: 'opacity,transform' });
       }
     }
-
-    document.documentElement.dataset.theme = id;
-    document.dispatchEvent(new CustomEvent('lentechange', { detail: { lente: id } }));
-
-    document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
-      const propias = (c.dataset.lentes ?? '').split(' ');
-      c.classList.toggle('destacado', id !== 'ambos' && propias.includes(id));
-    });
-
-    if (actualizarHash) {
-      history.replaceState(null, '', '#' + id);
-    }
   }
 
-  function sincronizarConHash() {
-    const id = ids.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'ambos';
-    activar(id, false, false);
+  // Secciones: siempre están en la página (apiladas, se scrollean) — un clic
+  // solo navega hasta ahí; el color/activo real lo confirma el scrollspy.
+  function irASeccion(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    observando = false;
+    aplicarEstilo(id, true);
+    el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => { observando = true; }, 700);
   }
-  sincronizarConHash();
-
-  // El sidebar persiste entre navegaciones (transition:persist), pero el
-  // resto de la página se reemplaza por el HTML estático de la página
-  // nueva (paneles en su estado por defecto) — hay que volver a sincronizar
-  // después de cada swap de Astro, no solo en la carga inicial.
-  document.addEventListener('astro:page-load', sincronizarConHash);
 
   items.forEach((b) => {
     b.addEventListener('click', () => {
-      activar(b.dataset.id ?? 'ambos', true, true);
+      const id = b.dataset.id ?? 'ambos';
+      if (perfiles.includes(id)) {
+        seleccionarPerfil(id, true, true);
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      } else {
+        irASeccion(id);
+      }
       cerrarMenu();
     });
   });
 
-  // Cualquier link `#id` del sitio (CTAs, "← Todos los casos" de un caso)
-  // debe activar el panel correspondiente, no solo los clics en el sidebar.
-  window.addEventListener('hashchange', () => {
-    const id = location.hash.slice(1);
-    if (ids.includes(id)) activar(id, false, true);
-  });
+  // Scrollspy: qué sección (o el propio Hero) ocupa la franja central de la
+  // pantalla gobierna el color/activo del sidebar mientras se scrollea. Se
+  // reconstruye en cada página (el sidebar persiste entre navegaciones, pero
+  // el resto del documento —y por lo tanto el Hero y las secciones— es el de
+  // la página nueva cada vez).
+  let observerActivo: IntersectionObserver | null = null;
+
+  function configurarPagina() {
+    observerActivo?.disconnect();
+
+    const hero = document.querySelector<HTMLElement>('[data-hero]');
+    const objetivos = [hero, ...secciones.map((id) => document.getElementById(id))].filter(
+      (el): el is HTMLElement => !!el
+    );
+
+    if (objetivos.length) {
+      observerActivo = new IntersectionObserver(
+        (entries) => {
+          if (!observando) return;
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            if (entry.target === hero) aplicarEstilo(ultimoPerfil, true);
+            else aplicarEstilo(entry.target.id, true);
+          });
+        },
+        { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+      );
+      objetivos.forEach((el) => observerActivo!.observe(el));
+    }
+
+    // Estado inicial de esta página: perfil o sección según el hash; sin
+    // hash (u otra página sin ninguno de los dos), solo refleja el último
+    // perfil elegido en los colores globales.
+    const hashId = location.hash.slice(1);
+    if (perfiles.includes(hashId)) {
+      seleccionarPerfil(hashId, false, false);
+    } else if (hero && secciones.includes(hashId) && document.getElementById(hashId)) {
+      // El panel del Hero necesita algún perfil por debajo, pero el activo
+      // real en el sidebar es la sección del hash — por eso aplicarEstilo
+      // va DESPUÉS, pisando el color que seleccionarPerfil haya dejado.
+      seleccionarPerfil(ultimoPerfil, false, false);
+      aplicarEstilo(hashId, false);
+      observando = false;
+      requestAnimationFrame(() => {
+        document.getElementById(hashId)?.scrollIntoView({ block: 'start' });
+        setTimeout(() => { observando = true; }, 700);
+      });
+    } else if (hero) {
+      seleccionarPerfil(ultimoPerfil, false, false);
+    } else {
+      // Página sin Hero ni secciones (un caso de estudio): refleja lo último
+      // que estaba activo en el sitio, sea perfil o sección.
+      aplicarEstilo(ultimoActivo, false);
+    }
+  }
+
+  // `astro:page-load` dispara también en la carga inicial, no solo tras
+  // una transición — sirve como único punto de entrada.
+  document.addEventListener('astro:page-load', configurarPagina);
 </script>
