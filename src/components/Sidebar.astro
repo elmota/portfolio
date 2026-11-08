@@ -150,9 +150,29 @@ import { sidebarItems } from '../lib/sidebarItems';
     setTimeout(() => { observando = true; }, 700);
   }
 
+  // Si el perfil/sección elegido no existe en esta página (por ejemplo,
+  // viendo el detalle de un caso: ahí no hay Hero ni secciones), navega al
+  // home con ese hash en vez de quedarse sin hacer nada — un link sintético
+  // para que la transición de página de Astro lo intercepte igual que un
+  // clic normal.
+  function navegarAHome(id: string) {
+    const base = document.querySelector<HTMLAnchorElement>('.logo')?.getAttribute('href') ?? '/';
+    const a = document.createElement('a');
+    a.href = base.replace(/#.*$/, '') + '#' + id;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
   items.forEach((b) => {
     b.addEventListener('click', () => {
       const id = b.dataset.id ?? 'ambos';
+      if (!document.querySelector('[data-hero]')) {
+        navegarAHome(id);
+        cerrarMenu();
+        return;
+      }
       if (perfiles.includes(id)) {
         seleccionarPerfil(id, true, true);
         window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
