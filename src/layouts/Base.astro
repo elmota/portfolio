@@ -49,6 +49,7 @@ const paletas = Object.fromEntries(
           var root = document.documentElement;
           var id = location.hash.slice(1);
           if (sidebarIds.indexOf(id) === -1) id = defaultSidebarId;
+          root.dataset.theme = id;
           var p = paletas[id];
           if (p) {
             root.style.setProperty('--bg', p.bg);

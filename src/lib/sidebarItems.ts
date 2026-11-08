@@ -5,6 +5,9 @@
 // TODA la página y detail/detailInk el acento, reemplazando lo que antes
 // hacían --bg/--text (paleta de sitio) y --accent (lente) por separado.
 //
+// Contacto es la excepción: negro en todo el sitio, regla 60/30/10 (ver
+// html[data-theme="contacto"] en global.css).
+//
 // Colores extraídos y mezclados a mano desde varias paletas de la grilla de
 // cubos isométricos (incluye verde y magenta, antes ausentes), saturados y
 // luego "bajados" de nuevo tras quedar demasiado eléctricos — cada uno
@@ -29,7 +32,7 @@ export const sidebarItems: SidebarItem[] = [
   { id: 'enfoque', tipo: 'seccion', numero: '05', etiqueta: 'Enfoque', tagline: 'Cómo cruzo diseño e ingeniería.', bg: '#bc2d75', ink: '#ffffff', detail: '#cd9f2f', detailInk: '#0a0a0a' },
   { id: 'skills', tipo: 'seccion', numero: '06', etiqueta: 'Skills', tagline: 'De research a CI/CD.', bg: '#1e4382', ink: '#ffffff', detail: '#2aa3b4', detailInk: '#0a0a0a' },
   { id: 'trayectoria', tipo: 'seccion', numero: '07', etiqueta: 'Trayectoria', tagline: '2008 — hoy.', bg: '#d19f3a', ink: '#0a0a0a', detail: '#d85955', detailInk: '#0a0a0a' },
-  { id: 'contacto', tipo: 'seccion', numero: '08', etiqueta: 'Contacto', tagline: 'Hablemos por LinkedIn.', bg: '#f4eeeb', ink: '#0a0a0a', detail: '#24a1b3', detailInk: '#0a0a0a' },
+  { id: 'contacto', tipo: 'seccion', numero: '08', etiqueta: 'Contacto', tagline: 'Hablemos por LinkedIn.', bg: '#1c1c1c', ink: '#ffffff', detail: '#22d3ee', detailInk: '#0a0a0a' },
 ];
 
 export const sidebarIds = sidebarItems.map((i) => i.id);
