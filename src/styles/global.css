@@ -388,11 +388,13 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   .case-nav-item, .case-nav-label { transition: none; }
 }
 
-/* Tablet/mobile (mismo quiebre que el resto del layout, ver .shell): la
+/* Tablet/mobile o cualquier dispositivo táctil (hover: none, p. ej. un iPad
+   horizontal, más ancho que el quiebre): sin hover ni scroll que lo abran, se
+   abre solo con un tap. (Mismo quiebre que el resto del layout, ver .shell): la
    columna no cabe sin tapar contenido — se reduce a un botón flotante con
    el número actual, que al tocarlo despliega la lista completa (con
    nombre) hacia arriba. */
-@media (max-width: 960px) {
+@media (max-width: 960px), (hover: none) {
   .case-nav { right: 20px; top: auto; bottom: 20px; transform: none; }
   .case-nav-toggle {
     display: flex; align-items: center; justify-content: center;

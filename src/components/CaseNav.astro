@@ -56,7 +56,7 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
     let scrollTimer: ReturnType<typeof setTimeout>;
     window.addEventListener('scroll', () => {
       const list = document.querySelector<HTMLElement>('.case-nav-list');
-      if (!list) return;
+      if (!list || window.matchMedia('(hover: none)').matches) return; // en táctil solo abre el tap
       list.classList.add('scrolling');
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => list.classList.remove('scrolling'), 1100);
