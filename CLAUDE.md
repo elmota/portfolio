@@ -1,7 +1,66 @@
 # Portfolio de Alejandro Pérez Rocha
 
-Sitio personal (Astro), estilo Swiss (blanco/negro + un acento intercambiable —
-ver sistema de paletas en `src/lib/palettes.ts` y `src/styles/global.css`).
+Sitio personal. Astro 7 con `<ClientRouter />` (View Transitions), colección de
+contenido `casos` y Three.js (`BlueprintScene`). No hay GSAP. Publicado en
+GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
+`SITE_URL` y `BASE_PATH`). Estilo Swiss: cada item del sidebar trae su paleta.
+
+## Reglas de trabajo
+
+- Verificar en el navegador y correr `npx pnpm build` antes de commitear.
+- Un commit por cambio; después preguntar "¿Lo publico?".
+- `git push origin main` solo con un sí explícito (el push dispara el deploy).
+- No ocultar nada al usuario: decir qué no se pudo verificar.
+- Respuestas concisas, en español.
+- Los commits terminan con la línea `Co-Authored-By` que indique la sesión.
+- Para revisar visualmente, preferir medir con JS (alturas, colores, estados)
+  antes que capturas: las capturas llenan el contexto muy rápido.
+
+## Arquitectura
+
+- **Sidebar unificado de 8 items** (`src/components/Sidebar.astro`,
+  `src/lib/sidebarItems.ts`): 3 perfiles (`diseno`, `ambos`, `ingenieria`) y
+  5 secciones (`casos`, `enfoque`, `skills`, `trayectoria`, `contacto`). Cada
+  item tiene paleta fija (`bg`/`ink`/`detail`/`detailInk`). Los perfiles
+  alternan paneles del Hero; las secciones son una página continua.
+- **Scrollspy**: `IntersectionObserver` (`rootMargin: -45% 0 -45% 0`) solo avisa
+  que algo cambió; `sincronizarActivo()` elige el bloque que cruza el centro de
+  la pantalla. Se apaga mientras corre un scroll programático.
+- **Clic en una sección**: salto instantáneo (`behavior: 'instant'`, porque
+  `html` tiene `scroll-behavior: smooth`) + animación corta `.desplegando`
+  en la sección destino. Los perfiles sí suben al Hero con scroll suave.
+- **Tema**: JS fija `--bg`, `--text`, `--accent`, `--accent-ink` en `:root`;
+  `html[data-theme]` permite sobrescribir. Contacto fija `--page`, `--page-ink`
+  y `--page-bar` en negro (60% negro, 30% carbón `#1c1c1c`, 10% cyan `#22d3ee`).
+- **Casos**: cada caso es una página (`/casos/[id]/`), sin modal. Transición
+  con View Transition (slide, fade, bounce); la reversa es "volver".
+  `CaseNav` vive en el slot fixed fuera de `.content` (`container-type` rompe
+  `position: fixed` en Safari). Desktop abre por hover (`hover: hover` y
+  `pointer: fine`); touch (`pointer: coarse`): primer tap abre, segundo navega.
+- **Animaciones**: scroll-driven nativo (`view-timeline` en `.fold`,
+  `animation-timeline`) con `@supports` como respaldo.
+- **Menú móvil (≤960px)**: toggle de 4 cuadros de color. Panel de alto
+  `calc(100dvh - var(--bar-h))` (`--bar-h: 66px`; actualizar si cambia el
+  padding de la barra), items repartidos con `flex`, inactivos a ancho fijo
+  (78%), activo al 100%. Bloquea el scroll de atrás mientras está abierto.
+
+## Problemas ya resueltos (no reintroducir)
+
+- Clase `.tag` en colisión: renombrada a `.item-tag`.
+- Listeners del sidebar perdidos tras navegar: el sidebar va en un
+  `<div transition:persist>`; el estado se rearma en `astro:page-load`.
+- Overflow horizontal en móvil: canvas medido con `clientWidth`, matemática
+  `cqw`/`%` de `.specs` corregida.
+- iPad tratado como hover: usar `pointer: coarse`.
+- Clic en el sidebar desde un caso: `navegarAHome`.
+- Abrir el menú en Contacto cambiaba a Trayectoria (scrollspy en el borde).
+
+## Pendiente de verificar
+
+- Probar en iPhone real con Safari (barra de controles abajo): menú móvil,
+  `100dvh`, tema negro de Contacto, salto instantáneo y animación de sección.
+- El build no corre en el VM de Claude (binarios de macOS en `node_modules`,
+  sin red para npm): compilar y hacer push desde la Mac.
 
 ## Principios a aplicar al evaluar o escribir/modificar contenido
 
@@ -11,22 +70,22 @@ decorativos: son el criterio real para aceptar o rechazar un cambio.
 
 ### 1. Heurísticas de usabilidad de Nielsen
 
-Aplicar sobre todo a interacciones (lentes del hero, modal de casos, nav,
+Aplicar sobre todo a interacciones (perfiles del hero, páginas de casos, nav,
 formularios/CTAs) y a cualquier estado nuevo (loading, vacío, error):
 
-1. **Visibilidad del estado del sistema** — el usuario siempre sabe qué lente/paleta
+1. **Visibilidad del estado del sistema** — el usuario siempre sabe qué perfil/sección
    está activa, qué caso está abierto, dónde está en la página.
 2. **Coincidencia con el mundo real** — lenguaje llano en español, sin jerga interna
    ("qué construir" en vez de "deliverables").
-3. **Control y libertad del usuario** — todo modal/estado es cerrable (Esc, click fuera,
-   X); nada atrapa al usuario.
+3. **Control y libertad del usuario** — todo overlay/estado es cerrable (Esc, click fuera,
+   X, "volver"); nada atrapa al usuario.
 4. **Consistencia y estándares** — mismos patrones de botón, misma tipografía de
    headline, mismo comportamiento de hover en todo el sitio.
 5. **Prevención de errores** — antes que mensajes de error: que la interacción no
    permita el error (ej. foco visible, targets grandes).
-6. **Reconocer antes que recordar** — no forzar al usuario a recordar qué lente eligió
+6. **Reconocer antes que recordar** — no forzar al usuario a recordar qué perfil eligió
    para entender una sección más abajo; el estado se refleja visualmente.
-7. **Flexibilidad y eficiencia de uso** — atajos para quien vuelve (URL con `?lente=`),
+7. **Flexibilidad y eficiencia de uso** — atajos para quien vuelve (el `#hash` de la URL abre un perfil o sección),
    sin estorbar a quien entra por primera vez.
 8. **Diseño estético y minimalista** — cada elemento en pantalla compite por atención;
    si no suma, se saca (regla ya aplicada en la fase de restraint/critique del sitio).
@@ -37,7 +96,7 @@ formularios/CTAs) y a cualquier estado nuevo (loading, vacío, error):
 
 ### 2. Principios de Gestalt (para layout y jerarquía visual)
 
-- **Proximidad** — elementos relacionados (headline + bajada + specs de un lente) se
+- **Proximidad** — elementos relacionados (headline + bajada + specs de un perfil) se
   agrupan con espaciado menor entre sí que respecto a otros bloques.
 - **Similitud** — mismo tratamiento visual (tipografía, peso, color) = misma categoría
   de contenido; no usar un mismo estilo para cosas conceptualmente distintas.
@@ -58,7 +117,7 @@ formularios/CTAs) y a cualquier estado nuevo (loading, vacío, error):
   conclusión/beneficio (el headline), y solo después da el razonamiento o el detalle
   (la bajada, los bullets). Nunca al revés.
 - **Agrupar ideas de forma MECE** (mutuamente excluyentes, colectivamente exhaustivas)
-  — los tres lentes (Diseño/Ambos/Ingeniería), las tarjetas de "Enfoque", los grupos
+  — los tres perfiles (Diseño/Ambos/Ingeniería), las tarjetas de "Enfoque", los grupos
   de skills: cada ítem de una agrupación debe ser claramente distinto de los demás
   y, juntos, cubrir el espacio sin solapar.
   - una idea por headline;
