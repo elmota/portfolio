@@ -594,7 +594,33 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
 .blob-shift {
   position: absolute; inset: 0; pointer-events: none;
 }
-/* El del fold lo mueve un loop de rAF (ver Hero.astro), sin transición CSS. */
+/* Parallax nativo (scroll-driven animations): el blob sube al scrollear hacia
+   abajo y baja al scrollear hacia arriba, según la posición del fold en el
+   viewport. Corre en el compositor, sin JS. Sin soporte, queda quieto. */
+@supports (animation-timeline: view()) {
+  /* La línea de tiempo se declara en el fold (el sujeto), no en el blob:
+     con view() en el blob, el "scroller" sería el propio fold (tiene
+     overflow:hidden) y el progreso nunca avanzaría. */
+  .fold { view-timeline: --fold block; }
+  .blob-shift {
+    animation: blobParallax linear both;
+    animation-timeline: --fold;
+  }
+  @keyframes blobParallax {
+    from { transform: translateY(70px); }
+    to { transform: translateY(-70px); }
+  }
+}
+/* Entrada de los textos del Hero, CSS puro: se reinicia cada vez que el panel
+   pasa de oculto a visible (cambio de perfil). */
+.panel:not([hidden]) [data-reveal] { animation: revealUp .5s cubic-bezier(.22, 1, .36, 1) both; }
+.hero-eyebrow[data-reveal] { animation-delay: 0s; }
+.hero-fold h1[data-reveal] { animation-delay: .08s; }
+.hero-fold .lead[data-reveal] { animation-delay: .16s; }
+.specs[data-reveal] { animation-delay: .24s; }
+.hero .cta { animation: fadeIn .4s ease .3s both; }
+@keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 /* Blob decorativo dentro del fold, apoyado abajo: flota y gira muy lento
    sobre su eje, sutil, nunca distrae. */
 .hero-blob {

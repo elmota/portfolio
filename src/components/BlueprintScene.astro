@@ -7,8 +7,6 @@
 
 <script>
   import * as THREE from 'three';
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
   const canvas = document.getElementById('blueprint-canvas') as HTMLCanvasElement | null;
   if (canvas) {
@@ -85,40 +83,49 @@
       ambos: { points: 0.4, lines: 0.1, size: 0.045 },
       ingenieria: { points: 0.55, lines: 0.16, size: 0.04 },
     };
+    let tema = temas.ambos;
     document.addEventListener('lentechange', (e: Event) => {
       const lente = (e as CustomEvent<{ lente: string }>).detail?.lente ?? 'ambos';
-      const t = temas[lente] ?? temas.ambos;
+      tema = temas[lente] ?? temas.ambos;
       if (reduceMotion) {
-        pointsMat.opacity = t.points;
-        lineMat.opacity = t.lines;
-        pointsMat.size = t.size;
+        pointsMat.opacity = tema.points;
+        lineMat.opacity = tema.lines;
+        pointsMat.size = tema.size;
         renderer.render(scene, camera);
-      } else {
-        gsap.to(pointsMat, { opacity: t.points, size: t.size, duration: 0.6, ease: 'power2.out' });
-        gsap.to(lineMat, { opacity: t.lines, duration: 0.6, ease: 'power2.out' });
       }
     });
 
     if (reduceMotion) {
       renderer.render(scene, camera);
     } else {
-      gsap.registerPlugin(ScrollTrigger);
+      // Sin GSAP: un solo loop de render con suavizado propio.
+      // - Deriva lenta en Y (seno, ~80 s por ciclo), independiente del scroll.
+      // - Un recorrido continuo ligado al progreso de scroll de toda la página.
+      // - Los cambios de lente se acercan al objetivo en vez de saltar.
+      let progreso = 0;
+      let progresoSuave = 0;
+      const leerProgreso = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        progreso = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      };
+      leerProgreso();
+      window.addEventListener('scroll', leerProgreso, { passive: true });
+      window.addEventListener('resize', leerProgreso);
 
-      // Deriva lenta, independiente del scroll: la señal de que esto está "vivo".
-      gsap.to(group.rotation, { y: '+=0.25', duration: 40, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-
-      // Un único recorrido continuo ligado al scroll de toda la página,
-      // no una animación repetida por sección.
-      gsap.to(group.rotation, {
-        x: 0.08 + 0.18,
-        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+      const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+      const t0 = performance.now();
+      renderer.setAnimationLoop((now: number) => {
+        // No gastar GPU con la pestaña oculta.
+        if (document.hidden) return;
+        progresoSuave = lerp(progresoSuave, progreso, 0.08);
+        group.rotation.y = 0.125 * (1 - Math.cos(((now - t0) / 1000 / 80) * Math.PI * 2));
+        group.rotation.x = 0.08 + 0.18 * progresoSuave;
+        camera.position.z = 11 - 2 * progresoSuave;
+        pointsMat.opacity = lerp(pointsMat.opacity, tema.points, 0.06);
+        pointsMat.size = lerp(pointsMat.size, tema.size, 0.06);
+        lineMat.opacity = lerp(lineMat.opacity, tema.lines, 0.06);
+        renderer.render(scene, camera);
       });
-      gsap.to(camera.position, {
-        z: 9,
-        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
-      });
-
-      renderer.setAnimationLoop(() => renderer.render(scene, camera));
     }
   }
 </script>

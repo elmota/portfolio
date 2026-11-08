@@ -48,7 +48,7 @@ const lentes = [
     {lentes.map((l) => (
       <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
         <div class="fold hero-fold">
-          <span class="blob-shift" data-blob-shift aria-hidden="true">
+          <span class="blob-shift" aria-hidden="true">
             <span class="hero-blob"></span>
           </span>
           <p class="hero-eyebrow" data-reveal>Alejandro Pérez Rocha · {l.rol}</p>
@@ -73,42 +73,3 @@ const lentes = [
     </div>
   </div>
 </section>
-
-<script>
-  import { gsap } from 'gsap';
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Único momento orquestado del home: el panel que Sidebar ya resolvió como
-  // activo aparece con una entrada suave; el resto del sitio no anima solo.
-  if (!reduceMotion) {
-    gsap.from('[data-panel]:not([hidden]) [data-reveal]', {
-      opacity: 0, y: 14, duration: 0.5, stagger: 0.1, ease: 'power3.out',
-    });
-    gsap.from('.hero .cta', { opacity: 0, duration: 0.4, delay: 0.3, ease: 'power3.out' });
-  }
-
-  // El blob descansa abajo del fold y sigue la velocidad del scroll: sube
-  // al scrollear hacia abajo y baja al scrollear hacia arriba, más cuanto
-  // más rápido; al detenerse vuelve suave a su posición (loop de rAF).
-  if (!reduceMotion) {
-    let lastY = window.scrollY;
-    let target = 0;
-    let shift = 0;
-    let raf = 0;
-    const tick = () => {
-      shift += (target - shift) * 0.14;
-      target *= 0.9;
-      document.querySelectorAll<HTMLElement>('[data-blob-shift]').forEach((el) => {
-        el.style.transform = `translateY(${-shift}px)`;
-      });
-      raf = Math.abs(shift) > 0.2 || Math.abs(target) > 0.2 ? requestAnimationFrame(tick) : 0;
-    };
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      target = Math.max(-140, Math.min(140, (y - lastY) * 3));
-      lastY = y;
-      if (!raf) raf = requestAnimationFrame(tick);
-    }, { passive: true });
-  }
-</script>
