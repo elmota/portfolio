@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CaseDetail from '../../components/CaseDetail.astro';
+import CaseNav from '../../components/CaseNav.astro';
 
 export async function getStaticPaths() {
   const casos = await getCollection('casos');
@@ -14,7 +15,8 @@ const d = caso.data;
 ---
 
 <Base title={`${d.titulo} — Alejandro Pérez Rocha`} description={d.resumen}>
-  <CaseDetail {...d} standalone slug={caso.id}>
+  <CaseDetail {...d} standalone>
     <Content />
   </CaseDetail>
+  <CaseNav current={caso.id} slot="fixed" />
 </Base>

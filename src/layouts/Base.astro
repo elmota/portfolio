@@ -78,5 +78,14 @@ const paletas = Object.fromEntries(
         </footer>
       </div>
     </div>
+    <!--
+      Fuera de `.shell`/`.content` a propósito: `.content` tiene
+      `container-type: inline-size` para las container queries, y eso
+      convierte a cualquier descendiente `position: fixed` (como el índice
+      entre casos) en "fijo" relativo a `.content` en vez de al viewport —
+      Safari lo aplica al pie de la letra (de ahí que solo fallara ahí), el
+      resto lo toleraba. Lo que necesite position:fixed real va en este slot.
+    -->
+    <slot name="fixed" />
   </body>
 </html>
