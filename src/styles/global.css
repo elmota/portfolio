@@ -450,6 +450,22 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
 
 @media (max-width: 960px) {
   .shell { flex-direction: column; align-items: stretch; gap: 0; padding: 0; }
+  /* El full-bleed de arriba usa cqw (ancho del contenedor) mezclado con %
+     (ancho del padre) para "jalar" el panel hasta el borde — en desktop,
+     con el sidebar angosto, esos dos marcos de referencia difieren lo
+     suficiente para que la cuenta dé negativa y funcione. En mobile,
+     .content ya ocupa todo el ancho y ambos valores terminan siendo casi
+     iguales: la cuenta da ~0 en vez de negativa, y el panel queda
+     desplazado (no pegado al borde) en vez de a sangre completa. Acá se
+     recalcula con un solo marco de referencia (el padding de `main`, el
+     mismo clamp en ambos lados), así no puede haber ese desajuste. */
+  .specs {
+    width: auto;
+    margin-left: calc(-1 * clamp(20px, 4vw, 56px));
+    margin-right: calc(-1 * clamp(20px, 4vw, 56px));
+    padding-left: clamp(20px, 4vw, 56px);
+    padding-right: clamp(20px, 4vw, 56px);
+  }
   .sidebar {
     position: sticky; top: 0; z-index: 20; width: 100%; height: auto; overflow: visible;
     padding: 14px 16px; background: #fff;

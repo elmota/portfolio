@@ -62,8 +62,14 @@
     group.add(new THREE.LineSegments(lineGeo, lineMat));
 
     function resize() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      // clientWidth/clientHeight, no innerWidth/innerHeight: en mobile
+      // innerWidth puede ser más ancho que el contenido real (el viewport de
+      // layout vs. el visual), y como <canvas> es un elemento "replaced",
+      // `inset:0` solo no lo estira — depende del width/height que fije acá.
+      // Con eso mal, el canvas quedaba más ancho que la página y generaba
+      // scroll horizontal fantasma.
+      const w = document.documentElement.clientWidth;
+      const h = document.documentElement.clientHeight;
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -119,11 +125,13 @@
 
 <style>
   #blueprint-canvas {
+    /* inset:0 ya estira el canvas al viewport entero; width/height en vw/vh
+       son redundantes y en mobile terminan siendo más anchos que el
+       contenido real (vw incluye lo que ocuparía una scrollbar), generando
+       el scroll horizontal fantasma que esto evita. */
     position: fixed;
     inset: 0;
     z-index: 0;
-    width: 100vw;
-    height: 100vh;
     pointer-events: none;
     opacity: 0.55;
   }
