@@ -129,13 +129,15 @@ p { margin: 0 0 1em; }
   border-radius: 38% 62% 58% 42% / 48% 44% 56% 52%;
   background: rgba(255, 255, 255, .22);
   transform-origin: 50% 50%;
+  transition: bottom .5s ease-in-out;
 }
 .item:hover .blob, .item.activo .blob { animation: itemBlobFloat 16s ease-in-out infinite; }
-/* Al seleccionarse, el blob sube dentro del item — mismo envoltorio
-   .blob-shift que el del fold, con su propia transición ease-in-out. */
-.item.activo .blob-shift { transform: translateY(-14px); }
+/* Al seleccionarse, el blob pasa de la esquina inferior derecha a la
+   superior derecha (bottom: 100% - 40px deja su borde superior a -14px,
+   simétrico al de abajo) con transición ease-in-out. */
+.item.activo .blob { bottom: calc(100% - 40px); }
 @media (prefers-reduced-motion: reduce) {
-  .item .blob-shift { transition: none; }
+  .item .blob { transition: none; }
 }
 @keyframes itemBlobFloat {
   0% { transform: translate(0, 0) rotate(0deg); }
@@ -352,12 +354,12 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
 }
 .case-nav-item {
-  max-width: 36px; height: 36px; flex: none;
+  max-width: 36px; width: 36px; height: 36px; flex: none;
   display: flex; align-items: center;
   border: 2px solid var(--line-strong); border-radius: 18px;
   background: #fff; color: var(--text);
   text-decoration: none; overflow: hidden;
-  transition: max-width .3s ease, background .2s, border-color .2s, color .2s;
+  transition: max-width .3s ease, width .3s ease, background .2s, border-color .2s, color .2s;
 }
 .case-nav-num {
   width: 32px; flex: none;
@@ -365,15 +367,21 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   font-family: var(--font-mono); font-weight: 700; font-size: .78rem;
 }
 .case-nav-label {
-  white-space: nowrap; font-weight: 700; font-size: .85rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; font-weight: 700; font-size: .85rem;
   opacity: 0; padding-right: 0; transition: opacity .2s ease .05s, padding-right .3s ease;
 }
-.case-nav-item:hover, .case-nav-item:focus-visible {
-  max-width: 260px; border-color: var(--accent);
+.case-nav-item:hover, .case-nav-item:focus-visible { border-color: var(--accent); }
+/* Como el minimapa de conversaciones de ChatGPT: al pasar el mouse por la
+   columna se despliega la lista completa (con nombres), no solo un item. */
+.case-nav-list { position: relative; }
+.case-nav-list::before {
+  content: ""; position: absolute; inset: -14px -14px -14px -14px; z-index: -1;
+  background: #fff; border: 2px solid var(--line-strong); border-radius: 20px;
+  opacity: 0; transition: opacity .25s ease; pointer-events: none;
 }
-.case-nav-item:hover .case-nav-label, .case-nav-item:focus-visible .case-nav-label {
-  opacity: 1; padding-right: 16px;
-}
+.case-nav-list:hover::before, .case-nav-list:focus-within::before { opacity: 1; }
+.case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item { max-width: 300px; width: 300px; }
+.case-nav-list:hover .case-nav-label, .case-nav-list:focus-within .case-nav-label { opacity: 1; padding-right: 16px; }
 .case-nav-item.activo { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 @media (prefers-reduced-motion: reduce) {
   .case-nav-item, .case-nav-label { transition: none; }
@@ -405,6 +413,8 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
     box-shadow: 0 16px 32px rgba(10, 10, 10, .18);
   }
   .case-nav-list.abierto { display: flex; }
+  .case-nav-list::before { display: none; }
+  .case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item { max-width: none; width: 100%; }
   .case-nav-item {
     max-width: none; width: 100%; height: auto; padding: 10px 12px;
     border: none; border-radius: 10px; overflow: visible; align-items: flex-start;
@@ -550,8 +560,8 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
    separado del blob para no pelear con su propia animación de flote. */
 .blob-shift {
   position: absolute; inset: 0; pointer-events: none;
-  transition: transform .35s ease-in-out;
 }
+/* El del fold lo mueve un loop de rAF (ver Hero.astro), sin transición CSS. */
 /* Blob decorativo dentro del fold, apoyado abajo: flota y gira muy lento
    sobre su eje, sutil, nunca distrae. */
 .hero-blob {

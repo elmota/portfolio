@@ -88,28 +88,27 @@ const lentes = [
     gsap.from('.hero .cta', { opacity: 0, duration: 0.4, delay: 0.3, ease: 'power3.out' });
   }
 
-  // El blob descansa abajo del fold y "reacciona" al scroll: sube mientras
-  // se scrollea hacia abajo (a mayor velocidad, más sube) y baja de vuelta
-  // al scrollear hacia arriba o al detenerse — nunca por su cuenta.
+  // El blob descansa abajo del fold y sigue la velocidad del scroll: sube
+  // al scrollear hacia abajo y baja al scrollear hacia arriba, más cuanto
+  // más rápido; al detenerse vuelve suave a su posición (loop de rAF).
   if (!reduceMotion) {
     let lastY = window.scrollY;
+    let target = 0;
     let shift = 0;
-    let decayTimer: ReturnType<typeof setTimeout>;
-    const shifters = () => document.querySelectorAll<HTMLElement>('[data-blob-shift]');
-
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY;
-      lastY = y;
-      shift = Math.max(-36, Math.min(36, shift + delta * 0.6));
-      shifters().forEach((el) => { el.style.transform = `translateY(${-shift}px)`; });
-
-      clearTimeout(decayTimer);
-      decayTimer = setTimeout(() => {
-        shift = 0;
-        shifters().forEach((el) => { el.style.transform = ''; });
-      }, 300);
+    let raf = 0;
+    const tick = () => {
+      shift += (target - shift) * 0.14;
+      target *= 0.9;
+      document.querySelectorAll<HTMLElement>('[data-blob-shift]').forEach((el) => {
+        el.style.transform = `translateY(${-shift}px)`;
+      });
+      raf = Math.abs(shift) > 0.2 || Math.abs(target) > 0.2 ? requestAnimationFrame(tick) : 0;
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      target = Math.max(-140, Math.min(140, (y - lastY) * 3));
+      lastY = y;
+      if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
   }
 </script>
