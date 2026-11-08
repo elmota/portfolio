@@ -14,7 +14,7 @@ const d = caso.data;
 ---
 
 <Base title={`${d.titulo} — Alejandro Pérez Rocha`} description={d.resumen}>
-  <CaseDetail {...d} standalone>
+  <CaseDetail {...d} standalone slug={caso.id}>
     <Content />
   </CaseDetail>
 </Base>

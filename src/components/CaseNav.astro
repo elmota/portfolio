@@ -1,0 +1,29 @@
+---
+// Índice navegable entre casos, visible solo dentro de la página propia de
+// un caso: en desktop, una columna fija al costado derecho, centrada
+// verticalmente; en tablet/mobile, una barra fija abajo (ver global.css).
+// Cada número lleva directo a ese caso (misma transición de página que el
+// resto del sitio), sin tener que volver primero al listado.
+import { getCollection } from 'astro:content';
+import { url } from '../lib/url';
+
+interface Props {
+  current: string;
+}
+const { current } = Astro.props;
+const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
+---
+
+<nav class="case-nav" aria-label="Navegar entre casos">
+  {casos.map((caso, i) => (
+    <a
+      class="case-nav-item"
+      class:list={{ activo: caso.id === current }}
+      href={url(`casos/${caso.id}/`)}
+      aria-current={caso.id === current ? 'page' : undefined}
+      title={caso.data.titulo}
+    >
+      {String(i + 1).padStart(2, '0')}
+    </a>
+  ))}
+</nav>

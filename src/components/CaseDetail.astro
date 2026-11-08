@@ -2,6 +2,7 @@
 // Contenido completo de un caso (ficha + cuerpo largo) — siempre su propia
 // página (/casos/slug/), nunca un modal.
 import Texto from './Texto.astro';
+import CaseNav from './CaseNav.astro';
 import { url } from '../lib/url';
 
 interface Props {
@@ -13,8 +14,9 @@ interface Props {
   proceso?: string;
   resultado: string;
   standalone?: boolean;
+  slug?: string;
 }
-const { titulo, resumen, etiquetas, problema, rol, proceso, resultado, standalone = false } = Astro.props;
+const { titulo, resumen, etiquetas, problema, rol, proceso, resultado, standalone = false, slug } = Astro.props;
 ---
 
 <article class="detalle">
@@ -34,6 +36,8 @@ const { titulo, resumen, etiquetas, problema, rol, proceso, resultado, standalon
     <slot />
   </div>
 </article>
+
+{standalone && slug && <CaseNav current={slug} />}
 
 {standalone && (
   <script>
