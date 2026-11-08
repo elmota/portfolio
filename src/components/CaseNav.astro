@@ -61,7 +61,7 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
       // Tablet táctil: la columna de números está siempre visible; el primer
       // tap sobre ella la despliega (sin navegar), el segundo elige un caso.
       const item = target.closest('.case-nav-item');
-      if (item && !list.classList.contains('abierto') && window.matchMedia('(hover: none) and (min-width: 601px)').matches) {
+      if (item && !list.classList.contains('abierto') && window.matchMedia('(pointer: coarse) and (min-width: 601px)').matches) {
         e.preventDefault();
         setAbierto(list, toggle, true);
         return;

@@ -383,7 +383,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
 /* Como el minimapa de conversaciones de ChatGPT: la columna se despliega
    completa (con nombres), no solo un item. Con mouse: solo al pasar por encima (nunca por scroll). En táctil no hay hover y el scroll no
    debe abrirla: se abre solo con un tap sobre la columna (.abierto). */
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .case-nav-list:hover::before, .case-nav-list:focus-within::before { opacity: 1; }
   .case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item { max-width: 300px; width: 300px; }
   .case-nav-list:hover .case-nav-label, .case-nav-list:focus-within .case-nav-label { opacity: 1; padding-right: 16px; }
