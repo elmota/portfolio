@@ -41,6 +41,16 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
   // idéntico en cada página), pero un listener en `document` sigue vivo.
   if (!(window as any).__caseNavInstalled) {
     (window as any).__caseNavInstalled = true;
+
+    function setAbierto(list: HTMLElement, toggle: HTMLButtonElement, abierto: boolean) {
+      list.classList.toggle('abierto', abierto);
+      toggle.setAttribute('aria-expanded', String(abierto));
+      // En mobile la lista es una hoja flotante sobre el contenido: mientras
+      // está abierta, bloquea el scroll de atrás para que no se vea cortada
+      // ni se pelee con el scroll de la página.
+      document.body.style.overflow = abierto ? 'hidden' : '';
+    }
+
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const toggle = document.querySelector<HTMLButtonElement>('.case-nav-toggle');
@@ -48,13 +58,13 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
       if (!toggle || !list) return;
 
       if (target.closest('.case-nav-toggle')) {
-        const abierto = list.classList.toggle('abierto');
-        toggle.setAttribute('aria-expanded', String(abierto));
+        setAbierto(list, toggle, !list.classList.contains('abierto'));
         return;
       }
-      if (list.classList.contains('abierto') && !list.contains(target)) {
-        list.classList.remove('abierto');
-        toggle.setAttribute('aria-expanded', 'false');
+      // Al elegir un caso de la lista, o al tocar fuera: cierra y libera el
+      // scroll antes de que la navegación (o el siguiente tap) ocurra.
+      if (list.classList.contains('abierto') && (target.closest('.case-nav-item') || !list.contains(target))) {
+        setAbierto(list, toggle, false);
       }
     });
   }
