@@ -81,10 +81,10 @@ p { margin: 0 0 1em; }
 }
 .content {
   flex: 1 1 auto; min-width: 0; container-type: inline-size;
-  /* Neutral a propósito: el color del item activo solo tiñe las secciones
-     relevantes (el fold, specs, cards de Enfoque), no todo el contenido. */
-  background: #ffffff; color: #0a0a0a;
-  border-radius: 28px; overflow: hidden;
+  /* Sin card propia: flota directo sobre --page, igual que los items del
+     sidebar. El color del item activo solo tiñe las secciones relevantes
+     (el fold, specs, cards de Enfoque), no un contenedor del contenido. */
+  color: #0a0a0a;
 }
 
 .sidebar-top { display: flex; align-items: center; justify-content: space-between; }
@@ -145,7 +145,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
    de borde a borde de la columna de contenido (no del viewport completo: con el
    sidebar fijo, "borde a borde" es borde a borde de `.content`, por eso usa
    unidades de container query (cqw) en vez de vw). */
-.specs, .hero.stage {
+.specs {
   width: 100cqw;
   margin-left: calc(50% - 50cqw);
   margin-right: calc(50% - 50cqw);
@@ -404,19 +404,15 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
 }
 
 /* ---------- Hero ---------- */
-.hero.stage {
-  padding-top: 56px; padding-bottom: 56px; gap: 20px;
-  position: relative; z-index: 1;
-  /* El fold ES la sección relevante que lleva el color completo del perfil
-     activo — el resto de .content queda neutral (ver .content). */
-  background: var(--bg); color: var(--text);
-  --muted: color-mix(in srgb, var(--text) 65%, var(--bg) 35%);
-  transition: background .3s ease, color .3s ease;
-}
+.hero.stage { padding-top: 56px; padding-bottom: 56px; gap: 20px; }
 .hero[hidden] { display: none; }
 .hero-resultado { display: flex; flex-direction: column; }
 .panel { position: relative; }
 .panel[hidden] { display: none; }
+/* Igual que las otras secciones: solo título + bajada van en el fold de
+   color del perfil activo; specs y CTA quedan separados, sobre el fondo
+   neutral de .content. */
+.hero-fold { position: relative; overflow: hidden; margin-bottom: 40px; }
 /* Cada vez que un panel pasa a visible: fade + zoom-in con un rebote sutil
    (el overshoot del cubic-bezier hace de "bounce" sin keyframes extra). */
 [data-panel]:not([hidden]) { animation: panelEnter .6s cubic-bezier(.34, 1.3, .64, 1) both; }
@@ -433,8 +429,8 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
 .hero-blob {
   position: absolute; top: -60px; right: -60px; width: 240px; height: 240px;
   border-radius: 40% 60% 55% 45% / 55% 45% 60% 40%;
-  background: color-mix(in srgb, var(--text) 8%, transparent);
-  pointer-events: none; z-index: -1;
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  pointer-events: none;
   animation: heroBlobFloat 22s ease-in-out infinite;
 }
 @keyframes heroBlobFloat {
