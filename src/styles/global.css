@@ -58,6 +58,8 @@ h2 { font-size: clamp(2.8rem, 7.2cqw, 6rem); font-weight: 900; }
    sin punto de corte. */
 @media (max-width: 480px) {
   h1 { font-size: clamp(2.5rem, 11cqw, 8.4rem); }
+  /* Palabras largas como "investigación" rozaban el borde derecho del fold. */
+  h2 { font-size: clamp(2rem, 9cqw, 6rem); }
 }
 h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -.01em; }
 p { margin: 0 0 1em; }
