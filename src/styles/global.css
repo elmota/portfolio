@@ -592,6 +592,15 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
   .divider { display: none; }
 }
 
+/* Al elegir una sección en el sidebar el scroll salta directo y la sección
+   se "despliega": entra desde un poco más abajo y más chica, con fade. */
+.section.desplegando { animation: seccionDespliega .45s cubic-bezier(.22, 1, .36, 1) both; transform-origin: 50% 0; }
+@keyframes seccionDespliega {
+  0% { opacity: 0; transform: translateY(28px) scale(.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .section.desplegando { animation: none; } }
+
 @keyframes itemDropIn {
   0% { opacity: 0; transform: translateY(-10px) scale(.94); }
   100% { opacity: 1; transform: translateY(0) scale(1); }

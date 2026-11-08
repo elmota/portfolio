@@ -169,8 +169,17 @@ import { sidebarItems } from '../lib/sidebarItems';
     if (!el) return;
     observando = false;
     aplicarEstilo(id, true);
-    el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    reactivarTrasScroll();
+    // Salto instantáneo (nada de recorrer 10.000 px de scroll): html tiene
+    // scroll-behavior: smooth, así que hay que pedir 'instant' explícito.
+    el.scrollIntoView({ behavior: 'instant', block: 'start' });
+    reactivarTrasScroll(150);
+    // En su lugar, una leve animación de "despliegue" en la sección destino.
+    if (!reduceMotion) {
+      el.classList.remove('desplegando');
+      void el.offsetWidth; // reinicia la animación si se pulsa dos veces
+      el.classList.add('desplegando');
+      el.addEventListener('animationend', () => el.classList.remove('desplegando'), { once: true });
+    }
   }
 
   // Si el perfil/sección elegido no existe en esta página (por ejemplo,
@@ -247,7 +256,7 @@ import { sidebarItems } from '../lib/sidebarItems';
       aplicarEstilo(hashId, false);
       observando = false;
       requestAnimationFrame(() => {
-        document.getElementById(hashId)?.scrollIntoView({ block: 'start' });
+        document.getElementById(hashId)?.scrollIntoView({ behavior: 'instant', block: 'start' });
         reactivarTrasScroll(700);
       });
     } else if (hero) {
