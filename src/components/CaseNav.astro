@@ -51,6 +51,17 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
       document.body.style.overflow = abierto ? 'hidden' : '';
     }
 
+    // Mientras se scrollea la página (en cualquier parte, no sobre la
+    // columna), la navegación se despliega completa y se recoge al parar.
+    let scrollTimer: ReturnType<typeof setTimeout>;
+    window.addEventListener('scroll', () => {
+      const list = document.querySelector<HTMLElement>('.case-nav-list');
+      if (!list) return;
+      list.classList.add('scrolling');
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => list.classList.remove('scrolling'), 1100);
+    }, { passive: true });
+
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const toggle = document.querySelector<HTMLButtonElement>('.case-nav-toggle');

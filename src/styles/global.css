@@ -208,6 +208,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   border-radius: var(--radius);
   padding: clamp(32px, 5vw, 56px);
   margin-bottom: 48px;
+  position: relative; overflow: hidden;
   transition: background .4s ease, color .4s ease;
 }
 .fold.section-head { margin-bottom: 48px; }
@@ -379,9 +380,9 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   background: #fff; border: 2px solid var(--line-strong); border-radius: 20px;
   opacity: 0; transition: opacity .25s ease; pointer-events: none;
 }
-.case-nav-list:hover::before, .case-nav-list:focus-within::before { opacity: 1; }
-.case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item { max-width: 300px; width: 300px; }
-.case-nav-list:hover .case-nav-label, .case-nav-list:focus-within .case-nav-label { opacity: 1; padding-right: 16px; }
+.case-nav-list:hover::before, .case-nav-list:focus-within::before, .case-nav-list.scrolling::before { opacity: 1; }
+.case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item, .case-nav-list.scrolling .case-nav-item { max-width: 300px; width: 300px; }
+.case-nav-list:hover .case-nav-label, .case-nav-list:focus-within .case-nav-label, .case-nav-list.scrolling .case-nav-label { opacity: 1; padding-right: 16px; }
 .case-nav-item.activo { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 @media (prefers-reduced-motion: reduce) {
   .case-nav-item, .case-nav-label { transition: none; }
@@ -414,7 +415,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   }
   .case-nav-list.abierto { display: flex; }
   .case-nav-list::before { display: none; }
-  .case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item { max-width: none; width: 100%; }
+  .case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item, .case-nav-list.scrolling .case-nav-item { max-width: none; width: 100%; }
   .case-nav-item {
     max-width: none; width: 100%; height: auto; padding: 10px 12px;
     border: none; border-radius: 10px; overflow: visible; align-items: flex-start;
