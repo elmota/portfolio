@@ -155,6 +155,12 @@ import { sidebarItems } from '../lib/sidebarItems';
     ultimoPerfil = id;
     aplicarEstilo(id, actualizarHash);
 
+    // Selector en línea del Hero: refleja el perfil activo (mismo estado que
+    // los items del menú, pero visible también en mobile sin abrir nada).
+    document.querySelectorAll<HTMLElement>('[data-perfil]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.perfil === id));
+    });
+
     // El revelado de textos al mostrar el panel es CSS puro: se reinicia solo
     // cuando el panel pasa de display:none a visible (ver global.css).
     document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
@@ -196,6 +202,25 @@ import { sidebarItems } from '../lib/sidebarItems';
     a.click();
     a.remove();
   }
+
+  // Selector en línea: cambia de perfil sin mover el scroll (el panel está
+  // justo debajo). Delegado en document: el Hero se vuelve a renderizar en
+  // cada navegación, este script no.
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-perfil]');
+    if (!b?.dataset.perfil) return;
+    seleccionarPerfil(b.dataset.perfil, true);
+    // En pantallas chicas el panel queda bajo el pliegue: si es así, lo
+    // trae a la vista para que el cambio no pase desapercibido.
+    requestAnimationFrame(() => {
+      const panel = document.querySelector<HTMLElement>('[data-panel]:not([hidden])');
+      if (!panel) return;
+      const top = panel.getBoundingClientRect().top;
+      if (top > window.innerHeight * 0.6) {
+        window.scrollBy({ top: top - 80, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    });
+  });
 
   items.forEach((b) => {
     b.addEventListener('click', () => {

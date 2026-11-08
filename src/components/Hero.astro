@@ -42,6 +42,9 @@ const lentes = [
   },
 ];
 
+import { sidebarItems } from '../lib/sidebarItems';
+
+const perfiles = sidebarItems.filter((i) => i.tipo === 'perfil');
 ---
 
 <section class="hero stage" data-hero>
@@ -50,21 +53,35 @@ const lentes = [
       <p class="hero-id">
         <strong>Alejandro Pérez Rocha</strong>
         <span>Product / UX Designer y Frontend Developer</span>
+        <span class="hero-meta">Santiago de Chile. Disponible de inmediato.</span>
       </p>
       <h1>Más allá del diseño: hasta producción.</h1>
       <p class="lead">
         Hola, soy Alejandro. Llevo 15 años en productos donde equivocarse cuesta: banca, minería, trámites públicos. Parto del discovery y el diseño, y sigo hasta que el producto funciona en producción.
       </p>
-      <p class="hero-meta">Santiago de Chile. Disponible de inmediato.</p>
       <ol class="ciclo" aria-label="Del discovery a producción">
         <li><span>1</span>Descubrir</li>
         <li><span>2</span>Diseñar</li>
         <li><span>3</span>Construir</li>
         <li><span>4</span>Producción</li>
       </ol>
-      <div class="cta">
-        <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
-        <a class="btn" href="#contacto">Hablemos</a>
+    </div>
+
+    <div class="perfil-switch" role="group" aria-labelledby="perfil-switch-title">
+      <p class="perfil-switch-title" id="perfil-switch-title">Elige cómo mirar mi trabajo</p>
+      <div class="perfil-switch-btns">
+        {perfiles.map((p) => (
+          <button
+            type="button"
+            class="perfil-btn"
+            data-perfil={p.id}
+            aria-pressed={p.id === 'ambos' ? 'true' : 'false'}
+            style={`--c:${p.bg};--ci:${p.ink}`}
+          >
+            <strong>{p.etiqueta}</strong>
+            <span>{p.tagline}</span>
+          </button>
+        ))}
       </div>
     </div>
 
@@ -89,5 +106,10 @@ const lentes = [
         </ul>
       </div>
     ))}
+
+    <div class="cta">
+      <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
+      <a class="btn" href="#contacto">Hablemos</a>
+    </div>
   </div>
 </section>
