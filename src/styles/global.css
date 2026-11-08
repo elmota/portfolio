@@ -47,11 +47,18 @@ body {
   font: 17px/1.6 var(--font-body);
   -webkit-font-smoothing: antialiased;
   position: relative;
+  overflow-x: hidden; /* red de seguridad: nada debería desbordar horizontalmente, pero si algo se escapa, que no abra scroll lateral */
 }
 a { color: inherit; }
-h1, h2, h3 { font-family: var(--font-display); line-height: .96; margin: 0 0 .5em; letter-spacing: -.02em; font-weight: 800; }
+h1, h2, h3 { font-family: var(--font-display); line-height: .96; margin: 0 0 .5em; letter-spacing: -.02em; font-weight: 800; overflow-wrap: break-word; }
 h1 { font-size: clamp(3.4rem, 9.5cqw, 8.4rem); font-weight: 900; max-width: 24ch; }
 h2 { font-size: clamp(2.8rem, 7.2cqw, 6rem); font-weight: 900; }
+/* Piso más chico en mobile: 3.4rem es demasiado grande para ~320-375px una
+   vez descontado el padding del fold, y puede desbordar una palabra larga
+   sin punto de corte. */
+@media (max-width: 480px) {
+  h1 { font-size: clamp(2.5rem, 11cqw, 8.4rem); }
+}
 h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -.01em; }
 p { margin: 0 0 1em; }
 
@@ -428,7 +435,7 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
      (para distinguirse de un vistazo) salvo el activo, que ocupa todo el
      ancho disponible (mismos márgenes horizontales del panel). */
   .items {
-    display: none; flex-direction: column; align-items: flex-start; gap: 8px;
+    display: none; flex-direction: column; align-items: center; gap: 8px;
     position: absolute; top: 100%; left: 0; right: 0; z-index: 19;
     margin: 0; padding: 10px 16px 16px; background: #fff;
     box-shadow: 0 16px 32px rgba(10, 10, 10, .18);
