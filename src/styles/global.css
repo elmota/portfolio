@@ -372,41 +372,58 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   opacity: 0; padding-right: 0; transition: opacity .2s ease .05s, padding-right .3s ease;
 }
 .case-nav-item:hover, .case-nav-item:focus-visible { border-color: var(--accent); }
-/* Como el minimapa de conversaciones de ChatGPT: al pasar el mouse por la
-   columna se despliega la lista completa (con nombres), no solo un item. */
 .case-nav-list { position: relative; }
 .case-nav-list::before {
-  content: ""; position: absolute; inset: -14px -14px -14px -14px; z-index: -1;
+  content: ""; position: absolute; inset: -14px; z-index: -1;
   background: #fff; border: 2px solid var(--line-strong); border-radius: 20px;
   opacity: 0; transition: opacity .25s ease; pointer-events: none;
 }
-.case-nav-list:hover::before, .case-nav-list:focus-within::before, .case-nav-list.scrolling::before { opacity: 1; }
-.case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item, .case-nav-list.scrolling .case-nav-item { max-width: 300px; width: 300px; }
-.case-nav-list:hover .case-nav-label, .case-nav-list:focus-within .case-nav-label, .case-nav-list.scrolling .case-nav-label { opacity: 1; padding-right: 16px; }
 .case-nav-item.activo { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+/* Como el minimapa de conversaciones de ChatGPT: la columna se despliega
+   completa (con nombres), no solo un item. Con mouse: al pasar por encima o
+   mientras se scrollea la página. En táctil no hay hover y el scroll no
+   debe abrirla: se abre solo con un tap sobre la columna (.abierto). */
+@media (hover: hover) {
+  .case-nav-list:hover::before, .case-nav-list:focus-within::before, .case-nav-list.scrolling::before { opacity: 1; }
+  .case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item, .case-nav-list.scrolling .case-nav-item { max-width: 300px; width: 300px; }
+  .case-nav-list:hover .case-nav-label, .case-nav-list:focus-within .case-nav-label, .case-nav-list.scrolling .case-nav-label { opacity: 1; padding-right: 16px; }
+}
+@media (min-width: 601px) {
+  .case-nav-list.abierto::before { opacity: 1; }
+  .case-nav-list.abierto .case-nav-item { max-width: 300px; width: 300px; }
+  .case-nav-list.abierto .case-nav-label { opacity: 1; padding-right: 16px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .case-nav-item, .case-nav-label { transition: none; }
 }
 
-/* Tablet/mobile o cualquier dispositivo táctil (hover: none, p. ej. un iPad
-   horizontal, más ancho que el quiebre): sin hover ni scroll que lo abran, se
-   abre solo con un tap. (Mismo quiebre que el resto del layout, ver .shell): la
-   columna no cabe sin tapar contenido — se reduce a un botón flotante con
-   el número actual, que al tocarlo despliega la lista completa (con
-   nombre) hacia arriba. */
-@media (max-width: 960px), (hover: none) {
+/* Celular: la columna no cabe sin tapar contenido — se reduce a un botón
+   flotante con el número actual, que al tocarlo despliega la lista completa
+   (con nombre) hacia arriba como una hoja. */
+@media (max-width: 600px) {
   .case-nav { right: 20px; top: auto; bottom: 20px; transform: none; }
   .case-nav-toggle {
-    display: flex; align-items: center; justify-content: center;
+    position: relative; display: flex; align-items: center; justify-content: center;
     width: 48px; height: 48px; border-radius: 50%;
     border: 2px solid var(--line-strong); background: var(--accent); color: var(--accent-ink);
     font-family: var(--font-mono); font-weight: 700; font-size: .85rem;
     cursor: pointer; box-shadow: 0 8px 20px rgba(10, 10, 10, .18);
+    transition: transform .4s cubic-bezier(.34, 1.4, .64, 1), background .25s ease, color .25s ease, box-shadow .25s ease;
   }
-  /* Hoja flotante, no un popover angosto: usa casi todo el ancho y alto
-     disponibles (con scroll propio) en vez de quedar cortada arriba o
-     tapada por el scroll del contenido de atrás (que queda bloqueado
-     mientras está abierta, ver el script). */
+  .case-nav-toggle:active { transform: scale(.88); }
+  .case-nav-toggle[aria-expanded="true"] {
+    transform: rotate(90deg); background: #fff; color: var(--text);
+    box-shadow: 0 4px 10px rgba(10, 10, 10, .12);
+  }
+  .case-nav-toggle[aria-expanded="true"]:active { transform: rotate(90deg) scale(.88); }
+  .case-nav-toggle-num, .case-nav-toggle-x {
+    position: absolute; transition: opacity .2s ease, transform .35s cubic-bezier(.34, 1.4, .64, 1);
+  }
+  .case-nav-toggle-x { font-size: 1.4rem; line-height: 1; opacity: 0; transform: scale(.4) rotate(-90deg); }
+  .case-nav-toggle[aria-expanded="true"] .case-nav-toggle-num { opacity: 0; transform: scale(.4) rotate(90deg); }
+  .case-nav-toggle[aria-expanded="true"] .case-nav-toggle-x { opacity: 1; transform: scale(1) rotate(-90deg); }
+
   .case-nav-list {
     display: none; flex-direction: column; align-items: stretch;
     position: fixed; left: 16px; right: 16px; bottom: 80px;
@@ -414,8 +431,17 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
     padding: 10px; gap: 6px;
     background: #fff; border: 2px solid var(--line-strong); border-radius: var(--radius);
     box-shadow: 0 16px 32px rgba(10, 10, 10, .18);
+    transform-origin: bottom right;
   }
-  .case-nav-list.abierto { display: flex; }
+  .case-nav-list.abierto { display: flex; animation: caseSheetIn .4s cubic-bezier(.34, 1.3, .64, 1) both; }
+  .case-nav-list.abierto .case-nav-item { animation: caseItemIn .4s cubic-bezier(.34, 1.3, .64, 1) both; }
+  .case-nav-list.abierto .case-nav-item:nth-child(1) { animation-delay: .04s; }
+  .case-nav-list.abierto .case-nav-item:nth-child(2) { animation-delay: .08s; }
+  .case-nav-list.abierto .case-nav-item:nth-child(3) { animation-delay: .12s; }
+  .case-nav-list.abierto .case-nav-item:nth-child(4) { animation-delay: .16s; }
+  .case-nav-list.abierto .case-nav-item:nth-child(5) { animation-delay: .20s; }
+  .case-nav-list.abierto .case-nav-item:nth-child(6) { animation-delay: .24s; }
+  .case-nav-list.abierto .case-nav-item:nth-child(7) { animation-delay: .28s; }
   .case-nav-list::before { display: none; }
   .case-nav-list:hover .case-nav-item, .case-nav-list:focus-within .case-nav-item, .case-nav-list.scrolling .case-nav-item { max-width: none; width: 100%; }
   .case-nav-item {
@@ -425,6 +451,11 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   .case-nav-label { opacity: 1; padding-right: 0; white-space: normal; line-height: 1.3; }
   .case-nav-item:hover, .case-nav-item:focus-visible { max-width: none; border-color: transparent; background: var(--surface); }
   .case-nav-item.activo { background: var(--accent); border-color: transparent; }
+}
+@keyframes caseSheetIn { from { opacity: 0; transform: translateY(14px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes caseItemIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .case-nav-list.abierto, .case-nav-list.abierto .case-nav-item, .case-nav-toggle, .case-nav-toggle-num, .case-nav-toggle-x { animation: none; transition: none; }
 }
 
 /* Trayectoria */
