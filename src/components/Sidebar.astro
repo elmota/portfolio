@@ -71,10 +71,15 @@ import { sidebarItems } from '../lib/sidebarItems';
   function cerrarMenu() {
     itemsNav?.classList.remove('abierto');
     menuToggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
   }
   menuToggle?.addEventListener('click', () => {
     const abierto = itemsNav?.classList.toggle('abierto');
     menuToggle.setAttribute('aria-expanded', String(!!abierto));
+    // El desplegable es una hoja flotante sobre el contenido (mobile/tablet):
+    // mientras está abierto, bloquea el scroll de atrás para que no se vea
+    // cortado ni se pelee con el scroll de la página.
+    document.body.style.overflow = abierto ? 'hidden' : '';
   });
 
   // Aplica el color/estado del item activo a TODA la página (bg/text/accent),
