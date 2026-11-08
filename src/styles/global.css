@@ -663,7 +663,7 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
    pasa de oculto a visible (cambio de perfil). */
 .panel:not([hidden]) [data-reveal] { animation: revealUp .5s cubic-bezier(.22, 1, .36, 1) both; }
 .hero-eyebrow[data-reveal] { animation-delay: 0s; }
-.hero-fold h1[data-reveal] { animation-delay: .08s; }
+.hero-fold h2[data-reveal] { animation-delay: .08s; }
 .hero-fold .lead[data-reveal] { animation-delay: .16s; }
 .specs[data-reveal] { animation-delay: .24s; }
 .hero .cta { animation: fadeIn .4s ease .3s both; }
@@ -690,7 +690,23 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
 
 .lead { font-size: clamp(1.2rem, 2cqw, 1.5rem); line-height: 1.55; color: var(--muted); max-width: 60ch; }
 .hero .specs { margin-top: 20px; }
-.hero .cta { margin-top: 16px; margin-bottom: 0; }
+.hero .cta { margin-top: 8px; margin-bottom: 0; }
+
+/* Presentación personal, sobre el fondo neutro: quién es, antes de qué
+   perfil se está mirando. El color del perfil queda para el fold de abajo. */
+.hero-intro { display: flex; flex-direction: column; gap: 20px; padding: 8px 0 clamp(40px, 6vw, 72px); }
+.hero-id { display: flex; flex-direction: column; gap: 2px; margin: 0; font-size: 1.1rem; }
+.hero-id strong { font-weight: 800; }
+.hero-intro h1 { margin: 0; max-width: 14ch; font-size: clamp(3rem, 9.5cqw, 8rem); }
+.hero-intro .lead { color: inherit; max-width: 58ch; margin: 0; }
+.hero-meta { margin: 0; font-weight: 700; }
+.ciclo {
+  list-style: none; margin: 4px 0 0; padding: 0; max-width: 640px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+.ciclo li { border-top: 3px solid currentColor; padding-top: 8px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; }
+.ciclo li span { font-family: var(--font-mono); font-size: .8rem; opacity: .75; }
+@media (max-width: 480px) { .ciclo { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------- Tema por lente: misma marca, distinto carácter tipográfico ----------
    "Diseño" se lee más editorial (más redondeo, más aire entre líneas).

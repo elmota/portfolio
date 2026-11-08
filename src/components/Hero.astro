@@ -18,7 +18,7 @@ const lentes = [
   },
   {
     id: 'ambos',
-    rol: 'Senior Product / UX Designer',
+    rol: 'Diseño + Código',
     titular: 'Llevar la solución desde la necesidad hasta su implementación.',
     bajada:
       '15 años en productos financieros, de minería y de gobierno. La misma persona define la experiencia y la construye. Los agentes de IA son un compañero: aceleran el proceso y ayudan con los casos borde; el criterio y la última revisión son míos.',
@@ -46,14 +46,36 @@ const lentes = [
 
 <section class="hero stage" data-hero>
   <div class="hero-resultado">
+    <div class="hero-intro">
+      <p class="hero-id">
+        <strong>Alejandro Pérez Rocha</strong>
+        <span>Product / UX Designer y Frontend Developer</span>
+      </p>
+      <h1>Más allá del diseño: hasta producción.</h1>
+      <p class="lead">
+        Hola, soy Alejandro. Llevo 15 años en productos donde equivocarse cuesta: banca, minería, trámites públicos. Parto del discovery y el diseño, y sigo hasta que el producto funciona en producción.
+      </p>
+      <p class="hero-meta">Santiago de Chile. Disponible de inmediato.</p>
+      <ol class="ciclo" aria-label="Del discovery a producción">
+        <li><span>1</span>Descubrir</li>
+        <li><span>2</span>Diseñar</li>
+        <li><span>3</span>Construir</li>
+        <li><span>4</span>Producción</li>
+      </ol>
+      <div class="cta">
+        <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
+        <a class="btn" href="#contacto">Hablemos</a>
+      </div>
+    </div>
+
     {lentes.map((l) => (
       <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
         <div class="fold hero-fold">
           <span class="blob-shift" aria-hidden="true">
             <span class="hero-blob"></span>
           </span>
-          <p class="hero-eyebrow" data-reveal>Alejandro Pérez Rocha · {l.rol}</p>
-          <h1 data-reveal>{l.titular}</h1>
+          <p class="hero-eyebrow" data-reveal>{l.rol}</p>
+          <h2 data-reveal>{l.titular}</h2>
           <p class="lead" data-reveal>{l.bajada}</p>
         </div>
         <ul class="specs" data-reveal>
@@ -67,10 +89,5 @@ const lentes = [
         </ul>
       </div>
     ))}
-
-    <div class="cta">
-      <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
-      <a class="btn" href="#contacto">Hablemos</a>
-    </div>
   </div>
 </section>
