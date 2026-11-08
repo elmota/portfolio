@@ -1,0 +1,155 @@
+---
+// Sidebar fijo con los 8 items unificados (3 perfiles + 5 secciones), todos
+// el mismo componente visual: bloques apilados que flotan sin contenedor
+// propio, cada uno con su paleta fija (ver sidebarItems.ts). Vive en
+// Base.astro, así que aparece en todas las páginas; el home (vía Hero y los
+// paneles de sección) reacciona mostrando/ocultando paneles, en las demás
+// páginas los botones solo actualizan el tema global y el hash.
+import { url } from '../lib/url';
+import { sidebarItems } from '../lib/sidebarItems';
+---
+
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <a class="logo" href={url()}>Alejandro Pérez</a>
+    <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="sidebar-items" aria-label="Abrir menú">
+      <span class="menu-toggle-grid" aria-hidden="true">
+        <span style="background:#d36958"></span>
+        <span style="background:#299dcd"></span>
+        <span style="background:#bc2d75"></span>
+        <span style="background:#d19f3a"></span>
+      </span>
+    </button>
+  </div>
+
+  <nav class="items" id="sidebar-items" aria-label="Perfiles y secciones">
+    {sidebarItems.map((item, i) => (
+      <>
+        <button
+          type="button"
+          class="item"
+          data-id={item.id}
+          data-bg={item.bg}
+          data-ink={item.ink}
+          data-detail={item.detail}
+          data-detail-ink={item.detailInk}
+          aria-pressed={item.id === 'ambos' ? 'true' : 'false'}
+          style={`--c:${item.bg};--ci:${item.ink}`}
+        >
+          <span class="blob" aria-hidden="true"></span>
+          <span class="num">{item.numero}</span>
+          <span class="label">{item.etiqueta}</span>
+          <span class="item-tag">{item.tagline}</span>
+        </button>
+        {i === 2 && <div class="divider" role="presentation"></div>}
+      </>
+    ))}
+  </nav>
+</aside>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const perfiles = ['diseno', 'ambos', 'ingenieria'];
+  const ids = [...perfiles, 'casos', 'enfoque', 'skills', 'trayectoria', 'contacto'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = document.querySelectorAll<HTMLButtonElement>('[data-id]');
+  const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const itemsNav = document.querySelector<HTMLElement>('.items');
+
+  function cerrarMenu() {
+    itemsNav?.classList.remove('abierto');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+  }
+  menuToggle?.addEventListener('click', () => {
+    const abierto = itemsNav?.classList.toggle('abierto');
+    menuToggle.setAttribute('aria-expanded', String(!!abierto));
+  });
+
+  function activar(id: string, actualizarHash: boolean, animar: boolean) {
+    const btn = document.querySelector<HTMLButtonElement>(`[data-id="${id}"]`);
+    if (!btn) return;
+    items.forEach((b) => {
+      const esEste = b === btn;
+      b.classList.toggle('activo', esEste);
+      b.setAttribute('aria-pressed', String(esEste));
+    });
+
+    // El item activo gobierna TODA la página: su bg/ink pasan a ser el fondo
+    // y texto del área de contenido, y detail/detailInk el acento — ya no
+    // hay una paleta de sitio aleatoria por separado (ver sidebarItems.ts).
+    const root = document.documentElement;
+    root.style.setProperty('--bg', btn.dataset.bg ?? '');
+    root.style.setProperty('--text', btn.dataset.ink ?? '');
+    root.style.setProperty('--accent', btn.dataset.detail ?? '');
+    root.style.setProperty('--accent-ink', btn.dataset.detailInk ?? '');
+
+    const panelActivo = document.querySelector<HTMLElement>(`[data-panel="${id}"]`);
+    const yaEstabaActivo = !!panelActivo && !panelActivo.hidden;
+
+    // El Hero (y sus CTA, siempre presentes) solo ocupa pantalla cuando el
+    // item activo es un perfil; en una sección queda oculto por completo
+    // para que el panel de esa sección sea lo único visible.
+    const hero = document.querySelector<HTMLElement>('[data-hero]');
+    if (hero) hero.hidden = !perfiles.includes(id);
+
+    // El cambio de panel es siempre inmediato y síncrono (nunca depende de que
+    // una animación termine). En páginas sin panel (casos de estudio) estas
+    // consultas simplemente no encuentran nada y no hacen efecto.
+    document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
+      p.hidden = p.dataset.panel !== id;
+    });
+
+    if (panelActivo) {
+      const reveal = panelActivo.querySelectorAll('[data-reveal]');
+      if (animar && !reduceMotion && !yaEstabaActivo) {
+        gsap.fromTo(
+          reveal,
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.05, overwrite: true }
+        );
+        setTimeout(() => gsap.set(reveal, { clearProps: 'opacity,transform' }), 500);
+      } else {
+        gsap.set(reveal, { clearProps: 'opacity,transform' });
+      }
+    }
+
+    document.documentElement.dataset.theme = id;
+    document.dispatchEvent(new CustomEvent('lentechange', { detail: { lente: id } }));
+
+    document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
+      const propias = (c.dataset.lentes ?? '').split(' ');
+      c.classList.toggle('destacado', id !== 'ambos' && propias.includes(id));
+    });
+
+    if (actualizarHash) {
+      history.replaceState(null, '', '#' + id);
+    }
+  }
+
+  function sincronizarConHash() {
+    const id = ids.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'ambos';
+    activar(id, false, false);
+  }
+  sincronizarConHash();
+
+  // El sidebar persiste entre navegaciones (transition:persist), pero el
+  // resto de la página se reemplaza por el HTML estático de la página
+  // nueva (paneles en su estado por defecto) — hay que volver a sincronizar
+  // después de cada swap de Astro, no solo en la carga inicial.
+  document.addEventListener('astro:page-load', sincronizarConHash);
+
+  items.forEach((b) => {
+    b.addEventListener('click', () => {
+      activar(b.dataset.id ?? 'ambos', true, true);
+      cerrarMenu();
+    });
+  });
+
+  // Cualquier link `#id` del sitio (CTAs, "← Todos los casos" de un caso)
+  // debe activar el panel correspondiente, no solo los clics en el sidebar.
+  window.addEventListener('hashchange', () => {
+    const id = location.hash.slice(1);
+    if (ids.includes(id)) activar(id, false, true);
+  });
+</script>

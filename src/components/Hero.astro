@@ -1,13 +1,11 @@
 ---
-// El fold es la elección: tres cards grandes (Diseño · Ambos · Ingeniería) son lo primero
-// que se ve. Elegir una no solo cambia el texto de abajo: cambia el tema visual de todo
-// el sitio (data-theme en <html>), para que la narrativa se sienta distinta según
-// la lente — más editorial en Diseño, balanceada en Ambos, más técnica en Ingeniería.
+// El contenido del fold ahora vive junto al selector de "perfiles" del
+// Sidebar (Diseño/Ambos/Ingeniería): Sidebar decide qué lente está activa
+// (tema, URL, evento `lentechange`) y este componente solo muestra el panel
+// correspondiente. Los tres textos son el verdadero contenido del home.
 const lentes = [
   {
     id: 'diseno',
-    etiqueta: 'Diseño',
-    tagline: 'Producto, research y sistemas.',
     rol: 'Product / UX Design',
     titular: 'Resolver rápido no sirve si es el problema equivocado.',
     bajada:
@@ -20,8 +18,6 @@ const lentes = [
   },
   {
     id: 'ambos',
-    etiqueta: 'Ambos',
-    tagline: 'Diseño y código, a la vez.',
     rol: 'Senior Product / UX Designer',
     titular: 'Una idea pierde valor cada vez que cambia de manos.',
     bajada:
@@ -34,8 +30,6 @@ const lentes = [
   },
   {
     id: 'ingenieria',
-    etiqueta: 'Ingeniería',
-    tagline: 'Frontend listo para producción.',
     rol: 'UX / Design Engineering',
     titular: 'Lo que deja de funcionar, deja de resolver el problema.',
     bajada:
@@ -49,32 +43,21 @@ const lentes = [
 ];
 ---
 
-<section class="hero stage bg-dark" data-hero>
-  <dl class="titleblock" data-titleblock>
-    <div><dt>Nombre</dt><dd>Alejandro Pérez Rocha</dd></div>
-    <div><dt>Rol</dt><dd data-tb-rol>{lentes[1].rol}</dd></div>
-    <div><dt>Rev.</dt><dd>{new Date().getFullYear()}</dd></div>
-  </dl>
-
-  <div class="hero-elige">
-    <p class="lentes-intro">Elige cómo quieres leer mi perfil</p>
-    <div class="lentes" role="group" aria-label="Elige cómo leer mi perfil">
-      {lentes.map((l) => (
-        <button type="button" class="lente" data-lente={l.id} aria-pressed={l.id === 'ambos' ? 'true' : 'false'}>
-          <span class="lente-label">{l.etiqueta}</span>
-          <span class="lente-tagline">{l.tagline}</span>
-        </button>
-      ))}
-    </div>
-  </div>
-
+<section class="hero stage" data-hero>
   <div class="hero-resultado">
     {lentes.map((l) => (
       <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
+        <span class="hero-blob" aria-hidden="true"></span>
         <h1 data-reveal>{l.titular}</h1>
         <p class="lead" data-reveal>{l.bajada}</p>
         <ul class="specs" data-reveal>
-          {l.datos.map(([t, d]) => <li><strong>{t}</strong><span>{d}</span></li>)}
+          {l.datos.map(([t, d], i) => (
+            <li>
+              <span class="specs-num">{String(i + 1).padStart(2, '0')}</span>
+              <strong>{t}</strong>
+              <span>{d}</span>
+            </li>
+          ))}
         </ul>
       </div>
     ))}
@@ -89,75 +72,14 @@ const lentes = [
 <script>
   import { gsap } from 'gsap';
 
-  const validas = ['diseno', 'ambos', 'ingenieria'];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function activar(lente: string, actualizarUrl: boolean, animar: boolean) {
-    document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.lente === lente));
-    });
-
-    const panelActivo = document.querySelector<HTMLElement>(`[data-panel="${lente}"]`);
-    const yaEstabaActivo = !!panelActivo && !panelActivo.hidden;
-
-    // El cambio de panel es siempre inmediato y síncrono (nunca depende de que una
-    // animación termine): así, por rápido que se hagan clic en los botones, el panel
-    // visible siempre corresponde al último clic. La animación solo decora la entrada
-    // del panel nuevo, y si se interrumpe, nunca deja contenido invisible.
-    document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
-      p.hidden = p.dataset.panel !== lente;
-    });
-    const tbRol = document.querySelector('[data-tb-rol]');
-    if (tbRol && panelActivo) tbRol.textContent = panelActivo.dataset.rol ?? '';
-
-    if (panelActivo) {
-      const reveal = panelActivo.querySelectorAll('[data-reveal]');
-      if (animar && !reduceMotion && !yaEstabaActivo) {
-        gsap.fromTo(
-          reveal,
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.05, overwrite: true }
-        );
-        // Respaldo: si la animación no llega a correr (pestaña en segundo plano,
-        // rAF pausado, etc.), el contenido igual queda visible.
-        setTimeout(() => gsap.set(reveal, { clearProps: 'opacity,transform' }), 500);
-      } else {
-        gsap.set(reveal, { clearProps: 'opacity,transform' });
-      }
-    }
-
-    document.documentElement.dataset.theme = lente;
-    document.dispatchEvent(new CustomEvent('lentechange', { detail: { lente } }));
-
-    // Resalta las capacidades que corresponden a la lente elegida
-    document.querySelectorAll<HTMLElement>('[data-lentes]').forEach((c) => {
-      const propias = (c.dataset.lentes ?? '').split(' ');
-      // Resalta las que aplican, en vez de apagar las que no: así nunca se pierde legibilidad.
-      c.classList.toggle('destacado', lente !== 'ambos' && propias.includes(lente));
-    });
-    if (actualizarUrl) {
-      const u = new URL(location.href);
-      if (lente === 'ambos') u.searchParams.delete('lente');
-      else u.searchParams.set('lente', lente);
-      history.replaceState(null, '', u);
-    }
-  }
-
-  const inicialParam = new URLSearchParams(location.search).get('lente') ?? 'ambos';
-  activar(validas.includes(inicialParam) ? inicialParam : 'ambos', false, false);
-
-  document.querySelectorAll<HTMLButtonElement>('[data-lente]').forEach((b) => {
-    b.addEventListener('click', () => activar(b.dataset.lente ?? 'ambos', true, true));
-  });
-
-  // Único momento orquestado de la página: el bloque de título y el selector
-  // aparecen al cargar; el panel inicial ya se resuelve arriba, sin animación propia.
+  // Único momento orquestado del home: el panel que Sidebar ya resolvió como
+  // activo aparece con una entrada suave; el resto del sitio no anima solo.
   if (!reduceMotion) {
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.from('[data-titleblock]', { opacity: 0, y: -8, duration: 0.5 })
-      .from('.lentes-intro', { opacity: 0, duration: 0.3 }, '-=0.3')
-      .from('.lente', { opacity: 0, y: 14, duration: 0.45, stagger: 0.08 }, '-=0.15')
-      .from('[data-panel="ambos"] [data-reveal]', { opacity: 0, y: 14, duration: 0.5, stagger: 0.1 }, '-=0.1')
-      .from('.hero .cta', { opacity: 0, duration: 0.4 }, '-=0.15');
+    gsap.from('[data-panel]:not([hidden]) [data-reveal]', {
+      opacity: 0, y: 14, duration: 0.5, stagger: 0.1, ease: 'power3.out',
+    });
+    gsap.from('.hero .cta', { opacity: 0, duration: 0.4, delay: 0.3, ease: 'power3.out' });
   }
 </script>

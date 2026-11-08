@@ -1,16 +1,13 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CaseCard from '../components/CaseCard.astro';
-import CaseDetail from '../components/CaseDetail.astro';
-import CaseModal from '../components/CaseModal.astro';
 import Texto from '../components/Texto.astro';
 import Hero from '../components/Hero.astro';
 
-const casosOrdenados = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
-const casos = await Promise.all(
-  casosOrdenados.map(async (caso) => ({ caso, Content: (await render(caso)).Content }))
-);
+// Cada caso abre siempre como página propia (/casos/<id>/, ver src/pages/casos/[id].astro),
+// nunca en un modal — así que acá solo hace falta el listado, no el contenido renderizado.
+const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
 
 // `lentes` indica con qué vista del hero se resalta cada grupo (diseno · ingenieria; ambos resalta todo)
 const capacidades = [
@@ -46,8 +43,28 @@ const formacion = [
 <Base>
   <Hero />
 
-  <section id="enfoque" class="section stage bg-light-accent">
-    <div class="section-head">
+  <section id="casos" class="panel section" data-panel="casos" hidden>
+    <div class="section-head fold">
+      <h2>Casos de estudio</h2>
+      <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
+    </div>
+    <div class="case-grid">
+      {casos.map((caso) => (
+        <CaseCard slug={caso.id} titulo={caso.data.titulo} resumen={caso.data.resumen} etiquetas={caso.data.etiquetas} />
+      ))}
+    </div>
+
+    <div class="otros-proyectos">
+      <h3>Otros proyectos</h3>
+      <article class="card">
+        <h3>Barrio Alonso de Córdova</h3>
+        <p>Proyecto digital para un entorno de boutiques de moda, diseño, regalos y restaurantes.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="enfoque" class="panel section stage" data-panel="enfoque" hidden>
+    <div class="section-head fold">
       <h2>Diseño que sabe cómo se construye</h2>
       <p class="section-intro">
         Los productos con los que suelo trabajar —dinero, maquinaria crítica, trámites de gobierno— son complejos y tienen poco margen de error. Entre el diseño y el código suele perderse fidelidad: una decisión de UX llega distinta al código, o una restricción técnica llega tarde al diseño. Se evita cuando ambos lados del trabajo los sostiene la misma persona, de principio a fin.
@@ -69,31 +86,8 @@ const formacion = [
     </div>
   </section>
 
-  <section id="casos" class="section">
-    <div class="section-head">
-      <h2>Casos de estudio</h2>
-      <p class="section-intro">Productos donde la complejidad es el trabajo: dinero, maquinaria, trámites públicos y confianza.</p>
-    </div>
-    <div class="case-grid">
-      {casos.map(({ caso }) => (
-        <CaseCard slug={caso.id} titulo={caso.data.titulo} resumen={caso.data.resumen} etiquetas={caso.data.etiquetas} />
-      ))}
-    </div>
-  </section>
-
-  <Fragment slot="overlay">
-    {casos.map(({ caso, Content }) => (
-      <template data-case-tpl={caso.id}>
-        <CaseDetail {...caso.data}>
-          <Content />
-        </CaseDetail>
-      </template>
-    ))}
-    <CaseModal />
-  </Fragment>
-
-  <section id="skills" class="section bg-dark-accent">
-    <div class="section-head">
+  <section id="skills" class="panel section" data-panel="skills" hidden>
+    <div class="section-head fold">
       <h2>De la investigación al código en producción</h2>
       <p class="section-intro">Incorporo IA y coding agents en el diseño, la implementación y el QA, siempre con criterio humano al frente.</p>
     </div>
@@ -107,8 +101,8 @@ const formacion = [
     </div>
   </section>
 
-  <section id="trayectoria" class="section">
-    <div class="section-head">
+  <section id="trayectoria" class="panel section" data-panel="trayectoria" hidden>
+    <div class="section-head fold">
       <h2>Trayectoria</h2>
       <p class="section-intro">2008 — hoy</p>
     </div>
@@ -123,19 +117,9 @@ const formacion = [
         </li>
       ))}
     </ol>
-  </section>
 
-  <section class="section">
-    <h2>Otros proyectos</h2>
-    <article class="card">
-      <h3>Barrio Alonso de Córdova</h3>
-      <p>Proyecto digital para un entorno de boutiques de moda, diseño, regalos y restaurantes.</p>
-    </article>
-  </section>
-
-  <section class="section">
-    <div class="section-head">
-      <h2>Formación</h2>
+    <div class="section-head formacion-head">
+      <h3>Formación</h3>
       <p class="section-intro">2005 — 2020</p>
     </div>
     <ol class="timeline">
@@ -148,13 +132,9 @@ const formacion = [
     </ol>
   </section>
 
-  <section class="section about stage bg-accent">
-    <h2>Sobre mí</h2>
-    <p class="stage-bottom-right">Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
-  </section>
-
-  <section id="contacto" class="section contact stage">
-    <div class="contact-top">
+  <section id="contacto" class="panel section contact stage" data-panel="contacto" hidden>
+    <p class="sobre-mi">Empecé en diseño gráfico y programación en 2008, y con los años me quedé en el cruce entre ambos: donde una buena decisión de diseño se encuentra con una restricción técnica real. Me muevo mejor en productos donde equivocarse cuesta —dinero, identidad, regulación— y donde la claridad es una forma de cuidar al usuario.</p>
+    <div class="contact-top fold">
       <h2>¿Tu producto necesita a alguien que diseñe y también lo construya?</h2>
       <p>Busco roles de Senior Product / UX Designer o UX Design Engineer, donde el diseño y el código se cruzan.</p>
     </div>

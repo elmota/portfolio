@@ -1,7 +1,9 @@
 ---
-// Card grande de la grilla de casos. Al hacer clic abre el detalle completo
-// en el modal (ver CaseModal.astro); el contenido real vive en un
-// <template data-case-tpl> que index.astro deja junto a esta card.
+// Fila de la lista de casos. Siempre abre la página propia del caso
+// (/casos/<slug>/, ver src/pages/casos/[id].astro) — nunca un modal — con la
+// transición de página definida en global.css (ver sección "View Transitions").
+import { url } from '../lib/url';
+
 interface Props {
   slug: string;
   titulo: string;
@@ -11,9 +13,11 @@ interface Props {
 const { slug, titulo, resumen, etiquetas } = Astro.props;
 ---
 
-<button type="button" class="case-card" data-open-case={slug} aria-haspopup="dialog">
-  <span class="case-card-tags">{etiquetas.map((e) => <span class="tag">{e}</span>)}</span>
-  <span class="case-card-title">{titulo}</span>
-  <span class="case-card-resumen">{resumen}</span>
-  <span class="case-card-open">Ver caso</span>
-</button>
+<a class="case-card" href={url(`casos/${slug}/`)}>
+  <span class="case-card-main">
+    <span class="case-card-tags">{etiquetas.map((e) => <span class="tag">{e}</span>)}</span>
+    <span class="case-card-title">{titulo}</span>
+    <span class="case-card-resumen">{resumen}</span>
+  </span>
+  <span class="case-card-arrow" aria-hidden="true">→</span>
+</a>

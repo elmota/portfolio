@@ -1,7 +1,10 @@
 ---
 import '../styles/global.css';
 import { url } from '../lib/url';
+import { ClientRouter } from 'astro:transitions';
 import BlueprintScene from '../components/BlueprintScene.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { sidebarItems, sidebarIds, defaultSidebarId } from '../lib/sidebarItems';
 
 interface Props {
   title?: string;
@@ -12,6 +15,10 @@ const {
   title = 'Alejandro Pérez Rocha — Senior Product / UX Designer y UX Design Engineer',
   description = 'Más de 15 años diseñando productos digitales con base en ingeniería frontend: Product Thinking, UX Strategy, Design Systems, REST APIs y CI/CD.',
 } = Astro.props;
+
+const paletas = Object.fromEntries(
+  sidebarItems.map((i) => [i.id, { bg: i.bg, ink: i.ink, detail: i.detail, detailInk: i.detailInk }])
+);
 ---
 
 <!doctype html>
@@ -32,27 +39,44 @@ const {
       href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
+    <script define:vars={{ paletas, sidebarIds, defaultSidebarId }}>
+      // Antes del primer pintado: fija bg/text/accent del item activo (perfil
+      // o sección, según el hash de la URL) para que no haya flash del color
+      // por defecto antes de que el script del Sidebar lo confirme.
+      (function () {
+        try {
+          var root = document.documentElement;
+          var id = location.hash.slice(1);
+          if (sidebarIds.indexOf(id) === -1) id = defaultSidebarId;
+          var p = paletas[id];
+          if (p) {
+            root.style.setProperty('--bg', p.bg);
+            root.style.setProperty('--text', p.ink);
+            root.style.setProperty('--accent', p.detail);
+            root.style.setProperty('--accent-ink', p.detailInk);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
-    <BlueprintScene />
-    <header class="nav">
-      <div class="nav-inner">
-        <a class="brand" href={url()}>Alejandro Pérez</a>
-        <nav>
-          <a href={url('#casos')}>Casos</a>
-          <a href={url('#enfoque')}>Enfoque</a>
-          <a href={url('#skills')}>Skills</a>
-          <a href={url('#trayectoria')}>Trayectoria</a>
-          <a class="btn btn-small" href={url('#contacto')}>Contacto</a>
-        </nav>
+    <div transition:persist="blueprint">
+      <BlueprintScene />
+    </div>
+    <div class="shell">
+      <div class="sidebar-persist" transition:persist="sidebar">
+        <Sidebar />
       </div>
-    </header>
-    <main>
-      <slot />
-    </main>
-    <slot name="overlay" />
-    <footer>
-      <p>© {new Date().getFullYear()} Alejandro Pérez Rocha</p>
-    </footer>
+      <div class="content">
+        <main>
+          <slot />
+        </main>
+        <slot name="overlay" />
+        <footer>
+          <p>© {new Date().getFullYear()} Alejandro Pérez Rocha</p>
+        </footer>
+      </div>
+    </div>
   </body>
 </html>

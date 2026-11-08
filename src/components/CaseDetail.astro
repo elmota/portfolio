@@ -1,7 +1,6 @@
 ---
-// Contenido completo de un caso (ficha + cuerpo largo). Se usa tanto en la página
-// propia de cada caso (/casos/slug/, para enlaces directos) como clonado dentro
-// del modal de la portada.
+// Contenido completo de un caso (ficha + cuerpo largo) — siempre su propia
+// página (/casos/slug/), nunca un modal.
 import Texto from './Texto.astro';
 import { url } from '../lib/url';
 
@@ -35,3 +34,24 @@ const { titulo, resumen, etiquetas, problema, rol, proceso, resultado, standalon
     <slot />
   </div>
 </article>
+
+{standalone && (
+  <script>
+    // "Volver" navega hacia atrás en el historial (si lo hay) en vez de
+    // forzar siempre una entrada nueva — así la transición de salida usa la
+    // animación "back" (ver global.css) y queda simétrica con la de entrada.
+    // Delegado en `document` (no en el link): con View Transitions, el script
+    // de una página de caso puede no re-ejecutarse al navegar de un caso a
+    // otro, pero un listener en `document` sigue vivo en toda la sesión.
+    if (!(window as any).__backNavInstalled) {
+      (window as any).__backNavInstalled = true;
+      document.addEventListener('click', (e) => {
+        const link = (e.target as HTMLElement)?.closest?.('a.back');
+        if (link && history.length > 1) {
+          e.preventDefault();
+          history.back();
+        }
+      });
+    }
+  </script>
+)}
