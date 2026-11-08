@@ -122,6 +122,12 @@ p { margin: 0 0 1em; }
   transform-origin: 50% 50%;
 }
 .item:hover .blob, .item.activo .blob { animation: itemBlobFloat 16s ease-in-out infinite; }
+/* Al seleccionarse, el blob sube dentro del item — mismo envoltorio
+   .blob-shift que el del fold, con su propia transición ease-in-out. */
+.item.activo .blob-shift { transform: translateY(-14px); }
+@media (prefers-reduced-motion: reduce) {
+  .item .blob-shift { transition: none; }
+}
 @keyframes itemBlobFloat {
   0% { transform: translate(0, 0) rotate(0deg); }
   50% { transform: translate(-5px, 6px) rotate(180deg); }
@@ -477,10 +483,17 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
   [data-panel]:not([hidden]) { animation: none; }
 }
 
-/* Blob decorativo dentro del fold: flota y gira muy lento sobre su eje,
-   sutil, nunca distrae. */
+/* Envoltorio que reacciona al scroll (ver Hero.astro): descansa quieto y
+   sube/baja según la velocidad y dirección, con una transición propia —
+   separado del blob para no pelear con su propia animación de flote. */
+.blob-shift {
+  position: absolute; inset: 0; pointer-events: none;
+  transition: transform .35s ease-in-out;
+}
+/* Blob decorativo dentro del fold, apoyado abajo: flota y gira muy lento
+   sobre su eje, sutil, nunca distrae. */
 .hero-blob {
-  position: absolute; top: -60px; right: -60px; width: 240px; height: 240px;
+  position: absolute; bottom: -60px; right: -60px; width: 240px; height: 240px;
   border-radius: 40% 60% 55% 45% / 55% 45% 60% 40%;
   background: color-mix(in srgb, var(--text) 10%, transparent);
   pointer-events: none;
@@ -493,6 +506,7 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-blob { animation: none; }
+  .blob-shift { transition: none; }
 }
 
 .lead { font-size: clamp(1.05rem, 1.5cqw, 1.3rem); color: var(--muted); max-width: 64ch; }

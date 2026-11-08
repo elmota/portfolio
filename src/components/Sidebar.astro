@@ -40,7 +40,9 @@ import { sidebarItems } from '../lib/sidebarItems';
           aria-pressed={item.id === 'ambos' ? 'true' : 'false'}
           style={`--c:${item.bg};--ci:${item.ink}`}
         >
-          <span class="blob" aria-hidden="true"></span>
+          <span class="blob-shift" aria-hidden="true">
+            <span class="blob"></span>
+          </span>
           <span class="num">{item.numero}</span>
           <span class="label">{item.etiqueta}</span>
           <span class="item-tag">{item.tagline}</span>

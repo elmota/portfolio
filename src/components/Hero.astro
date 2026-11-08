@@ -48,7 +48,9 @@ const lentes = [
     {lentes.map((l) => (
       <div class="panel" data-panel={l.id} data-rol={l.rol} hidden={l.id !== 'ambos'}>
         <div class="fold hero-fold">
-          <span class="hero-blob" aria-hidden="true"></span>
+          <span class="blob-shift" data-blob-shift aria-hidden="true">
+            <span class="hero-blob"></span>
+          </span>
           <p class="hero-eyebrow" data-reveal>Alejandro Pérez Rocha · {l.rol}</p>
           <h1 data-reveal>{l.titular}</h1>
           <p class="lead" data-reveal>{l.bajada}</p>
@@ -84,5 +86,30 @@ const lentes = [
       opacity: 0, y: 14, duration: 0.5, stagger: 0.1, ease: 'power3.out',
     });
     gsap.from('.hero .cta', { opacity: 0, duration: 0.4, delay: 0.3, ease: 'power3.out' });
+  }
+
+  // El blob descansa abajo del fold y "reacciona" al scroll: sube mientras
+  // se scrollea hacia abajo (a mayor velocidad, más sube) y baja de vuelta
+  // al scrollear hacia arriba o al detenerse — nunca por su cuenta.
+  if (!reduceMotion) {
+    let lastY = window.scrollY;
+    let shift = 0;
+    let decayTimer: ReturnType<typeof setTimeout>;
+    const shifters = () => document.querySelectorAll<HTMLElement>('[data-blob-shift]');
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      shift = Math.max(-36, Math.min(36, shift + delta * 0.6));
+      shifters().forEach((el) => { el.style.transform = `translateY(${-shift}px)`; });
+
+      clearTimeout(decayTimer);
+      decayTimer = setTimeout(() => {
+        shift = 0;
+        shifters().forEach((el) => { el.style.transform = ''; });
+      }, 300);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 </script>
