@@ -1,9 +1,9 @@
 ---
 // Índice navegable entre casos, visible solo dentro de la página propia de
-// un caso: en desktop, una columna fija al costado derecho, centrada
-// verticalmente; en tablet/mobile, una barra fija abajo (ver global.css).
-// Cada número lleva directo a ese caso (misma transición de página que el
-// resto del sitio), sin tener que volver primero al listado.
+// un caso. En desktop: columna fija al costado derecho, centrada
+// verticalmente, con hover que revela el nombre del caso (hay espacio de
+// sobra). En tablet/mobile: un botón flotante con el número actual que, al
+// tocarlo, despliega la lista completa con los nombres.
 import { getCollection } from 'astro:content';
 import { url } from '../lib/url';
 
@@ -12,18 +12,50 @@ interface Props {
 }
 const { current } = Astro.props;
 const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
+const actual = casos.find((c) => c.id === current);
+const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0') : '';
 ---
 
 <nav class="case-nav" aria-label="Navegar entre casos">
-  {casos.map((caso, i) => (
-    <a
-      class="case-nav-item"
-      class:list={{ activo: caso.id === current }}
-      href={url(`casos/${caso.id}/`)}
-      aria-current={caso.id === current ? 'page' : undefined}
-      title={caso.data.titulo}
-    >
-      {String(i + 1).padStart(2, '0')}
-    </a>
-  ))}
+  <button type="button" class="case-nav-toggle" aria-expanded="false" aria-controls="case-nav-list">
+    {numeroActual}
+  </button>
+  <div class="case-nav-list" id="case-nav-list">
+    {casos.map((caso, i) => (
+      <a
+        class="case-nav-item"
+        class:list={{ activo: caso.id === current }}
+        href={url(`casos/${caso.id}/`)}
+        aria-current={caso.id === current ? 'page' : undefined}
+      >
+        <span class="case-nav-num">{String(i + 1).padStart(2, '0')}</span>
+        <span class="case-nav-label">{caso.data.titulo}</span>
+      </a>
+    ))}
+  </div>
 </nav>
+
+<script>
+  // Delegado en `document` (no en el toggle): con View Transitions, este
+  // script puede no re-ejecutarse al navegar de un caso a otro (contenido
+  // idéntico en cada página), pero un listener en `document` sigue vivo.
+  if (!(window as any).__caseNavInstalled) {
+    (window as any).__caseNavInstalled = true;
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const toggle = document.querySelector<HTMLButtonElement>('.case-nav-toggle');
+      const list = document.querySelector<HTMLElement>('.case-nav-list');
+      if (!toggle || !list) return;
+
+      if (target.closest('.case-nav-toggle')) {
+        const abierto = list.classList.toggle('abierto');
+        toggle.setAttribute('aria-expanded', String(abierto));
+        return;
+      }
+      if (list.classList.contains('abierto') && !list.contains(target)) {
+        list.classList.remove('abierto');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>
