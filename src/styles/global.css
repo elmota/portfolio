@@ -648,7 +648,9 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
      con view() en el blob, el "scroller" sería el propio fold (tiene
      overflow:hidden) y el progreso nunca avanzaría. */
   .fold { view-timeline: --fold block; }
-  .blob-shift {
+  /* Solo en los folds: el .blob-shift de los items del sidebar es otro
+     elemento con la misma clase y no debe moverse con el scroll. */
+  .fold .blob-shift {
     animation: blobParallax linear both;
     animation-timeline: --fold;
   }
