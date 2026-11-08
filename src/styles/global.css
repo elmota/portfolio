@@ -131,6 +131,9 @@ html[data-theme="contacto"] {
   transition: flex-grow .35s ease-in-out, padding .35s ease-in-out;
 }
 .item.activo { flex-grow: 2.6; padding: 22px 20px; }
+/* Contacto es #1c1c1c: sobre el tema negro casi no se separa del fondo.
+   Un aro tenue lo delimita sin cambiar su paleta. */
+.item[data-id="contacto"] { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); }
 .item:focus-visible { outline: 3px solid var(--ci); outline-offset: -4px; }
 .num { font-family: var(--font-mono); font-size: .8rem; font-weight: 800; opacity: .8; }
 .label { font-family: var(--font-display); font-weight: 900; font-size: .98rem; letter-spacing: -.01em; }
@@ -527,6 +530,7 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
     padding-right: clamp(20px, 4vw, 56px);
   }
   .sidebar {
+    --bar-h: 66px; /* alto de la barra superior: 14 + 38 (toggle) + 14 */
     position: sticky; top: 0; z-index: 20; width: 100%; height: auto; overflow: visible;
     padding: 14px 16px; background: var(--page-bar);
   }
@@ -550,24 +554,30 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
   .items {
     display: none; flex-direction: column; align-items: center; gap: 8px;
     position: absolute; top: 100%; left: 0; right: 0; z-index: 19;
-    margin: 0; padding: 10px 16px calc(16px + env(safe-area-inset-bottom)); background: var(--page-bar);
+    box-sizing: border-box;
+    margin: 0; padding: 10px 16px calc(14px + env(safe-area-inset-bottom)); background: var(--page-bar);
     box-shadow: 0 16px 32px rgba(10, 10, 10, .18);
-    /* Nunca más alto que la pantalla visible (en Safari iOS la barra del
-       navegador la achica): si no entra, scrollea por dentro en vez de
-       quedar tapado. 76px ≈ alto de la barra superior. */
-    max-height: calc(100vh - 76px); max-height: calc(100dvh - 76px);
+    /* Ocupa TODO el alto visible bajo la barra. 100dvh sigue a la barra de
+       Safari iOS (arriba o abajo, expandida o colapsada); el scroll de la
+       página está bloqueado mientras el menú está abierto, así que el valor
+       no salta. La altura es fija (no max-height) para que los items se
+       repartan el espacio; si la pantalla es tan baja que no entran, scrollea
+       por dentro. */
+    height: calc(100vh - var(--bar-h)); height: calc(100dvh - var(--bar-h));
     overflow-y: auto; overscroll-behavior: contain;
   }
   .items.abierto { display: flex; }
-  /* Compactos: número y nombre en una sola línea para que los 8 quepan en el
-     alto visible de un iPhone con la barra de Safari. */
+  /* Los 8 items se reparten el alto (flex-grow); el activo crece un poco más
+     para mostrar su descripción. Ancho: fijo para todos los inactivos, el
+     activo ocupa todo el ancho del panel. */
   .item {
-    width: auto; min-width: 46%; flex-grow: 0; flex-shrink: 0;
-    flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 10px; row-gap: 2px;
+    width: 78%; min-width: 0; flex: 1 1 auto;
+    flex-direction: row; flex-wrap: wrap; align-items: center; align-content: center;
+    column-gap: 10px; row-gap: 2px;
     padding: 10px 16px;
   }
   .item .item-tag { flex-basis: 100%; }
-  .item.activo { width: 100%; padding: 12px 18px; }
+  .item.activo { width: 100%; flex-grow: 1.6; padding: 12px 18px; }
   .items.abierto .item {
     animation: itemDropIn .5s cubic-bezier(.34, 1.3, .64, 1) both;
   }

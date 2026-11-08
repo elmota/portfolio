@@ -64,16 +64,55 @@ import { sidebarItems } from '../lib/sidebarItems';
 
   let ultimoPerfil = 'ambos'; // qué perfil restaurar al volver a scrollear hasta el Hero
   let ultimoActivo = 'ambos'; // último id activo, sea perfil o sección — para páginas sin ninguno de los dos (un caso de estudio)
-  let observando = true; // se apaga un instante durante un scroll-to-click, para que el observer no "pelee" con el clic
+  let observando = true; // se apaga durante un scroll-to-click, para que el observer no "pelee" con el clic
+  let heroActivo: HTMLElement | null = null;
+  let objetivosActivos: HTMLElement[] = [];
+
+  // Fuente de verdad del scrollspy: el bloque (Hero o sección) que cruza la
+  // línea central de la pantalla. Se recalcula entero cada vez en vez de
+  // fiarse de qué entradas avisó el observer: en el borde entre dos
+  // secciones ambas pueden contar como "visibles" y ganaba la que avisara
+  // último (abrir el menú en Contacto lo dejaba en Trayectoria).
+  function sincronizarActivo() {
+    if (!observando) return;
+    const centro = window.innerHeight / 2;
+    for (const el of objetivosActivos) {
+      const r = el.getBoundingClientRect();
+      if (r.top <= centro && r.bottom > centro) {
+        const id = el === heroActivo ? ultimoPerfil : el.id;
+        if (id !== ultimoActivo) aplicarEstilo(id, true);
+        return;
+      }
+    }
+  }
+
+  // Reactiva el scrollspy cuando el scroll programático realmente terminó
+  // (scrollend), no a los 700 ms: en móvil el salto hasta Contacto recorre
+  // ~11.000 px y dura más. Si el navegador no emite scrollend, vale el plazo.
+  function reactivarTrasScroll(plazoMs = 2500) {
+    let hecho = false;
+    const fin = () => {
+      if (hecho) return;
+      hecho = true;
+      window.removeEventListener('scrollend', fin);
+      clearTimeout(t);
+      observando = true;
+      sincronizarActivo();
+    };
+    const t = setTimeout(fin, plazoMs);
+    window.addEventListener('scrollend', fin, { once: true });
+  }
 
   function cerrarMenu() {
     itemsNav?.classList.remove('abierto');
     menuToggle?.setAttribute('aria-expanded', 'false');
+    menuToggle?.setAttribute('aria-label', 'Abrir menú');
     document.body.style.overflow = '';
   }
   menuToggle?.addEventListener('click', () => {
     const abierto = itemsNav?.classList.toggle('abierto');
     menuToggle.setAttribute('aria-expanded', String(!!abierto));
+    menuToggle.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
     // El desplegable es una hoja flotante sobre el contenido (mobile/tablet):
     // mientras está abierto, bloquea el scroll de atrás para que no se vea
     // cortado ni se pelee con el scroll de la página.
@@ -131,7 +170,7 @@ import { sidebarItems } from '../lib/sidebarItems';
     observando = false;
     aplicarEstilo(id, true);
     el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    setTimeout(() => { observando = true; }, 700);
+    reactivarTrasScroll();
   }
 
   // Si el perfil/sección elegido no existe en esta página (por ejemplo,
@@ -181,19 +220,16 @@ import { sidebarItems } from '../lib/sidebarItems';
     const objetivos = [hero, ...secciones.map((id) => document.getElementById(id))].filter(
       (el): el is HTMLElement => !!el
     );
+    heroActivo = hero;
+    objetivosActivos = objetivos;
 
     if (objetivos.length) {
-      observerActivo = new IntersectionObserver(
-        (entries) => {
-          if (!observando) return;
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            if (entry.target === hero) aplicarEstilo(ultimoPerfil, true);
-            else aplicarEstilo(entry.target.id, true);
-          });
-        },
-        { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
-      );
+      // El observer solo avisa "algo cambió cerca del centro"; quién manda
+      // lo decide sincronizarActivo().
+      observerActivo = new IntersectionObserver(() => sincronizarActivo(), {
+        rootMargin: '-45% 0px -45% 0px',
+        threshold: 0,
+      });
       objetivos.forEach((el) => observerActivo!.observe(el));
     }
 
@@ -212,7 +248,7 @@ import { sidebarItems } from '../lib/sidebarItems';
       observando = false;
       requestAnimationFrame(() => {
         document.getElementById(hashId)?.scrollIntoView({ block: 'start' });
-        setTimeout(() => { observando = true; }, 700);
+        reactivarTrasScroll(700);
       });
     } else if (hero) {
       seleccionarPerfil(ultimoPerfil, false);
