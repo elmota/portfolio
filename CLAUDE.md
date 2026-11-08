@@ -18,11 +18,18 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 
 ## Arquitectura
 
-- **Sidebar unificado de 8 items** (`src/components/Sidebar.astro`,
-  `src/lib/sidebarItems.ts`): 3 perfiles (`diseno`, `ambos`, `ingenieria`) y
-  5 secciones (`casos`, `enfoque`, `skills`, `trayectoria`, `contacto`). Cada
-  item tiene paleta fija (`bg`/`ink`/`detail`/`detailInk`). Los perfiles
-  alternan paneles del Hero; las secciones son una página continua.
+- **Perfiles y secciones** (`src/components/Hero.astro`, `Sidebar.astro`,
+  `src/lib/sidebarItems.ts`): 3 perfiles (`diseno`, `ambos` = "Diseño + Código",
+  `ingenieria`) y 5 secciones (`casos`, `enfoque`, `skills`, `trayectoria`,
+  `contacto`), cada uno con paleta fija (`bg`/`ink`/`detail`/`detailInk`). Los
+  perfiles se eligen con el **selector en línea del Hero** (`.perfil-btn`,
+  siempre visible, también en móvil) y alternan paneles; el **sidebar lista solo
+  las 5 secciones** (numeradas 01–05). Las paletas de los 8 viajan como JSON
+  (`#paletas-data`) porque `aplicarEstilo` las necesita sin item de menú.
+  Estando en un perfil (arriba del todo) ningún item del menú queda activo.
+- **Primera vista**: presentación personal (nombre, rol, "Más allá del diseño:
+  hasta producción.", ciudad y disponibilidad, ciclo de 4 pasos) sobre fondo
+  neutro; el color del perfil vive en el fold del panel de abajo.
 - **Scrollspy**: `IntersectionObserver` (`rootMargin: -45% 0 -45% 0`) solo avisa
   que algo cambió; `sincronizarActivo()` elige el bloque que cruza el centro de
   la pantalla. Se apaga mientras corre un scroll programático.
@@ -41,7 +48,7 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   `animation-timeline`) con `@supports` como respaldo.
 - **Menú móvil (≤960px)**: toggle de 4 cuadros de color. Panel de alto
   `calc(100dvh - var(--bar-h))` (`--bar-h: 66px`; actualizar si cambia el
-  padding de la barra), items repartidos con `flex`, inactivos a ancho fijo
+  padding de la barra), items repartidos con `flex` (5 items), inactivos a ancho fijo
   (78%), activo al 100%. Bloquea el scroll de atrás mientras está abierto.
 
 ## Problemas ya resueltos (no reintroducir)

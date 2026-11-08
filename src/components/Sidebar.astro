@@ -11,6 +11,15 @@
 // y un clic solo hace scroll hasta ahí, no oculta nada.
 import { url } from '../lib/url';
 import { sidebarItems } from '../lib/sidebarItems';
+
+// Los perfiles se eligen con el selector en línea del Hero (visible también
+// en mobile); el sidebar lista solo las secciones. Las paletas de todos
+// viajan igual como JSON, porque aplicarEstilo las necesita aunque el item
+// del perfil ya no exista en el menú.
+const secciones = sidebarItems.filter((i) => i.tipo === 'seccion');
+const paletas = Object.fromEntries(
+  sidebarItems.map((i) => [i.id, { bg: i.bg, ink: i.ink, detail: i.detail, detailInk: i.detailInk }])
+);
 ---
 
 <aside class="sidebar">
@@ -26,8 +35,8 @@ import { sidebarItems } from '../lib/sidebarItems';
     </button>
   </div>
 
-  <nav class="items" id="sidebar-items" aria-label="Perfiles y secciones">
-    {sidebarItems.map((item, i) => (
+  <nav class="items" id="sidebar-items" aria-label="Secciones">
+    {secciones.map((item) => (
       <>
         <button
           type="button"
@@ -37,7 +46,7 @@ import { sidebarItems } from '../lib/sidebarItems';
           data-ink={item.ink}
           data-detail={item.detail}
           data-detail-ink={item.detailInk}
-          aria-pressed={item.id === 'ambos' ? 'true' : 'false'}
+          aria-pressed="false"
           style={`--c:${item.bg};--ci:${item.ink}`}
         >
           <span class="blob-shift" aria-hidden="true">
@@ -47,11 +56,11 @@ import { sidebarItems } from '../lib/sidebarItems';
           <span class="label">{item.etiqueta}</span>
           <span class="item-tag">{item.tagline}</span>
         </button>
-        {i === 2 && <div class="divider" role="presentation"></div>}
       </>
     ))}
   </nav>
 </aside>
+<script type="application/json" id="paletas-data" set:html={JSON.stringify(paletas)} />
 
 <script>
   const perfiles = ['diseno', 'ambos', 'ingenieria'];
@@ -59,6 +68,9 @@ import { sidebarItems } from '../lib/sidebarItems';
   const ids = [...perfiles, ...secciones];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items = document.querySelectorAll<HTMLButtonElement>('[data-id]');
+  const paletas: Record<string, { bg: string; ink: string; detail: string; detailInk: string }> = JSON.parse(
+    document.getElementById('paletas-data')?.textContent ?? '{}'
+  );
   const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
   const itemsNav = document.querySelector<HTMLElement>('.items');
 
@@ -123,20 +135,22 @@ import { sidebarItems } from '../lib/sidebarItems';
   // sin tocar qué contenido está visible — eso lo decide el scroll (secciones)
   // o el toggle del Hero (perfiles).
   function aplicarEstilo(id: string, actualizarHash: boolean) {
-    const btn = document.querySelector<HTMLButtonElement>(`[data-id="${id}"]`);
-    if (!btn) return;
+    const p = paletas[id];
+    if (!p) return;
     ultimoActivo = id;
+    // Solo las secciones tienen item en el menú: estando en un perfil
+    // (arriba del todo), ninguno queda marcado.
     items.forEach((b) => {
-      const esEste = b === btn;
+      const esEste = b.dataset.id === id;
       b.classList.toggle('activo', esEste);
       b.setAttribute('aria-pressed', String(esEste));
     });
 
     const root = document.documentElement;
-    root.style.setProperty('--bg', btn.dataset.bg ?? '');
-    root.style.setProperty('--text', btn.dataset.ink ?? '');
-    root.style.setProperty('--accent', btn.dataset.detail ?? '');
-    root.style.setProperty('--accent-ink', btn.dataset.detailInk ?? '');
+    root.style.setProperty('--bg', p.bg);
+    root.style.setProperty('--text', p.ink);
+    root.style.setProperty('--accent', p.detail);
+    root.style.setProperty('--accent-ink', p.detailInk);
 
     document.documentElement.dataset.theme = id;
     document.dispatchEvent(new CustomEvent('lentechange', { detail: { lente: id } }));
