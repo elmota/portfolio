@@ -14,6 +14,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@microsoft/clarity": "1.0.2",
     "astro": "7.4.5",
     "three": "^0.187.0"
   },

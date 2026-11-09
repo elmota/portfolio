@@ -1,0 +1,26 @@
+---
+// Microsoft Clarity (mapas de calor y grabaciones de sesión), vía el paquete
+// npm oficial. Solo corre si se cumplen las tres condiciones:
+//   1. Build de producción (no en `astro dev`).
+//   2. PUBLIC_CLARITY_ID definido (en GitHub: variable de repositorio
+//      CLARITY_PROJECT_ID, que deploy.yml pasa al build). El ID de proyecto no
+//      es secreto: igual queda visible en el HTML publicado.
+//   3. El navegador no envía "No rastrear" (Do Not Track).
+// Se inicializa una sola vez: Base.astro usa <ClientRouter />, así que este
+// módulo no se re-ejecuta al navegar; Clarity sigue los cambios de URL por sí
+// mismo (history API).
+const id = import.meta.env.PROD ? import.meta.env.PUBLIC_CLARITY_ID : undefined;
+---
+
+{id && <meta name="clarity-project-id" content={id} />}
+
+<script>
+  import Clarity from '@microsoft/clarity';
+
+  const id = document.querySelector<HTMLMetaElement>('meta[name="clarity-project-id"]')?.content;
+  const noRastrear = navigator.doNotTrack === '1' || (window as any).doNotTrack === '1';
+  if (id && !noRastrear && !(window as any).__clarityIniciado) {
+    (window as any).__clarityIniciado = true;
+    Clarity.init(id);
+  }
+</script>

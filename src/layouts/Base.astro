@@ -4,6 +4,7 @@ import { url } from '../lib/url';
 import { ClientRouter } from 'astro:transitions';
 import BlueprintScene from '../components/BlueprintScene.astro';
 import Sidebar from '../components/Sidebar.astro';
+import Analytics from '../components/Analytics.astro';
 import { sidebarItems, sidebarIds, defaultSidebarId } from '../lib/sidebarItems';
 
 interface Props {
@@ -40,6 +41,7 @@ const paletas = Object.fromEntries(
       rel="stylesheet"
     />
     <ClientRouter />
+    <Analytics />
     <script define:vars={{ paletas, sidebarIds, defaultSidebarId }}>
       // Antes del primer pintado: fija bg/text/accent del item activo (perfil
       // o sección, según el hash de la URL) para que no haya flash del color

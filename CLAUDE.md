@@ -58,6 +58,19 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   (78%), activo al 100%. Número, título y descripción de cada item siempre
   alineados a la izquierda (`justify-content: flex-start` en la fila móvil). Bloquea el scroll de atrás mientras está abierto.
 
+## Analítica (Microsoft Clarity)
+
+- Paquete `@microsoft/clarity` fijado en 1.0.2 (versión exacta; envoltorio fino
+  que inyecta el script de `clarity.ms`). Se inicializa en
+  `src/components/Analytics.astro`, una sola vez (ClientRouter no re-ejecuta
+  módulos). Va incluido en `Base.astro`.
+- **Inactivo salvo que**: build de producción **y** `PUBLIC_CLARITY_ID`
+  definido **y** el navegador no envía Do Not Track. En el deploy el ID viene de
+  la variable de repositorio `CLARITY_PROJECT_ID` (Settings → Secrets and
+  variables → Actions → Variables); `deploy.yml` la pasa al build. El ID no es
+  secreto (queda en el HTML).
+- Pendiente de decidir: aviso de privacidad / consentimiento de cookies.
+
 ## Problemas ya resueltos (no reintroducir)
 
 - Clase `.tag` en colisión: renombrada a `.item-tag`.
