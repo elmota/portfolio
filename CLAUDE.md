@@ -65,10 +65,10 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   `src/components/Analytics.astro`, una sola vez (ClientRouter no re-ejecuta
   módulos). Va incluido en `Base.astro`.
 - **Inactivo salvo que**: build de producción **y** `PUBLIC_CLARITY_ID`
-  definido **y** el navegador no envía Do Not Track. En el deploy el ID viene de
-  la variable de repositorio `CLARITY_PROJECT_ID` (Settings → Secrets and
-  variables → Actions → Variables); `deploy.yml` la pasa al build. El ID no es
-  secreto (queda en el HTML).
+  definido **y** el navegador no envía Do Not Track. En el deploy `deploy.yml` lo pasa al
+  build: la variable de repositorio `CLARITY_PROJECT_ID` si existe, si no el ID
+  del proyecto (`zapi45uvh4`, escrito en el workflow). El ID no es secreto
+  (queda en el HTML). Local/dev: sin ID, no se carga nada.
 - Pendiente de decidir: aviso de privacidad / consentimiento de cookies.
 
 ## Problemas ya resueltos (no reintroducir)
