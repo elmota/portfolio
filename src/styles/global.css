@@ -128,7 +128,7 @@ html[data-theme="contacto"] {
 .item {
   all: unset; box-sizing: border-box; cursor: pointer; position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: center; gap: 4px;
-  padding: 16px 18px; border-radius: 18px;
+  padding: 16px 18px; border-radius: 18px; text-align: left;
   background: var(--c); color: var(--ci);
   flex-grow: 1;
   transition: flex-grow .35s ease-in-out, padding .35s ease-in-out;
@@ -583,6 +583,7 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
   .item {
     width: 78%; min-width: 0; flex: 1 1 auto;
     flex-direction: row; flex-wrap: wrap; align-items: center; align-content: center;
+    justify-content: flex-start; /* número y título a la izquierda, igual que la descripción */
     column-gap: 10px; row-gap: 2px;
     padding: 10px 16px;
   }

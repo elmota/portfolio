@@ -55,7 +55,8 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 - **Menú móvil (≤960px)**: toggle de 4 cuadros de color. Panel de alto
   `calc(100dvh - var(--bar-h))` (`--bar-h: 66px`; actualizar si cambia el
   padding de la barra), items repartidos con `flex` (5 items), inactivos a ancho fijo
-  (78%), activo al 100%. Bloquea el scroll de atrás mientras está abierto.
+  (78%), activo al 100%. Número, título y descripción de cada item siempre
+  alineados a la izquierda (`justify-content: flex-start` en la fila móvil). Bloquea el scroll de atrás mientras está abierto.
 
 ## Problemas ya resueltos (no reintroducir)
 
