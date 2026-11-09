@@ -178,6 +178,9 @@ const paletas = Object.fromEntries(
   // Perfiles: alternan entre los 3 paneles del Hero (nunca se "scrollean",
   // son la misma sección contada distinto) y siempre vuelven arriba.
   function seleccionarPerfil(id: string, actualizarHash: boolean) {
+    // Hacia qué lado "entra" el panel nuevo (según el orden del selector).
+    const cambia = id !== ultimoPerfil;
+    const dir = perfiles.indexOf(id) > perfiles.indexOf(ultimoPerfil) ? 'next' : 'prev';
     ultimoPerfil = id;
     aplicarEstilo(id, actualizarHash);
 
@@ -191,6 +194,7 @@ const paletas = Object.fromEntries(
     // cuando el panel pasa de display:none a visible (ver global.css).
     document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => {
       p.hidden = p.dataset.panel !== id;
+      if (cambia && !p.hidden) p.dataset.dir = dir;
     });
   }
 
@@ -263,6 +267,44 @@ const paletas = Object.fromEntries(
         window.scrollBy({ top: destino, behavior: reduceMotion ? 'auto' : 'smooth' });
       }
     });
+  });
+
+  // Deslizar horizontalmente sobre el selector o el panel cambia de perfil
+  // (izquierda = siguiente, derecha = anterior). Es un atajo además de los
+  // botones, para quien usa el móvil con una mano. Solo cuenta un gesto claramente
+  // horizontal: el scroll vertical de la página no se toca (los listeners son
+  // pasivos y `touch-action: pan-y` en el CSS deja pasar solo el desplazamiento
+  // vertical al navegador).
+  let toque: { x: number; y: number; t: number } | null = null;
+  const zonaPerfil = (el: EventTarget | null) =>
+    (el as HTMLElement | null)?.closest?.('[data-panel], .perfil-switch') ?? null;
+  document.addEventListener('touchstart', (e) => {
+    toque = e.touches.length === 1 && zonaPerfil(e.target)
+      ? { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() }
+      : null;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (!toque) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - toque.x;
+    const dy = t.clientY - toque.y;
+    const rapido = Date.now() - toque.t < 700;
+    toque = null;
+    if (!rapido || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+    const i = perfiles.indexOf(ultimoPerfil) + (dx < 0 ? 1 : -1);
+    if (i >= 0 && i < perfiles.length) seleccionarPerfil(perfiles[i], true);
+  }, { passive: true });
+  document.addEventListener('touchcancel', () => { toque = null; }, { passive: true });
+
+  // Teclado: flechas izquierda/derecha sobre los botones de perfil.
+  document.addEventListener('keydown', (e) => {
+    const b = (e.target as HTMLElement)?.closest?.<HTMLElement>('[data-perfil]');
+    if (!b || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+    const i = perfiles.indexOf(b.dataset.perfil ?? '') + (e.key === 'ArrowRight' ? 1 : -1);
+    if (i < 0 || i >= perfiles.length) return;
+    e.preventDefault();
+    seleccionarPerfil(perfiles[i], true);
+    document.querySelector<HTMLElement>(`[data-perfil="${perfiles[i]}"]`)?.focus();
   });
 
   items.forEach((b) => {

@@ -33,6 +33,12 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   perfil tiene un secundario propio: turquesa, rosa `#ec7fa6` y amarillo. El
   naranja `#dd8a2e` es de Trayectoria (antes era de "Ambos": dos cálidos con el
   mismo peso). Cada cambio de paleta se valida con WCAG AA.
+- **Cambiar de perfil sin los botones** (heurística de flexibilidad): deslizar
+  horizontalmente sobre el selector o el panel (izquierda = siguiente, derecha =
+  anterior; umbral 60px, rápido, claramente horizontal; sin ciclo en los
+  extremos) y flechas ←/→ sobre los botones. Los listeners son pasivos y las
+  zonas llevan `touch-action: pan-y pinch-zoom`. El panel entra desde el lado
+  del avance (`data-dir`). En táctil el título añade ", o desliza".
 - **Primera vista**: presentación personal (nombre, rol, "Más allá del diseño:
   hasta producción.", ciudad y disponibilidad, ciclo de 4 pasos) sobre fondo
   neutro; el color del perfil vive en el fold del panel de abajo.

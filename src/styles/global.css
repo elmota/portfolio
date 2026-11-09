@@ -735,6 +735,16 @@ footer .footer-aviso a { text-decoration: underline; text-underline-offset: 2px;
    vista (en mobile el menú los oculta tras el toggle). */
 .perfil-switch { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
 .perfil-switch-title { margin: 0; font-weight: 700; }
+.perfil-switch-hint { display: none; }
+@media (pointer: coarse) { .perfil-switch-hint { display: inline; } }
+/* El gesto horizontal lo maneja el JS (cambio de perfil); al navegador solo le
+   dejamos el desplazamiento vertical y el zoom con pellizco. */
+.perfil-switch, [data-panel] { touch-action: pan-y pinch-zoom; }
+/* El panel entra desde el lado hacia el que se avanzó (siguiente / anterior). */
+[data-panel][data-dir="next"]:not([hidden]) { animation: panelEntraSig .45s cubic-bezier(.22, 1, .36, 1) both; }
+[data-panel][data-dir="prev"]:not([hidden]) { animation: panelEntraAnt .45s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes panelEntraSig { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: none; } }
+@keyframes panelEntraAnt { from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: none; } }
 .perfil-switch-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .perfil-btn {
   background: var(--c); color: var(--ci); border: 0; border-radius: var(--radius);

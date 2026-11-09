@@ -68,7 +68,7 @@ const perfiles = sidebarItems.filter((i) => i.tipo === 'perfil');
     </div>
 
     <div class="perfil-switch" role="group" aria-labelledby="perfil-switch-title">
-      <p class="perfil-switch-title" id="perfil-switch-title">Elige cómo mirar mi trabajo</p>
+      <p class="perfil-switch-title" id="perfil-switch-title">Elige cómo mirar mi trabajo<span class="perfil-switch-hint">, o desliza</span></p>
       <div class="perfil-switch-btns">
         {perfiles.map((p) => (
           <button
