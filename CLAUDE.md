@@ -74,6 +74,22 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 - El build no corre en el VM de Claude (binarios de macOS en `node_modules`,
   sin red para npm): compilar y hacer push desde la Mac.
 
+## Narrativa (mantra y reglas de copy)
+
+- **Mantra**: "Más allá del diseño: los productos están vivos." Una idea
+  comienza en el discovery y el diseño y no termina en producción: evoluciona.
+  El ciclo del Hero es continuo (Descubrir, Diseñar, Construir, Evolucionar y
+  vuelta a empezar), no un círculo que se cierra al llegar a producción.
+- Evitar "hasta producción" / "hasta que funcione": suenan a final.
+- Usar "comienza" (no "parto"). No repetir "producto": alternar con "idea"
+  cuando aplique; acompañar ideas también importa, más allá de lo tangible.
+- Primera persona, concreto, sin cliché ni textos largos. Eje: el oficio es la
+  base y la IA es un compañero que acelera y cubre casos borde; el criterio y
+  la última revisión son humanos.
+- En móvil, el selector de perfil debe quedar a la vista en la primera
+  pantalla (hoy ~549–623px de 664): al alargar copy de la presentación,
+  volver a medirlo.
+
 ## Principios a aplicar al evaluar o escribir/modificar contenido
 
 Cuando se agregue, edite o critique copy, layout o estructura de cualquier

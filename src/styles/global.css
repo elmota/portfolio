@@ -790,10 +790,11 @@ html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
    en la primera pantalla (si no, hay que scrollear para descubrir que existe). */
 @media (max-width: 600px) {
   .hero.stage { padding-top: 20px; }
-  .hero-intro { gap: 14px; padding-bottom: 20px; }
-  .hero-id { font-size: 1rem; }
-  .hero-intro h1 { font-size: clamp(2.4rem, 10.5cqw, 3rem); }
-  .hero-intro .lead { font-size: 1.02rem; line-height: 1.5; }
+  .hero-intro { gap: 12px; padding-bottom: 18px; }
+  .hero-id { font-size: 1rem; gap: 0; }
+  .hero-intro h1 { font-size: clamp(2.1rem, 9.2cqw, 2.6rem); text-wrap: balance; }
+  .hero-intro .lead { font-size: .98rem; line-height: 1.45; }
+  .ciclo li span { display: none; } /* en mobile, una sola línea: sin los números */
   .perfil-switch { gap: 8px; margin-bottom: 16px; }
 }
 

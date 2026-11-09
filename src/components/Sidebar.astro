@@ -253,7 +253,14 @@ const paletas = Object.fromEntries(
       if (!panel) return;
       const top = panel.getBoundingClientRect().top;
       if (top > window.innerHeight * 0.6) {
-        window.scrollBy({ top: top - 80, behavior: reduceMotion ? 'auto' : 'smooth' });
+        // Deja el selector completo a la vista, justo bajo la barra: el
+        // panel sigue debajo, y se puede cambiar de perfil sin scrollear.
+        const selector = document.querySelector<HTMLElement>('.perfil-switch');
+        const barra = window.matchMedia('(max-width: 960px)').matches
+          ? (document.querySelector<HTMLElement>('.sidebar-top')?.getBoundingClientRect().bottom ?? 0)
+          : 0;
+        const destino = selector ? selector.getBoundingClientRect().top - barra - 12 : top - 80;
+        window.scrollBy({ top: destino, behavior: reduceMotion ? 'auto' : 'smooth' });
       }
     });
   });
