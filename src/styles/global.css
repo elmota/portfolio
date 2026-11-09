@@ -793,3 +793,13 @@ html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
   .hero-intro .lead { font-size: 1.02rem; line-height: 1.5; }
   .perfil-switch { gap: 8px; margin-bottom: 16px; }
 }
+
+/* Los titulares de perfil traen palabras de 15 letras ("implementación.",
+   "complicaciones.") que a tamaño fijo no caben en un iPhone y el navegador
+   las parte en mitad de palabra, dejando una letra sola en la última línea.
+   El tamaño se deriva del ancho disponible (contenedor menos los paddings de
+   main y del fold, ~104px) para que la palabra más larga entre siempre
+   entera (≈8.8em de ancho en Archivo 900). */
+@media (max-width: 600px) {
+  .hero-fold h2 { font-size: min(2.8rem, calc((100cqw - 108px) / 9)); }
+}

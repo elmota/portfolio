@@ -61,6 +61,10 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 - iPad tratado como hover: usar `pointer: coarse`.
 - Clic en el sidebar desde un caso: `navegarAHome`.
 - Abrir el menú en Contacto cambiaba a Trayectoria (scrollspy en el borde).
+- Titulares de perfil partidos en mitad de palabra en iPhone ("implementación" →
+  "implementació/n"): `.hero-fold h2` deriva su tamaño del ancho disponible en
+  ≤600px. Si se cambia el copy de un titular, revisar su palabra más larga
+  (≈8.8em de ancho) a 320–600px antes de publicar.
 
 ## Pendiente de verificar
 
