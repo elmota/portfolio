@@ -40,7 +40,7 @@ const formacion = [
 ];
 
 // Espiral de "Cada versión es otra vuelta": 3 vueltas desde el centro hacia
-// afuera. Las versiones 1, 2, 3 y n caen siempre sobre el mismo radio (arriba):
+// afuera. Las versiones (puntos, sin números) caen siempre sobre el mismo radio (arriba):
 // cada vuelta vuelve al mismo punto, un poco más lejos y con más contexto.
 const ESP = { cx: 210, cy: 210, r0: 16, r1: 176, vueltas: 3, pasos: 360 };
 const espMax = ESP.vueltas * 2 * Math.PI;
@@ -61,7 +61,7 @@ const espNodos = [0, 1, 2, 3].map((k, i) => {
   const pt = espPunto(th);
   const idx = Math.round((th / espMax) * ESP.pasos);
   const desde = 8 + 40 * (espLen[idx] / espTotal); // % del rango de scroll en que aparece
-  return { ...pt, etiqueta: i === 3 ? 'n' : String(k + 1), desde: desde.toFixed(1), hasta: (desde + 4).toFixed(1), ultimo: i === 3 };
+  return { ...pt, desde: desde.toFixed(1), hasta: (desde + 4).toFixed(1), ultimo: i === 3 };
 });
 const espEnd = espPts[espPts.length - 1];
 const espPrev = espPts[espPts.length - 6];
@@ -130,12 +130,11 @@ const espFlecha = [
         <p>Lo que la gente hace con lo entregado abre el siguiente descubrir. Acompaño esas vueltas, no solo la primera.</p>
       </figcaption>
       <svg viewBox="0 0 420 420" role="img" aria-labelledby="espiral-t">
-        <title id="espiral-t">Una espiral que se abre en cada vuelta: versión 1, 2, 3 y n.</title>
+        <title id="espiral-t">Una espiral que se abre en cada vuelta: cada punto es una versión, y sigue.</title>
         <path class="vuelta" pathLength="1" d={espD} />
         {espNodos.map((n) => (
           <g class:list={['nodo', { ultimo: n.ultimo }]} style={`animation-range: cover ${n.desde}% cover ${n.hasta}%`}>
             <circle cx={n.x.toFixed(1)} cy={n.y.toFixed(1)} r={n.ultimo ? 8 : 6} />
-            <text x={n.x.toFixed(1)} y={(n.y - 16).toFixed(1)} text-anchor="middle">{n.etiqueta}</text>
           </g>
         ))}
         <polygon class="flecha" points={espFlecha} />

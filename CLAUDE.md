@@ -85,8 +85,8 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   El ciclo del Hero es continuo (Descubrir, Diseñar, Construir, Evolucionar y
   vuelta a empezar), no un círculo que se cierra al llegar a producción.
 - **"Cada versión es otra vuelta."** (figura `.espiral`, al cierre de Enfoque):
-  mantra + espiral de 3 vueltas con las versiones 1, 2, 3 y n sobre el mismo
-  radio (cada vuelta vuelve al mismo punto, más afuera y con más contexto). Se
+  mantra + espiral de 3 vueltas con las versiones (puntos, sin números) sobre el
+  mismo radio (cada vuelta vuelve al mismo punto, más afuera y con más contexto). Se
   dibuja con el scroll (`view-timeline` nombrado en la figura). Decisión: NO
   mostrar el doble diamante ni etapas de metodología como diagrama; hace que el
   sitio parezca un texto sobre definiciones de diseño y no un portafolio.
