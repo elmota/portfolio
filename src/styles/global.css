@@ -22,7 +22,7 @@
   --muted: #595959;
   --line: #e2e2e2;
   --line-strong: #0a0a0a;
-  --accent: #cd9f2f;
+  --accent: #ec7fa6;
   --accent-tint: color-mix(in srgb, var(--accent) 16%, white);
   /* Tinte del color PRINCIPAL de la sección (no el detalle): usado en filas
      y cards de contenido (case-card, grid3 .card) para que se note de qué

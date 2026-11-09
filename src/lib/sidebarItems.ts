@@ -28,7 +28,7 @@ export interface SidebarItem {
 
 export const sidebarItems: SidebarItem[] = [
   { id: 'diseno', tipo: 'perfil', numero: '01', etiqueta: 'Diseño', tagline: 'Entender a quien usa el producto.', bg: '#d36958', ink: '#0a0a0a', detail: '#2aa3b4', detailInk: '#0a0a0a' },
-  { id: 'ambos', tipo: 'perfil', numero: '02', etiqueta: 'Diseño + Código', tagline: 'La experiencia, de la idea al código.', bg: '#7a56c8', ink: '#ffffff', detail: '#cd9f2f', detailInk: '#0a0a0a' },
+  { id: 'ambos', tipo: 'perfil', numero: '02', etiqueta: 'Diseño + Código', tagline: 'La experiencia, de la idea al código.', bg: '#7a56c8', ink: '#ffffff', detail: '#ec7fa6', detailInk: '#0a0a0a' },
   { id: 'ingenieria', tipo: 'perfil', numero: '03', etiqueta: 'Ingeniería', tagline: 'Código al servicio de la experiencia.', bg: '#2fc33e', ink: '#0a0a0a', detail: '#cd9f2f', detailInk: '#0a0a0a' },
   { id: 'casos', tipo: 'seccion', numero: '01', etiqueta: 'Casos', tagline: '7 proyectos con proceso y resultado.', bg: '#299dcd', ink: '#0a0a0a', detail: '#d2503c', detailInk: '#0a0a0a' },
   { id: 'enfoque', tipo: 'seccion', numero: '02', etiqueta: 'Enfoque', tagline: 'Cómo cruzo diseño e ingeniería.', bg: '#bc2d75', ink: '#ffffff', detail: '#cd9f2f', detailInk: '#0a0a0a' },

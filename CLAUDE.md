@@ -29,7 +29,8 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   El menú abre con **Inicio** (00, delineado, sin paleta propia): vuelve al Hero
   conservando el último perfil, y queda activo mientras se está en el Hero.
 - **Paleta de perfiles**: Diseño coral `#d36958`, Diseño + Código violeta
-  `#7a56c8` (tono intermedio, texto blanco 5.26:1), Ingeniería verde. El
+  `#7a56c8` (tono intermedio, texto blanco 5.26:1), Ingeniería verde. Cada
+  perfil tiene un secundario propio: turquesa, rosa `#ec7fa6` y amarillo. El
   naranja `#dd8a2e` es de Trayectoria (antes era de "Ambos": dos cálidos con el
   mismo peso). Cada cambio de paleta se valida con WCAG AA.
 - **Primera vista**: presentación personal (nombre, rol, "Más allá del diseño:
