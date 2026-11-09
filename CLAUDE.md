@@ -84,6 +84,11 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 - iPad tratado como hover: usar `pointer: coarse`.
 - Clic en el sidebar desde un caso: `navegarAHome`.
 - Abrir el menú en Contacto cambiaba a Trayectoria (scrollspy en el borde).
+- Índice de casos en tablet: el primer toque navegaba directo porque el router
+  de Astro (listener de `click` en `document`, fase normal, registrado antes)
+  corre antes que el de `CaseNav` y ya lo había consumido. `CaseNav` escucha en
+  fase de captura (`addEventListener('click', fn, true)`) para ir primero; el
+  router ignora los clics con `defaultPrevented`. No volver a la fase normal.
 - Titulares de perfil partidos en mitad de palabra en iPhone ("implementación" →
   "implementació/n"): `.hero-fold h2` deriva su tamaño del ancho disponible en
   ≤600px. Si se cambia el copy de un titular, revisar su palabra más larga

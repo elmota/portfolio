@@ -52,6 +52,11 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
       document.body.style.overflow = abierto && window.matchMedia('(max-width: 600px)').matches ? 'hidden' : '';
     }
 
+    // En fase de CAPTURA (tercer argumento `true`): el router de Astro escucha
+    // clics en `document` en la fase normal y, registrado antes, correría primero
+    // y navegaría en el primer toque sin darle chance a este handler de abrir la
+    // lista. Ejecutándose antes, el preventDefault de abajo sí lo frena (el router
+    // ignora los clics con defaultPrevented).
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const toggle = document.querySelector<HTMLButtonElement>('.case-nav-toggle');
@@ -76,6 +81,6 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
       if (list.classList.contains('abierto') && (target.closest('.case-nav-item') || !list.contains(target))) {
         setAbierto(list, toggle, false);
       }
-    });
+    }, true);
   }
 </script>
