@@ -807,3 +807,50 @@ html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
 @media (max-width: 600px) {
   .hero-fold h2 { font-size: min(2.8rem, calc((100cqw - 108px) / 9)); }
 }
+
+/* ---------- Enfoque: doble diamante en espiral ----------
+   Dos versiones del mismo diagrama (horizontal / vertical) porque un viewBox
+   ancho se vuelve ilegible en un teléfono. La curva de vuelta se dibuja con
+   el scroll (view-timeline nombrado en la figura: un path SVG no es un buen
+   sujeto de view()); sin soporte o con reduced-motion queda dibujada. */
+.espiral {
+  margin: 0 0 48px; display: flex; flex-direction: column; gap: 24px;
+  border: 2px solid var(--line-strong); border-radius: var(--radius);
+  padding: clamp(20px, 4vw, 40px); background: var(--bg-tint);
+}
+.espiral h3 { margin: 0 0 8px; }
+.espiral p { margin: 0; color: var(--muted); max-width: 62ch; }
+.espiral svg { display: block; width: 100%; height: auto; color: var(--page-ink); }
+.espiral .espiral-v { display: none; max-width: 360px; margin-inline: auto; }
+.espiral text { font-family: var(--font-display); font-weight: 800; font-size: 20px; fill: currentColor; }
+.espiral .cap { font-weight: 600; font-size: 16px; opacity: .8; }
+.espiral .rombo { fill: color-mix(in srgb, var(--bg) 14%, transparent); stroke: currentColor; stroke-width: 2.5; stroke-linejoin: round; }
+.espiral .corte { stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 4 5; opacity: .5; }
+.espiral .vuelta { fill: none; stroke: var(--bg); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; }
+.espiral .flecha { fill: var(--bg); }
+.espiral-perfiles {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.espiral-perfiles li { border-top: 2px solid var(--line-strong); padding-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+.espiral-perfiles strong { font-family: var(--font-display); font-weight: 900; }
+@media (max-width: 600px) {
+  .espiral .espiral-h { display: none; }
+  .espiral .espiral-v { display: block; }
+  .espiral text { font-size: 18px; }
+  .espiral .cap { font-size: 14px; }
+  .espiral-perfiles { grid-template-columns: 1fr; gap: 12px; }
+}
+@supports (animation-timeline: view()) {
+  .espiral { view-timeline: --espiral block; }
+  .espiral .vuelta {
+    animation: espiralDibuja linear both;
+    animation-timeline: --espiral; animation-range: entry 20% cover 55%;
+  }
+  .espiral .flecha {
+    animation: espiralFlecha linear both;
+    animation-timeline: --espiral; animation-range: cover 45% cover 55%;
+  }
+  @keyframes espiralDibuja { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes espiralFlecha { from { opacity: 0; } to { opacity: 1; } }
+}

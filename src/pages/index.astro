@@ -72,6 +72,53 @@ const formacion = [
         Los productos con los que suelo trabajar —dinero, maquinaria crítica, trámites de gobierno— son complejos y tienen poco margen de error. Entre el diseño y el código suele perderse fidelidad: una decisión de UX llega distinta al código, o una restricción técnica llega tarde al diseño. Se evita cuando ambos lados del trabajo los sostiene la misma persona, de principio a fin.
       </p>
     </div>
+    <figure class="espiral">
+      <figcaption>
+        <h3>Doble diamante, en espiral</h3>
+        <p>Exploro el problema y lo acoto; exploro soluciones y las entrego. La entrega no cierra el ciclo: lo que la gente hace con lo entregado abre el siguiente descubrir, con más contexto que la vuelta anterior.</p>
+      </figcaption>
+
+      <svg class="espiral-h" viewBox="0 0 900 352" role="img" aria-labelledby="espiral-h-t">
+        <title id="espiral-h-t">Doble diamante: Descubrir y Definir (problema), Desarrollar y Entregar (solución). Una curva vuelve de Entregar a Descubrir.</title>
+        <polygon class="rombo" points="60,120 250,30 440,120 250,210" />
+        <polygon class="rombo" points="460,120 650,30 840,120 650,210" />
+        <line class="corte" x1="250" y1="30" x2="250" y2="210" />
+        <line class="corte" x1="650" y1="30" x2="650" y2="210" />
+        <text class="cap" x="250" y="18" text-anchor="middle">Problema</text>
+        <text class="cap" x="650" y="18" text-anchor="middle">Solución</text>
+        <text x="155" y="252" text-anchor="middle">Descubrir</text>
+        <text x="345" y="252" text-anchor="middle">Definir</text>
+        <text x="560" y="252" text-anchor="middle">Desarrollar</text>
+        <text x="735" y="252" text-anchor="middle">Entregar</text>
+        <path class="vuelta" pathLength="1" d="M840 120 C900 120 900 320 450 318 C150 318 20 250 54.8 139.3" />
+        <polygon class="flecha" points="60,122 63.4,141.9 46.2,136.7" />
+        <text class="cap" x="450" y="338" text-anchor="middle">y vuelve a Descubrir, con más contexto</text>
+      </svg>
+
+      <svg class="espiral-v" viewBox="0 0 360 590" role="img" aria-labelledby="espiral-v-t">
+        <title id="espiral-v-t">Doble diamante: Descubrir y Definir (problema), Desarrollar y Entregar (solución). Una curva vuelve de Entregar a Descubrir.</title>
+        <polygon class="rombo" points="150,50 270,140 150,230 30,140" />
+        <polygon class="rombo" points="150,310 270,400 150,490 30,400" />
+        <line class="corte" x1="30" y1="140" x2="270" y2="140" />
+        <line class="corte" x1="30" y1="400" x2="270" y2="400" />
+        <text class="cap" x="150" y="34" text-anchor="middle">Problema</text>
+        <text class="cap" x="150" y="294" text-anchor="middle">Solución</text>
+        <text x="150" y="112" text-anchor="middle">Descubrir</text>
+        <text x="150" y="188" text-anchor="middle">Definir</text>
+        <text x="150" y="372" text-anchor="middle">Desarrollar</text>
+        <text x="150" y="448" text-anchor="middle">Entregar</text>
+        <path class="vuelta" pathLength="1" d="M150 492 C150 545 345 545 345 300 C345 150 345 40 164 49.5" />
+        <polygon class="flecha" points="150,50 164,43 164,56" />
+        <text class="cap" x="180" y="575" text-anchor="middle">y vuelve a Descubrir, con más contexto</text>
+      </svg>
+
+      <ul class="espiral-perfiles">
+        <li><strong>Diseño</strong><span>Descubrir y Definir</span></li>
+        <li><strong>Diseño + Código</strong><span>La espiral completa, y la vuelta siguiente</span></li>
+        <li><strong>Ingeniería</strong><span>Desarrollar y Entregar</span></li>
+      </ul>
+    </figure>
+
     <div class="grid2">
       <article class="card" data-lentes="diseno">
         <h3>Qué construir</h3>
