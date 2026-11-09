@@ -80,13 +80,12 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   comienza en el discovery y el diseño y no termina en producción: evoluciona.
   El ciclo del Hero es continuo (Descubrir, Diseñar, Construir, Evolucionar y
   vuelta a empezar), no un círculo que se cierra al llegar a producción.
-- **Doble diamante en espiral** (figura `.espiral` en Enfoque): Descubrir y
-  Definir (problema), Desarrollar y Entregar (solución); la entrega no cierra el
-  ciclo, una curva vuelve a Descubrir con más contexto. Mapa: Diseño = primer
-  diamante, Ingeniería = segundo, Diseño + Código = la espiral completa. Se
-  presenta como lectura propia, no como definición oficial del marco (el doble
-  diamante original es lineal). Dos SVG (horizontal/vertical) por legibilidad;
-  la curva se dibuja con `view-timeline` nombrado en la figura.
+- **"Cada versión es otra vuelta."** (figura `.espiral`, al cierre de Enfoque):
+  mantra + espiral de 3 vueltas con las versiones 1, 2, 3 y n sobre el mismo
+  radio (cada vuelta vuelve al mismo punto, más afuera y con más contexto). Se
+  dibuja con el scroll (`view-timeline` nombrado en la figura). Decisión: NO
+  mostrar el doble diamante ni etapas de metodología como diagrama; hace que el
+  sitio parezca un texto sobre definiciones de diseño y no un portafolio.
 - Evitar "hasta producción" / "hasta que funcione": suenan a final.
 - Usar "comienza" (no "parto"). No repetir "producto": alternar con "idea"
   cuando aplique; acompañar ideas también importa, más allá de lo tangible.

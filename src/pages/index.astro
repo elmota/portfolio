@@ -38,6 +38,39 @@ const formacion = [
   { anio: '2009–2010', titulo: 'Diplomado en Programación Web', lugar: 'Universidad del Pacífico' },
   { anio: '2005–2008', titulo: 'Diseño Gráfico', lugar: 'INACAP' },
 ];
+
+// Espiral de "Cada versión es otra vuelta": 3 vueltas desde el centro hacia
+// afuera. Las versiones 1, 2, 3 y n caen siempre sobre el mismo radio (arriba):
+// cada vuelta vuelve al mismo punto, un poco más lejos y con más contexto.
+const ESP = { cx: 210, cy: 210, r0: 16, r1: 176, vueltas: 3, pasos: 360 };
+const espMax = ESP.vueltas * 2 * Math.PI;
+const espPunto = (th: number) => {
+  const r = ESP.r0 + (ESP.r1 - ESP.r0) * (th / espMax);
+  const f = th - Math.PI / 2; // arranca arriba, avanza en sentido horario
+  return { x: ESP.cx + r * Math.cos(f), y: ESP.cy + r * Math.sin(f) };
+};
+const espPts = Array.from({ length: ESP.pasos + 1 }, (_, i) => espPunto((espMax * i) / ESP.pasos));
+const espLen = espPts.reduce<number[]>((acc, p, i) => {
+  acc.push(i === 0 ? 0 : acc[i - 1] + Math.hypot(p.x - espPts[i - 1].x, p.y - espPts[i - 1].y));
+  return acc;
+}, []);
+const espTotal = espLen[espLen.length - 1];
+const espD = 'M' + espPts.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L');
+const espNodos = [0, 1, 2, 3].map((k, i) => {
+  const th = k * 2 * Math.PI;
+  const pt = espPunto(th);
+  const idx = Math.round((th / espMax) * ESP.pasos);
+  const desde = 8 + 40 * (espLen[idx] / espTotal); // % del rango de scroll en que aparece
+  return { ...pt, etiqueta: i === 3 ? 'n' : String(k + 1), desde: desde.toFixed(1), hasta: (desde + 4).toFixed(1), ultimo: i === 3 };
+});
+const espEnd = espPts[espPts.length - 1];
+const espPrev = espPts[espPts.length - 6];
+const espAng = Math.atan2(espEnd.y - espPrev.y, espEnd.x - espPrev.x);
+const espFlecha = [
+  [espEnd.x + 14 * Math.cos(espAng), espEnd.y + 14 * Math.sin(espAng)],
+  [espEnd.x + 7 * Math.cos(espAng + Math.PI / 2), espEnd.y + 7 * Math.sin(espAng + Math.PI / 2)],
+  [espEnd.x + 7 * Math.cos(espAng - Math.PI / 2), espEnd.y + 7 * Math.sin(espAng - Math.PI / 2)],
+].map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
 ---
 
 <Base>
@@ -72,53 +105,6 @@ const formacion = [
         Los productos con los que suelo trabajar —dinero, maquinaria crítica, trámites de gobierno— son complejos y tienen poco margen de error. Entre el diseño y el código suele perderse fidelidad: una decisión de UX llega distinta al código, o una restricción técnica llega tarde al diseño. Se evita cuando ambos lados del trabajo los sostiene la misma persona, de principio a fin.
       </p>
     </div>
-    <figure class="espiral">
-      <figcaption>
-        <h3>Doble diamante, en espiral</h3>
-        <p>Exploro el problema y lo acoto; exploro soluciones y las entrego. La entrega no cierra el ciclo: lo que la gente hace con lo entregado abre el siguiente descubrir, con más contexto que la vuelta anterior.</p>
-      </figcaption>
-
-      <svg class="espiral-h" viewBox="0 0 900 352" role="img" aria-labelledby="espiral-h-t">
-        <title id="espiral-h-t">Doble diamante: Descubrir y Definir (problema), Desarrollar y Entregar (solución). Una curva vuelve de Entregar a Descubrir.</title>
-        <polygon class="rombo" points="60,120 250,30 440,120 250,210" />
-        <polygon class="rombo" points="460,120 650,30 840,120 650,210" />
-        <line class="corte" x1="250" y1="30" x2="250" y2="210" />
-        <line class="corte" x1="650" y1="30" x2="650" y2="210" />
-        <text class="cap" x="250" y="18" text-anchor="middle">Problema</text>
-        <text class="cap" x="650" y="18" text-anchor="middle">Solución</text>
-        <text x="155" y="252" text-anchor="middle">Descubrir</text>
-        <text x="345" y="252" text-anchor="middle">Definir</text>
-        <text x="560" y="252" text-anchor="middle">Desarrollar</text>
-        <text x="735" y="252" text-anchor="middle">Entregar</text>
-        <path class="vuelta" pathLength="1" d="M840 120 C900 120 900 320 450 318 C150 318 20 250 54.8 139.3" />
-        <polygon class="flecha" points="60,122 63.4,141.9 46.2,136.7" />
-        <text class="cap" x="450" y="338" text-anchor="middle">y vuelve a Descubrir, con más contexto</text>
-      </svg>
-
-      <svg class="espiral-v" viewBox="0 0 360 590" role="img" aria-labelledby="espiral-v-t">
-        <title id="espiral-v-t">Doble diamante: Descubrir y Definir (problema), Desarrollar y Entregar (solución). Una curva vuelve de Entregar a Descubrir.</title>
-        <polygon class="rombo" points="150,50 270,140 150,230 30,140" />
-        <polygon class="rombo" points="150,310 270,400 150,490 30,400" />
-        <line class="corte" x1="30" y1="140" x2="270" y2="140" />
-        <line class="corte" x1="30" y1="400" x2="270" y2="400" />
-        <text class="cap" x="150" y="34" text-anchor="middle">Problema</text>
-        <text class="cap" x="150" y="294" text-anchor="middle">Solución</text>
-        <text x="150" y="112" text-anchor="middle">Descubrir</text>
-        <text x="150" y="188" text-anchor="middle">Definir</text>
-        <text x="150" y="372" text-anchor="middle">Desarrollar</text>
-        <text x="150" y="448" text-anchor="middle">Entregar</text>
-        <path class="vuelta" pathLength="1" d="M150 492 C150 545 345 545 345 300 C345 150 345 40 164 49.5" />
-        <polygon class="flecha" points="150,50 164,43 164,56" />
-        <text class="cap" x="180" y="575" text-anchor="middle">y vuelve a Descubrir, con más contexto</text>
-      </svg>
-
-      <ul class="espiral-perfiles">
-        <li><strong>Diseño</strong><span>Descubrir y Definir</span></li>
-        <li><strong>Diseño + Código</strong><span>La espiral completa, y la vuelta siguiente</span></li>
-        <li><strong>Ingeniería</strong><span>Desarrollar y Entregar</span></li>
-      </ul>
-    </figure>
-
     <div class="grid2">
       <article class="card" data-lentes="diseno">
         <h3>Qué construir</h3>
@@ -137,6 +123,24 @@ const formacion = [
         <p>Es mi compañero en research, auditorías, prototipos, implementación y QA: acelera y ayuda a cubrir casos borde. Yo valido cada resultado, y un blueprint de producto con las decisiones documentadas mantiene al equipo y a los agentes con el mismo criterio.</p>
       </article>
     </div>
+
+    <figure class="espiral">
+      <figcaption>
+        <h3>Cada versión es otra vuelta.</h3>
+        <p>Lo que la gente hace con lo entregado abre el siguiente descubrir. Acompaño esas vueltas, no solo la primera.</p>
+      </figcaption>
+      <svg viewBox="0 0 420 420" role="img" aria-labelledby="espiral-t">
+        <title id="espiral-t">Una espiral que se abre en cada vuelta: versión 1, 2, 3 y n.</title>
+        <path class="vuelta" pathLength="1" d={espD} />
+        {espNodos.map((n) => (
+          <g class:list={['nodo', { ultimo: n.ultimo }]} style={`animation-range: cover ${n.desde}% cover ${n.hasta}%`}>
+            <circle cx={n.x.toFixed(1)} cy={n.y.toFixed(1)} r={n.ultimo ? 8 : 6} />
+            <text x={n.x.toFixed(1)} y={(n.y - 16).toFixed(1)} text-anchor="middle">{n.etiqueta}</text>
+          </g>
+        ))}
+        <polygon class="flecha" points={espFlecha} />
+      </svg>
+    </figure>
   </section>
 
   <section id="skills" class="section">
