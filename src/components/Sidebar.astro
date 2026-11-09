@@ -36,6 +36,17 @@ const paletas = Object.fromEntries(
   </div>
 
   <nav class="items" id="sidebar-items" aria-label="Secciones">
+    <button
+      type="button"
+      class="item item-inicio"
+      data-id="inicio"
+      aria-pressed="false"
+      style="--c:transparent;--ci:var(--page-ink)"
+    >
+      <span class="num">00</span>
+      <span class="label">Inicio</span>
+      <span class="item-tag">Quién soy y mis perfiles.</span>
+    </button>
     {secciones.map((item) => (
       <>
         <button
@@ -141,7 +152,8 @@ const paletas = Object.fromEntries(
     // Solo las secciones tienen item en el menú: estando en un perfil
     // (arriba del todo), ninguno queda marcado.
     items.forEach((b) => {
-      const esEste = b.dataset.id === id;
+      // "Inicio" queda activo mientras se está en el Hero (cualquier perfil).
+      const esEste = b.dataset.id === id || (b.dataset.id === 'inicio' && perfiles.includes(id));
       b.classList.toggle('activo', esEste);
       b.setAttribute('aria-pressed', String(esEste));
     });
@@ -202,6 +214,16 @@ const paletas = Object.fromEntries(
     }
   }
 
+  // "Inicio": vuelve arriba del todo (Hero) conservando el último perfil.
+  function irAInicio() {
+    const hero = document.querySelector<HTMLElement>('[data-hero]');
+    if (!hero) return;
+    observando = false;
+    seleccionarPerfil(ultimoPerfil, true);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    reactivarTrasScroll(150);
+  }
+
   // Si el perfil/sección elegido no existe en esta página (por ejemplo,
   // viendo el detalle de un caso: ahí no hay Hero ni secciones), navega al
   // home con ese hash en vez de quedarse sin hacer nada — un link sintético
@@ -210,7 +232,7 @@ const paletas = Object.fromEntries(
   function navegarAHome(id: string) {
     const base = document.querySelector<HTMLAnchorElement>('.logo')?.getAttribute('href') ?? '/';
     const a = document.createElement('a');
-    a.href = base.replace(/#.*$/, '') + '#' + id;
+    a.href = base.replace(/#.*$/, '') + (id ? '#' + id : '');
     a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
@@ -240,11 +262,13 @@ const paletas = Object.fromEntries(
     b.addEventListener('click', () => {
       const id = b.dataset.id ?? 'ambos';
       if (!document.querySelector('[data-hero]')) {
-        navegarAHome(id);
+        navegarAHome(id === 'inicio' ? '' : id);
         cerrarMenu();
         return;
       }
-      if (perfiles.includes(id)) {
+      if (id === 'inicio') {
+        irAInicio();
+      } else if (perfiles.includes(id)) {
         seleccionarPerfil(id, true);
         window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       } else {
