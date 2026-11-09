@@ -498,7 +498,13 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
 .contact p { color: var(--muted); max-width: 55ch; font-size: 1.05rem; }
 .contact .contact-top p { font-size: var(--bajada); max-width: 58ch; }
 /* "Sobre mí" plegado como intro del panel de Contacto, antes del titular. */
-.sobre-mi { max-width: 60ch; color: var(--muted); font-size: 1.3rem; line-height: 1.55; margin-bottom: 28px; }
+/* Trayectoria: el párrafo "sobre mí" es parte central del relato, no una nota al
+   margen: grande, en tinta plena y con la tipografía de los titulares. */
+.sobre-mi {
+  max-width: 44ch; color: inherit; margin: 0 0 clamp(40px, 6vw, 72px);
+  font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em;
+  font-size: clamp(1.35rem, 3cqw, 2rem); line-height: 1.32;
+}
 
 /* "Formación" plegada dentro del panel de Trayectoria, como segundo bloque. */
 .formacion-head { margin-top: 64px; }
@@ -827,7 +833,7 @@ html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
   padding: clamp(24px, 4vw, 48px); background: var(--bg-tint);
 }
 .espiral h3 { margin: 0 0 16px; font-size: clamp(2.2rem, 5.4cqw, 4rem); font-weight: 900; line-height: .98; letter-spacing: -.02em; }
-.espiral p { margin: 0; color: var(--muted); max-width: 44ch; font-size: 1.1rem; }
+.espiral p { margin: 0; color: var(--muted); max-width: 40ch; font-size: var(--bajada); line-height: 1.5; }
 .espiral svg { display: block; width: 100%; max-width: 420px; height: auto; margin-inline: auto; color: var(--page-ink); }
 .espiral .vuelta { fill: none; stroke: var(--bg); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; }
 .espiral .nodo circle { fill: var(--bg-tint); stroke: currentColor; stroke-width: 2.5; }
