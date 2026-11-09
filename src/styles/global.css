@@ -11,6 +11,9 @@
      contenedor con el color de fondo, solo las secciones relevantes (ver
      `.hero.stage`, `.specs`, `.grid3 .card`), alternando con secciones
      "flotantes" sin tinte (Skills, Trayectoria, Contacto). */
+  /* Bajada bajo un titular de sección o de perfil: una sola escala para todas
+     (antes eran 1.2rem fijo / 2cqw / 1rem según la sección). */
+  --bajada: clamp(1.25rem, 3cqw, 2rem);
   --bg: #7a56c8;
   --surface: #f5f5f5;
   --text: #ffffff;
@@ -134,9 +137,9 @@ html[data-theme="contacto"] {
 /* Contacto es #1c1c1c: sobre el tema negro casi no se separa del fondo.
    Un aro tenue lo delimita sin cambiar su paleta. */
 .item[data-id="contacto"] { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); }
-/* Inicio no tiene paleta propia: va delineado, para que se lea como "volver"
+/* Inicio no tiene paleta propia: blanco con aro, para que se lea como "volver"
    y no como una sección más con su color. */
-.item-inicio { box-shadow: inset 0 0 0 2px var(--page-ink); }
+.item-inicio { box-shadow: inset 0 0 0 2px #0a0a0a; }
 .item:focus-visible { outline: 3px solid var(--ci); outline-offset: -4px; }
 .num { font-family: var(--font-mono); font-size: .8rem; font-weight: 800; opacity: .8; }
 .label { font-family: var(--font-display); font-weight: 900; font-size: .98rem; letter-spacing: -.01em; }
@@ -191,7 +194,8 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
   padding-right: max(clamp(20px, 4vw, 56px), calc((100cqw - var(--max)) / 2 + clamp(20px, 4vw, 56px)));
 }
 .section { padding-top: 140px; padding-bottom: 140px; }
-.section-intro { color: var(--muted); max-width: 62ch; font-size: 1.2rem; line-height: 1.55; }
+.section-intro { color: var(--muted); max-width: 62ch; font-size: var(--bajada); line-height: 1.5; }
+.contact-top p { font-size: var(--bajada); line-height: 1.5; }
 
 /* ---------- Escenas a pantalla completa y cabeceras ancladas a los extremos ----------
    Las secciones con poco contenido (hero, enfoque, sobre mí, contacto) ocupan casi
@@ -257,7 +261,9 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
    numerada flotando directo sobre el color (sin card propia), como los
    bloques de afirmaciones de la referencia — el color es el contenedor. */
 .specs {
-  list-style: none; margin: 48px 0 0; padding-top: 28px; padding-bottom: 28px;
+  /* margin-top/bottom por separado: un `margin` abreviado pisaría los márgenes
+     laterales negativos del sangrado completo (regla .specs de arriba). */
+  list-style: none; margin-top: 48px; margin-bottom: 0; padding-top: 28px; padding-bottom: 28px;
   background: var(--accent); color: var(--accent-ink);
   transition: background .4s ease, color .4s ease;
 }
@@ -490,8 +496,9 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
 .about p { max-width: 68ch; color: var(--muted); font-size: 1.05rem; }
 .contact { padding-bottom: 140px; }
 .contact p { color: var(--muted); max-width: 55ch; font-size: 1.05rem; }
+.contact .contact-top p { font-size: var(--bajada); max-width: 58ch; }
 /* "Sobre mí" plegado como intro del panel de Contacto, antes del titular. */
-.sobre-mi { max-width: 60ch; color: var(--muted); font-size: 1rem; margin-bottom: 28px; }
+.sobre-mi { max-width: 60ch; color: var(--muted); font-size: 1.3rem; line-height: 1.55; margin-bottom: 28px; }
 
 /* "Formación" plegada dentro del panel de Trayectoria, como segundo bloque. */
 .formacion-head { margin-top: 64px; }
@@ -691,7 +698,7 @@ footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw,
   .blob-shift { transition: none; }
 }
 
-.lead { font-size: clamp(1.2rem, 2cqw, 1.5rem); line-height: 1.55; color: var(--muted); max-width: 60ch; }
+.lead { font-size: var(--bajada); line-height: 1.5; color: var(--muted); max-width: 60ch; }
 .hero .specs { margin-top: 20px; }
 .hero .cta { margin-top: 8px; margin-bottom: 0; }
 .hero-resultado > .cta { margin-top: 28px; }
@@ -809,7 +816,7 @@ html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
 }
 
 /* ---------- Enfoque: "Cada versión es otra vuelta" ----------
-   Mantra + espiral de 3 vueltas con las versiones 1, 2, 3 y n sobre el mismo
+   Mantra + espiral de 3 vueltas con las versiones (puntos) sobre el mismo
    radio. Se dibuja con el scroll (view-timeline nombrado en la figura: un
    path SVG no es un buen sujeto de view()); sin soporte o con
    reduced-motion queda dibujada completa. */
@@ -824,7 +831,6 @@ html[data-theme="ingenieria"] .tag, html[data-theme="ingenieria"] .chips li {
 .espiral .vuelta { fill: none; stroke: var(--bg); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; }
 .espiral .nodo circle { fill: var(--bg-tint); stroke: currentColor; stroke-width: 2.5; }
 .espiral .nodo.ultimo circle { fill: var(--bg); }
-.espiral .nodo text { font-family: var(--font-display); font-weight: 900; font-size: 20px; fill: currentColor; }
 .espiral .flecha { fill: var(--bg); }
 @media (max-width: 760px) {
   .espiral { grid-template-columns: 1fr; }
