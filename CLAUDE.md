@@ -47,6 +47,9 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   y `--page-bar` en negro (60% negro, 30% carbón `#1c1c1c`, 10% cyan `#22d3ee`).
 - **Casos**: cada caso es una página (`/casos/[id]/`), sin modal. Transición
   con View Transition (slide, fade, bounce); la reversa es "volver".
+  "← Todos los casos" va siempre a `/#casos` (no a `history.back()`, que desde
+  un caso llegado por el índice devolvía al caso anterior); `CaseDetail` fuerza
+  `direction = 'back'` en `astro:before-preparation` para la animación inversa.
   `CaseNav` vive en el slot fixed fuera de `.content` (`container-type` rompe
   `position: fixed` en Safari). Desktop abre por hover (`hover: hover` y
   `pointer: fine`); touch (`pointer: coarse`): primer tap abre, segundo navega.
