@@ -84,6 +84,11 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 - iPad tratado como hover: usar `pointer: coarse`.
 - Clic en el sidebar desde un caso: `navegarAHome`.
 - Abrir el menú en Contacto cambiaba a Trayectoria (scrollspy en el borde).
+- Texto blanco sobre fondo claro: `--text`/`--line-strong` son BLANCOS en Diseño +
+  Código, Enfoque, Skills y Contacto. Sobre superficies neutras usar
+  `--page-ink`; sobre superficies siempre claras (índice de casos, `.case-card`,
+  tinte de la espiral, blockquote) usar tinta fija `#0a0a0a`. `--text` solo
+  sobre `--bg` (folds). Al tocar paletas, revisar contraste en los 8 temas.
 - Índice de casos en tablet: el primer toque navegaba directo porque el router
   de Astro (listener de `click` en `document`, fase normal, registrado antes)
   corre antes que el de `CaseNav` y ya lo había consumido. `CaseNav` escucha en
