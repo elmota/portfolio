@@ -64,8 +64,8 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
 
 ## Pendiente de verificar
 
-- Probar en iPhone real con Safari (barra de controles abajo): menú móvil,
-  `100dvh`, tema negro de Contacto, salto instantáneo y animación de sección.
+- Verificado en iPhone real con Safari (2026-11-08): menú móvil de 5 items,
+  `100dvh`, tema negro de Contacto, selector de perfil en línea.
 - El build no corre en el VM de Claude (binarios de macOS en `node_modules`,
   sin red para npm): compilar y hacer push desde la Mac.
 
