@@ -17,6 +17,9 @@ const {
   description = 'Más de 15 años mejorando la experiencia de usuario de productos digitales, desde el diseño y el frontend: Product Thinking, UX Strategy, Design Systems, REST APIs y CI/CD.',
 } = Astro.props;
 
+// El aviso de analítica se muestra solo cuando Clarity está activo (ver Analytics.astro).
+const conClarity = Boolean(import.meta.env.PROD && import.meta.env.PUBLIC_CLARITY_ID);
+
 const paletas = Object.fromEntries(
   sidebarItems.map((i) => [i.id, { bg: i.bg, ink: i.ink, detail: i.detail, detailInk: i.detailInk }])
 );
@@ -78,6 +81,9 @@ const paletas = Object.fromEntries(
         <slot name="overlay" />
         <footer>
           <p>© {new Date().getFullYear()} Alejandro Pérez Rocha</p>
+          {conClarity && (
+            <p class="footer-aviso">Mido cómo se usa este sitio con <a href="https://privacy.microsoft.com/es-es/privacystatement" target="_blank" rel="noopener">Microsoft Clarity</a> (mapas de calor y sesiones anonimizadas). Si tu navegador envía «No rastrear», no se activa.</p>
+          )}
         </footer>
       </div>
     </div>

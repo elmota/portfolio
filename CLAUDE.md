@@ -69,7 +69,10 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   build: la variable de repositorio `CLARITY_PROJECT_ID` si existe, si no el ID
   del proyecto (`zapi45uvh4`, escrito en el workflow). El ID no es secreto
   (queda en el HTML). Local/dev: sin ID, no se carga nada.
-- Pendiente de decidir: aviso de privacidad / consentimiento de cookies.
+- El pie muestra un aviso de privacidad (enlace a la política de Microsoft) solo
+  cuando Clarity está activo. Sin banner de consentimiento: no se esperan
+  visitas de la UE/Reino Unido/Suiza (decisión del autor); si eso cambia,
+  revisar el requisito de consentimiento de Clarity (`Clarity.consentV2`).
 
 ## Problemas ya resueltos (no reintroducir)
 

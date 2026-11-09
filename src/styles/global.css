@@ -516,6 +516,8 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px);
 
 footer { border-top: 2px solid var(--line-strong); text-align: center; color: var(--muted); font-size: .85rem; position: relative; z-index: 1; }
 footer p { max-width: var(--max); margin: 0 auto; padding: 32px clamp(20px, 4vw, 56px); }
+footer p + p { padding-top: 0; margin-top: -16px; } /* aviso de analítica pegado al © */
+footer .footer-aviso a { text-decoration: underline; text-underline-offset: 2px; }
 
 /* Pendientes: resaltado ámbar, sin la etiqueta "Completar" */
 .todo { background: var(--amber-tint); color: var(--amber); padding: 1px 6px; border-radius: 2px; font-size: .9em; }
