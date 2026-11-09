@@ -11,15 +11,15 @@
      contenedor con el color de fondo, solo las secciones relevantes (ver
      `.hero.stage`, `.specs`, `.grid3 .card`), alternando con secciones
      "flotantes" sin tinte (Skills, Trayectoria, Contacto). */
-  --bg: #d08033;
+  --bg: #7a56c8;
   --surface: #f5f5f5;
-  --text: #0a0a0a;
+  --text: #ffffff;
   /* Gris fijo para texto secundario en el área neutral; el fold redefine
      --muted localmente hacia su propio bg/text (ver .hero.stage). */
   --muted: #595959;
   --line: #e2e2e2;
   --line-strong: #0a0a0a;
-  --accent: #2aa3b4;
+  --accent: #cd9f2f;
   --accent-tint: color-mix(in srgb, var(--accent) 16%, white);
   /* Tinte del color PRINCIPAL de la sección (no el detalle): usado en filas
      y cards de contenido (case-card, grid3 .card) para que se note de qué

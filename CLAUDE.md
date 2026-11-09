@@ -28,6 +28,10 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   (`#paletas-data`) porque `aplicarEstilo` las necesita sin item de menú.
   El menú abre con **Inicio** (00, delineado, sin paleta propia): vuelve al Hero
   conservando el último perfil, y queda activo mientras se está en el Hero.
+- **Paleta de perfiles**: Diseño coral `#d36958`, Diseño + Código violeta
+  `#7a56c8` (tono intermedio, texto blanco 5.26:1), Ingeniería verde. El
+  naranja `#dd8a2e` es de Trayectoria (antes era de "Ambos": dos cálidos con el
+  mismo peso). Cada cambio de paleta se valida con WCAG AA.
 - **Primera vista**: presentación personal (nombre, rol, "Más allá del diseño:
   hasta producción.", ciudad y disponibilidad, ciclo de 4 pasos) sobre fondo
   neutro; el color del perfil vive en el fold del panel de abajo.
