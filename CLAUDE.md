@@ -90,11 +90,10 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   un caso hay que tocar ambos. Las páginas se arman con `Home.astro` y
   `CasePage.astro`, que reciben `lang`. `Base.astro` pone `<html lang>`,
   `canonical` y `hreflang`.
-  - Detección: en páginas en español, un script inline (head) redirige a la
-    versión `/en/` si no hay preferencia guardada y el primer idioma del
-    navegador entre es/en es inglés (ninguno → inglés). La preferencia
-    (`localStorage.lang`) la guarda el selector ES/EN del sidebar y manda
-    sobre el navegador. Una URL `/en/` nunca redirige.
+  - Sin detección ni redirección automática (decisión por SEO: el español es
+    la prioridad y debe indexarse en `/`). El idioma lo decide la URL; el
+    selector ES/EN del sidebar enlaza a la página equivalente (`hreflang`
+    en el head) conservando la sección (#hash).
   - El sidebar persiste entre páginas y se dibuja en un solo idioma, así que
     el selector hace carga completa (`data-astro-reload`) y `astro:before-swap`
     fuerza recarga si el router intenta cambiar de idioma (p. ej. con "atrás").
