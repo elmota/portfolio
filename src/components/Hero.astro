@@ -3,47 +3,15 @@
 // Sidebar (Diseño/Ambos/Ingeniería): Sidebar decide qué lente está activa
 // (tema, URL, evento `lentechange`) y este componente solo muestra el panel
 // correspondiente. Los tres textos son el verdadero contenido del home.
-const lentes = [
-  {
-    id: 'diseno',
-    rol: 'Product / UX Design',
-    titular: 'Las soluciones se diseñan junto con el usuario.',
-    bajada:
-      'Research en terreno, Product Thinking y design systems en banca, minería y trámites públicos. La IA me acompaña a sintetizar, auditar y cubrir casos borde; las decisiones de diseño las tomo yo.',
-    datos: [
-      ['Entender a la persona', 'research y discovery en terreno antes de diseñar'],
-      ['Decidir qué construir', 'Product Thinking y UX Strategy'],
-      ['IA como compañero', 'síntesis de research y auditorías de UX, también para cubrir casos borde'],
-    ],
-  },
-  {
-    id: 'ambos',
-    rol: 'Diseño + Código',
-    titular: 'Acompañar la solución desde la necesidad hasta su evolución.',
-    bajada:
-      'La misma persona define la experiencia y la construye, antes y después del lanzamiento. Los agentes de IA son un compañero: aceleran el proceso y ayudan con los casos borde; el criterio y la última revisión son míos.',
-    datos: [
-      ['15+', 'años acompañando ideas digitales'],
-      ['Design + Code', 'de la estrategia al frontend, y su evolución'],
-      ['IA con criterio', 'research, prototipos y QA; la validación final es mía'],
-    ],
-  },
-  {
-    id: 'ingenieria',
-    rol: 'UX / Design Engineering',
-    titular: 'Integración de soluciones sin complicaciones.',
-    bajada:
-      'TypeScript, Next.js, Angular y React Native conectados a APIs REST y CI/CD. Los coding agents me acompañan en implementación y QA, útiles para casos borde; reviso cada cambio antes de producción.',
-    datos: [
-      ['TypeScript', 'Angular, Next.js y React Native'],
-      ['REST APIs y CI/CD', 'integración y entrega continua'],
-      ['Coding agents', 'acompañan la implementación y el QA; yo reviso cada cambio'],
-    ],
-  },
-];
-
 import { sidebarItems } from '../lib/sidebarItems';
+import { getDict, type Lang } from '../i18n';
 
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'es' } = Astro.props;
+const d = getDict(lang);
+const lentes = d.hero.lentes;
 const perfiles = sidebarItems.filter((i) => i.tipo === 'perfil');
 ---
 
@@ -51,24 +19,21 @@ const perfiles = sidebarItems.filter((i) => i.tipo === 'perfil');
   <div class="hero-resultado">
     <div class="hero-intro">
       <p class="hero-id">
-        <strong>Alejandro Pérez Rocha</strong>
-        <span>Product / UX Designer y Frontend Developer</span>
-        <span class="hero-meta">Santiago de Chile. Disponible de inmediato.</span>
+        <strong>{d.hero.nombre}</strong>
+        <span>{d.hero.cargo}</span>
+        <span class="hero-meta">{d.hero.meta}</span>
       </p>
-      <h1>Más allá del diseño: los productos están vivos.</h1>
+      <h1>{d.hero.titular}</h1>
       <p class="lead">
-        Hola, soy Alejandro. Llevo 15 años en banca, minería y trámites públicos, donde equivocarse cuesta. Una idea comienza en el discovery y el diseño, y no termina en producción: la acompaño mientras evoluciona.
+        {d.hero.lead}
       </p>
-      <ol class="ciclo" aria-label="Del discovery a la evolución, y vuelta a empezar">
-        <li><span>1</span>Descubrir</li>
-        <li><span>2</span>Diseñar</li>
-        <li><span>3</span>Construir</li>
-        <li><span>4</span>Evolucionar</li>
+      <ol class="ciclo" aria-label={d.hero.cicloAria}>
+        {d.hero.ciclo.map((paso, i) => <li><span>{i + 1}</span>{paso}</li>)}
       </ol>
     </div>
 
     <div class="perfil-switch" role="group" aria-labelledby="perfil-switch-title">
-      <p class="perfil-switch-title" id="perfil-switch-title">Elige cómo mirar mi trabajo<span class="perfil-switch-hint">, o desliza</span></p>
+      <p class="perfil-switch-title" id="perfil-switch-title">{d.hero.switchTitle}<span class="perfil-switch-hint">{d.hero.switchHint}</span></p>
       <div class="perfil-switch-btns">
         {perfiles.map((p) => (
           <button
@@ -78,8 +43,8 @@ const perfiles = sidebarItems.filter((i) => i.tipo === 'perfil');
             aria-pressed={p.id === 'ambos' ? 'true' : 'false'}
             style={`--c:${p.bg};--ci:${p.ink}`}
           >
-            <strong>{p.etiqueta}</strong>
-            <span>{p.tagline}</span>
+            <strong>{d.items[p.id].etiqueta}</strong>
+            <span>{d.items[p.id].tagline}</span>
           </button>
         ))}
       </div>
@@ -108,8 +73,8 @@ const perfiles = sidebarItems.filter((i) => i.tipo === 'perfil');
     ))}
 
     <div class="cta">
-      <a class="btn btn-primary" href="#casos">Ver casos de estudio</a>
-      <a class="btn" href="#contacto">Hablemos</a>
+      <a class="btn btn-primary" href="#casos">{d.hero.ctaCasos}</a>
+      <a class="btn" href="#contacto">{d.hero.ctaContacto}</a>
     </div>
   </div>
 </section>

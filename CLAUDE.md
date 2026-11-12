@@ -83,6 +83,22 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   visitas de la UE/Reino Unido/Suiza (decisión del autor); si eso cambia,
   revisar el requisito de consentimiento de Clarity (`Clarity.consentV2`).
 
+- **Idiomas (es / en)**: español en `/` (por defecto) e inglés en `/en/`, ambos
+  estáticos. Todo el copy sale de `src/i18n/es.ts` y `en.ts` (mismas claves; el
+  tipo `Dict` lo exige). Los casos viven en dos colecciones con los mismos ids:
+  `src/content/casos` (es) y `src/content/casos-en` (en); al agregar o editar
+  un caso hay que tocar ambos. Las páginas se arman con `Home.astro` y
+  `CasePage.astro`, que reciben `lang`. `Base.astro` pone `<html lang>`,
+  `canonical` y `hreflang`.
+  - Detección: en páginas en español, un script inline (head) redirige a la
+    versión `/en/` si no hay preferencia guardada y el primer idioma del
+    navegador entre es/en es inglés (ninguno → inglés). La preferencia
+    (`localStorage.lang`) la guarda el selector ES/EN del sidebar y manda
+    sobre el navegador. Una URL `/en/` nunca redirige.
+  - El sidebar persiste entre páginas y se dibuja en un solo idioma, así que
+    el selector hace carga completa (`data-astro-reload`) y `astro:before-swap`
+    fuerza recarga si el router intenta cambiar de idioma (p. ej. con "atrás").
+
 ## Problemas ya resueltos (no reintroducir)
 
 - Clase `.tag` en colisión: renombrada a `.item-tag`.

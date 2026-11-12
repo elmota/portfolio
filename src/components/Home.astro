@@ -1,0 +1,175 @@
+---
+// Home completa en un idioma (la usan src/pages/index.astro y src/pages/en/index.astro).
+// Todo el copy sale de src/i18n; los casos, de la colección del idioma.
+import Base from '../layouts/Base.astro';
+import CaseCard from './CaseCard.astro';
+import Hero from './Hero.astro';
+import { getCasos } from '../lib/casos';
+import { getDict, type Lang } from '../i18n';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'es' } = Astro.props;
+const d = getDict(lang);
+const h = d.home;
+
+// Cada caso abre siempre como página propia (/casos/<id>/, ver src/pages/casos/[id].astro),
+// nunca en un modal — así que acá solo hace falta el listado, no el contenido renderizado.
+const casos = await getCasos(lang);
+
+// Espiral de "Cada versión es otra vuelta": 3 vueltas desde el centro hacia
+// afuera. Las versiones (puntos, sin números) caen siempre sobre el mismo radio (arriba):
+// cada vuelta vuelve al mismo punto, un poco más lejos y con más contexto.
+const ESP = { cx: 210, cy: 210, r0: 16, r1: 176, vueltas: 3, pasos: 360 };
+const espMax = ESP.vueltas * 2 * Math.PI;
+const espPunto = (th: number) => {
+  const r = ESP.r0 + (ESP.r1 - ESP.r0) * (th / espMax);
+  const f = th - Math.PI / 2; // arranca arriba, avanza en sentido horario
+  return { x: ESP.cx + r * Math.cos(f), y: ESP.cy + r * Math.sin(f) };
+};
+const espPts = Array.from({ length: ESP.pasos + 1 }, (_, i) => espPunto((espMax * i) / ESP.pasos));
+const espLen = espPts.reduce<number[]>((acc, p, i) => {
+  acc.push(i === 0 ? 0 : acc[i - 1] + Math.hypot(p.x - espPts[i - 1].x, p.y - espPts[i - 1].y));
+  return acc;
+}, []);
+const espTotal = espLen[espLen.length - 1];
+const espD = 'M' + espPts.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L');
+const espNodos = [0, 1, 2, 3].map((k, i) => {
+  const th = k * 2 * Math.PI;
+  const pt = espPunto(th);
+  const idx = Math.round((th / espMax) * ESP.pasos);
+  const desde = 8 + 40 * (espLen[idx] / espTotal); // % del rango de scroll en que aparece
+  return { ...pt, desde: desde.toFixed(1), hasta: (desde + 4).toFixed(1), ultimo: i === 3 };
+});
+const espEnd = espPts[espPts.length - 1];
+const espPrev = espPts[espPts.length - 6];
+const espAng = Math.atan2(espEnd.y - espPrev.y, espEnd.x - espPrev.x);
+const espFlecha = [
+  [espEnd.x + 14 * Math.cos(espAng), espEnd.y + 14 * Math.sin(espAng)],
+  [espEnd.x + 7 * Math.cos(espAng + Math.PI / 2), espEnd.y + 7 * Math.sin(espAng + Math.PI / 2)],
+  [espEnd.x + 7 * Math.cos(espAng - Math.PI / 2), espEnd.y + 7 * Math.sin(espAng - Math.PI / 2)],
+].map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+---
+
+<Base lang={lang}>
+  <Hero lang={lang} />
+
+  <section id="casos" class="section">
+    <div class="section-head fold">
+      <span class="blob-shift" aria-hidden="true"><span class="hero-blob"></span></span>
+      <h2>{h.casos.titulo}</h2>
+      <p class="section-intro">{h.casos.intro}</p>
+    </div>
+    <div class="case-grid">
+      {casos.map((caso) => (
+        <CaseCard slug={caso.id} titulo={caso.data.titulo} resumen={caso.data.resumen} etiquetas={caso.data.etiquetas} lang={lang} />
+      ))}
+    </div>
+
+    <div class="otros-proyectos">
+      <h3>{h.casos.otrosTitulo}</h3>
+      {h.casos.otros.map((o) => (
+        <article class="card">
+          <h3>{o.titulo}</h3>
+          <p>{o.texto}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="enfoque" class="section stage">
+    <div class="section-head fold">
+      <span class="blob-shift" aria-hidden="true"><span class="hero-blob"></span></span>
+      <h2>{h.enfoque.titulo}</h2>
+      <p class="section-intro">
+        {h.enfoque.intro}
+      </p>
+    </div>
+    <div class="grid2">
+      {h.enfoque.tarjetas.map((t) => (
+        <article class="card" data-lentes={t.lentes}>
+          <h3>{t.titulo}</h3>
+          <p>{t.texto}</p>
+        </article>
+      ))}
+    </div>
+
+    <figure class="espiral">
+      <figcaption>
+        <h3>{h.enfoque.espiralTitulo}</h3>
+        <p>{h.enfoque.espiralTexto}</p>
+      </figcaption>
+      <svg viewBox="0 0 420 420" role="img" aria-labelledby="espiral-t">
+        <title id="espiral-t">{h.enfoque.espiralSvg}</title>
+        <path class="vuelta" pathLength="1" d={espD} />
+        {espNodos.map((n) => (
+          <g class:list={['nodo', { ultimo: n.ultimo }]} style={`animation-range: cover ${n.desde}% cover ${n.hasta}%`}>
+            <circle cx={n.x.toFixed(1)} cy={n.y.toFixed(1)} r={n.ultimo ? 8 : 6} />
+          </g>
+        ))}
+        <polygon class="flecha" points={espFlecha} />
+      </svg>
+    </figure>
+  </section>
+
+  <section id="skills" class="section">
+    <div class="section-head fold">
+      <span class="blob-shift" aria-hidden="true"><span class="hero-blob"></span></span>
+      <h2>{h.skills.titulo}</h2>
+      <p class="section-intro">{h.skills.intro}</p>
+    </div>
+    <div class="grid2">
+      {h.skills.grupos.map((g) => (
+        <div class="card" data-lentes={g.lentes}>
+          <h3>{g.titulo}</h3>
+          <ul class="chips">{g.items.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="trayectoria" class="section">
+    <div class="section-head fold">
+      <span class="blob-shift" aria-hidden="true"><span class="hero-blob"></span></span>
+      <h2>{h.trayectoria.titulo}</h2>
+      <p class="section-intro">{h.trayectoria.rango}</p>
+    </div>
+    <p class="sobre-mi">{h.trayectoria.sobreMi}</p>
+    <ol class="timeline">
+      {h.trayectoria.entradas.map((t) => (
+        <li>
+          <span class="when">{t.cuando}</span>
+          <div>
+            <h3>{t.titulo} <span class="rol">· {t.rol}</span></h3>
+            {t.texto && <p>{t.texto}</p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="section-head formacion-head">
+      <h3>{h.trayectoria.formacionTitulo}</h3>
+      <p class="section-intro">{h.trayectoria.formacionRango}</p>
+    </div>
+    <ol class="timeline">
+      {h.trayectoria.formacion.map((f) => (
+        <li>
+          <span class="when">{f.anio}</span>
+          <div><h3>{f.titulo}</h3><p>{f.lugar}</p></div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section id="contacto" class="section contact stage">
+    <div class="contact-top fold">
+      <span class="blob-shift" aria-hidden="true"><span class="hero-blob"></span></span>
+      <h2>{h.contacto.titulo}</h2>
+      <p>{h.contacto.texto}</p>
+    </div>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://www.linkedin.com/in/alejandro-p%C3%A9rez-2ba53415/" target="_blank" rel="noopener">{h.contacto.cta}</a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,24 @@
+---
+// Página de un caso en un idioma (la usan src/pages/casos/[id].astro y
+// src/pages/en/casos/[id].astro). El caso viene de la colección de ese idioma.
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CaseDetail from './CaseDetail.astro';
+import CaseNav from './CaseNav.astro';
+import { getDict, type Lang } from '../i18n';
+
+interface Props {
+  caso: any;
+  lang: Lang;
+}
+const { caso, lang } = Astro.props;
+const { Content } = await render(caso);
+const d = caso.data;
+---
+
+<Base title={`${d.titulo} — ${getDict(lang).caso.sufijoTitulo}`} description={d.resumen} lang={lang} path={`casos/${caso.id}/`}>
+  <CaseDetail {...d} standalone lang={lang}>
+    <Content />
+  </CaseDetail>
+  <CaseNav current={caso.id} lang={lang} slot="fixed" />
+</Base>

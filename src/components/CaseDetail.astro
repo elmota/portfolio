@@ -5,7 +5,7 @@
 // de `.content` (que tiene container-type) para que su position:fixed sea
 // relativo al viewport de verdad, no al contenido.
 import Texto from './Texto.astro';
-import { url } from '../lib/url';
+import { lurl, getDict, type Lang } from '../i18n';
 
 interface Props {
   titulo: string;
@@ -16,21 +16,23 @@ interface Props {
   proceso?: string;
   resultado: string;
   standalone?: boolean;
+  lang?: Lang;
 }
-const { titulo, resumen, etiquetas, problema, rol, proceso, resultado, standalone = false } = Astro.props;
+const { titulo, resumen, etiquetas, problema, rol, proceso, resultado, standalone = false, lang = 'es' } = Astro.props;
+const d = getDict(lang).caso;
 ---
 
 <article class="detalle">
-  {standalone && <a class="back" href={url('#casos')}>← Todos los casos</a>}
+  {standalone && <a class="back" href={lurl(lang, '#casos')}>{d.volver}</a>}
   <div class="case-meta" class:list={{ 'with-back': standalone }}>{etiquetas.map((e) => <span class="tag">{e}</span>)}</div>
   <h1 class="case-detail-title">{titulo}</h1>
   <p class="lead">{resumen}</p>
   <div class="case" style="margin-top:32px">
     <dl>
-      <dt>Problema</dt><dd><Texto text={problema} /></dd>
-      <dt>Mi rol</dt><dd><Texto text={rol} /></dd>
-      {proceso && (<><dt>Proceso</dt><dd><Texto text={proceso} /></dd></>)}
-      <dt>Resultado</dt><dd><Texto text={resultado} /></dd>
+      <dt>{d.problema}</dt><dd><Texto text={problema} /></dd>
+      <dt>{d.rol}</dt><dd><Texto text={rol} /></dd>
+      {proceso && (<><dt>{d.proceso}</dt><dd><Texto text={proceso} /></dd></>)}
+      <dt>{d.resultado}</dt><dd><Texto text={resultado} /></dd>
     </dl>
   </div>
   <div class="body">

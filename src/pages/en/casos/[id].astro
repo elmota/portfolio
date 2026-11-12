@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import CasePage from '../../../components/CasePage.astro';
+
+export async function getStaticPaths() {
+  const casos = await getCollection('casosEn');
+  return casos.map((caso) => ({ params: { id: caso.id }, props: { caso } }));
+}
+
+const { caso } = Astro.props;
+---
+
+<CasePage caso={caso} lang="en" />

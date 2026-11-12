@@ -6,16 +6,24 @@ import BlueprintScene from '../components/BlueprintScene.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Analytics from '../components/Analytics.astro';
 import { sidebarItems, sidebarIds, defaultSidebarId } from '../lib/sidebarItems';
+import { getDict, langs, altPaths, type Lang } from '../i18n';
 
 interface Props {
   title?: string;
   description?: string;
+  lang?: Lang;
+  // Ruta de esta misma página sin prefijo de idioma ('' = home, 'casos/x/' = un caso):
+  // de ahí salen las URLs equivalentes en cada idioma.
+  path?: string;
 }
 
-const {
-  title = 'Alejandro Pérez Rocha — Senior Product / UX Designer y UX Design Engineer',
-  description = 'Más de 15 años mejorando la experiencia de usuario de productos digitales, desde el diseño y el frontend: Product Thinking, UX Strategy, Design Systems, REST APIs y CI/CD.',
-} = Astro.props;
+const { lang = 'es', path = '' } = Astro.props;
+const d = getDict(lang);
+const { title = d.meta.title, description = d.meta.description } = Astro.props;
+
+// URLs equivalentes en cada idioma (selector, hreflang y redirección por idioma del sistema).
+const alt = altPaths(path);
+const absoluta = (ruta: string) => (Astro.site ? new URL(ruta, Astro.site).href : ruta);
 
 // El aviso de analítica se muestra solo cuando Clarity está activo (ver Analytics.astro).
 const conClarity = Boolean(import.meta.env.PROD && import.meta.env.PUBLIC_CLARITY_ID);
@@ -26,7 +34,7 @@ const paletas = Object.fromEntries(
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,6 +44,10 @@ const paletas = Object.fromEntries(
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content={d.meta.locale} />
+    <link rel="canonical" href={absoluta(alt[lang])} />
+    {langs.map((l) => <link rel="alternate" hreflang={l} href={absoluta(alt[l])} />)}
+    <link rel="alternate" hreflang="x-default" href={absoluta(alt.es)} />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,6 +57,32 @@ const paletas = Object.fromEntries(
     />
     <ClientRouter />
     <Analytics />
+    {lang === 'es' && (
+      <script is:inline define:vars={{ enUrl: alt.en }}>
+        // Idioma por defecto según el sistema: en las páginas en español, si
+        // el visitante prefiere inglés (o eligió "EN" con el selector antes),
+        // se lo lleva a la página equivalente en /en/ antes del primer
+        // pintado. Una preferencia guardada con el selector manda sobre el
+        // idioma del navegador. Las páginas en inglés nunca redirigen: una URL
+        // /en/ compartida se abre tal cual.
+        (function () {
+          try {
+            var guardado = localStorage.getItem('lang');
+            var quiere = guardado === 'es' || guardado === 'en' ? guardado : 'en';
+            if (quiere !== guardado) {
+              // Sin preferencia guardada: el primer idioma del navegador que
+              // sea español o inglés; si no hay ninguno de los dos, inglés.
+              var prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+              for (var i = 0; i < prefs.length; i++) {
+                var c = String(prefs[i]).toLowerCase().slice(0, 2);
+                if (c === 'es' || c === 'en') { quiere = c; break; }
+              }
+            }
+            if (quiere === 'en') location.replace(enUrl + location.search + location.hash);
+          } catch (e) {}
+        })();
+      </script>
+    )}
     <script define:vars={{ paletas, sidebarIds, defaultSidebarId }}>
       // Antes del primer pintado: fija bg/text/accent del item activo (perfil
       // o sección, según el hash de la URL) para que no haya flash del color
@@ -72,7 +110,7 @@ const paletas = Object.fromEntries(
     </div>
     <div class="shell">
       <div class="sidebar-persist" transition:persist="sidebar">
-        <Sidebar />
+        <Sidebar lang={lang} alt={alt} />
       </div>
       <div class="content">
         <main>
@@ -80,9 +118,9 @@ const paletas = Object.fromEntries(
         </main>
         <slot name="overlay" />
         <footer>
-          <p>© {new Date().getFullYear()} Alejandro Pérez Rocha</p>
+          <p>© {new Date().getFullYear()} {d.footer.autor}</p>
           {conClarity && (
-            <p class="footer-aviso">Mido cómo se usa este sitio con <a href="https://privacy.microsoft.com/es-es/privacystatement" target="_blank" rel="noopener">Microsoft Clarity</a> (mapas de calor y sesiones anonimizadas). Si tu navegador envía «No rastrear», no se activa.</p>
+            <p class="footer-aviso">{d.footer.clarityAntes}<a href={d.footer.clarityHref} target="_blank" rel="noopener">{d.footer.clarityEnlace}</a>{d.footer.clarityDespues}</p>
           )}
         </footer>
       </div>
@@ -96,5 +134,31 @@ const paletas = Object.fromEntries(
       resto lo toleraba. Lo que necesite position:fixed real va en este slot.
     -->
     <slot name="fixed" />
+
+    <script>
+      // Idioma: recuerda la elección del selector (ES/EN) y evita mezclar idiomas
+      // al navegar. Delegado en `document`: con View Transitions este módulo se
+      // evalúa una sola vez, y el sidebar (con el selector) persiste entre páginas.
+      document.addEventListener(
+        'click',
+        (e) => {
+          const el = (e.target as HTMLElement | null)?.closest?.<HTMLElement>('[data-set-lang]');
+          if (!el) return;
+          try { localStorage.setItem('lang', el.dataset.setLang ?? ''); } catch {}
+        },
+        true
+      );
+
+      // El sidebar persiste entre navegaciones y se dibuja en un solo idioma: si el
+      // router va a cambiar a una página de otro idioma (por ejemplo, "atrás" tras
+      // cambiar con el selector), se hace una carga completa en vez de intercambiar
+      // solo el contenido.
+      document.addEventListener('astro:before-swap', (e) => {
+        const ev = e as Event & { newDocument: Document; to: URL; swap: () => void };
+        if (ev.newDocument.documentElement.lang !== document.documentElement.lang) {
+          ev.swap = () => location.replace(ev.to.href);
+        }
+      });
+    </script>
   </body>
 </html>

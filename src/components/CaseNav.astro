@@ -4,19 +4,20 @@
 // verticalmente, con hover que revela el nombre del caso (hay espacio de
 // sobra). En tablet/mobile: un botón flotante con el número actual que, al
 // tocarlo, despliega la lista completa con los nombres.
-import { getCollection } from 'astro:content';
-import { url } from '../lib/url';
+import { getCasos } from '../lib/casos';
+import { lurl, getDict, type Lang } from '../i18n';
 
 interface Props {
   current: string;
+  lang?: Lang;
 }
-const { current } = Astro.props;
-const casos = (await getCollection('casos')).sort((a, b) => a.data.orden - b.data.orden);
+const { current, lang = 'es' } = Astro.props;
+const casos = await getCasos(lang);
 const actual = casos.find((c) => c.id === current);
 const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0') : '';
 ---
 
-<nav class="case-nav" aria-label="Navegar entre casos">
+<nav class="case-nav" aria-label={getDict(lang).caso.navAria}>
   <button type="button" class="case-nav-toggle" aria-expanded="false" aria-controls="case-nav-list">
     <span class="case-nav-toggle-num">{numeroActual}</span>
     <span class="case-nav-toggle-x" aria-hidden="true">×</span>
@@ -26,7 +27,7 @@ const numeroActual = actual ? String(casos.indexOf(actual) + 1).padStart(2, '0')
       <a
         class="case-nav-item"
         class:list={{ activo: caso.id === current }}
-        href={url(`casos/${caso.id}/`)}
+        href={lurl(lang, `casos/${caso.id}/`)}
         aria-current={caso.id === current ? 'page' : undefined}
       >
         <span class="case-nav-num">{String(i + 1).padStart(2, '0')}</span>

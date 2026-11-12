@@ -2,18 +2,19 @@
 // Fila de la lista de casos. Siempre abre la página propia del caso
 // (/casos/<slug>/, ver src/pages/casos/[id].astro) — nunca un modal — con la
 // transición de página definida en global.css (ver sección "View Transitions").
-import { url } from '../lib/url';
+import { lurl, type Lang } from '../i18n';
 
 interface Props {
   slug: string;
   titulo: string;
   resumen: string;
   etiquetas: string[];
+  lang?: Lang;
 }
-const { slug, titulo, resumen, etiquetas } = Astro.props;
+const { slug, titulo, resumen, etiquetas, lang = 'es' } = Astro.props;
 ---
 
-<a class="case-card" href={url(`casos/${slug}/`)}>
+<a class="case-card" href={lurl(lang, `casos/${slug}/`)}>
   <span class="case-card-main">
     <span class="case-card-tags">{etiquetas.map((e) => <span class="tag">{e}</span>)}</span>
     <span class="case-card-title">{titulo}</span>

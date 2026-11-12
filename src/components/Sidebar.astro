@@ -9,8 +9,16 @@
 // secciones, en cambio, son contenido real apilado en una sola página larga
 // (como therawmaterials.com/work): el sidebar seguil el scroll (scrollspy)
 // y un clic solo hace scroll hasta ahí, no oculta nada.
-import { url } from '../lib/url';
 import { sidebarItems } from '../lib/sidebarItems';
+import { getDict, langs, lurl, type Lang } from '../i18n';
+
+interface Props {
+  lang?: Lang;
+  // URL de esta misma página en cada idioma (para el selector ES/EN).
+  alt?: Record<Lang, string>;
+}
+const { lang = 'es', alt = { es: lurl('es'), en: lurl('en') } } = Astro.props;
+const d = getDict(lang);
 
 // Los perfiles se eligen con el selector en línea del Hero (visible también
 // en mobile); el sidebar lista solo las secciones. Las paletas de todos
@@ -24,8 +32,25 @@ const paletas = Object.fromEntries(
 
 <aside class="sidebar">
   <div class="sidebar-top">
-    <a class="logo" href={url()}>Alejandro Pérez</a>
-    <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="sidebar-items" aria-label="Abrir menú">
+    <a class="logo" href={lurl(lang)}>{d.ui.logo}</a>
+    <div class="lang-switch" role="group" aria-label={d.ui.language}>
+      {langs.map((l) =>
+        l === lang ? (
+          <span class="lang-opt activo" lang={l} aria-current="true">{l.toUpperCase()}</span>
+        ) : (
+          <a class="lang-opt" href={alt[l]} hreflang={l} lang={l} aria-label={d.ui.switchTo[l]} data-set-lang={l} data-astro-reload>{l.toUpperCase()}</a>
+        )
+      )}
+    </div>
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-expanded="false"
+      aria-controls="sidebar-items"
+      aria-label={d.ui.menuOpen}
+      data-label-open={d.ui.menuOpen}
+      data-label-close={d.ui.menuClose}
+    >
       <span class="menu-toggle-grid" aria-hidden="true">
         <span style="background:#d36958"></span>
         <span style="background:#299dcd"></span>
@@ -35,7 +60,7 @@ const paletas = Object.fromEntries(
     </button>
   </div>
 
-  <nav class="items" id="sidebar-items" aria-label="Secciones">
+  <nav class="items" id="sidebar-items" aria-label={d.ui.sections}>
     <button
       type="button"
       class="item item-inicio"
@@ -44,8 +69,8 @@ const paletas = Object.fromEntries(
       style="--c:#ffffff;--ci:#0a0a0a"
     >
       <span class="num">00</span>
-      <span class="label">Inicio</span>
-      <span class="item-tag">Quién soy y mis perfiles.</span>
+      <span class="label">{d.ui.home.label}</span>
+      <span class="item-tag">{d.ui.home.tag}</span>
     </button>
     {secciones.map((item) => (
       <>
@@ -64,8 +89,8 @@ const paletas = Object.fromEntries(
             <span class="blob"></span>
           </span>
           <span class="num">{item.numero}</span>
-          <span class="label">{item.etiqueta}</span>
-          <span class="item-tag">{item.tagline}</span>
+          <span class="label">{d.items[item.id].etiqueta}</span>
+          <span class="item-tag">{d.items[item.id].tagline}</span>
         </button>
       </>
     ))}
@@ -129,13 +154,13 @@ const paletas = Object.fromEntries(
   function cerrarMenu() {
     itemsNav?.classList.remove('abierto');
     menuToggle?.setAttribute('aria-expanded', 'false');
-    menuToggle?.setAttribute('aria-label', 'Abrir menú');
+    menuToggle?.setAttribute('aria-label', menuToggle.dataset.labelOpen ?? '');
     document.body.style.overflow = '';
   }
   menuToggle?.addEventListener('click', () => {
     const abierto = itemsNav?.classList.toggle('abierto');
     menuToggle.setAttribute('aria-expanded', String(!!abierto));
-    menuToggle.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+    menuToggle.setAttribute('aria-label', (abierto ? menuToggle.dataset.labelClose : menuToggle.dataset.labelOpen) ?? '');
     // El desplegable es una hoja flotante sobre el contenido (mobile/tablet):
     // mientras está abierto, bloquea el scroll de atrás para que no se vea
     // cortado ni se pelee con el scroll de la página.
@@ -334,7 +359,29 @@ const paletas = Object.fromEntries(
   // la página nueva cada vez).
   let observerActivo: IntersectionObserver | null = null;
 
+  // El sidebar persiste entre páginas: el href de la otra opción del selector
+  // de idioma tiene que apuntar a la versión equivalente de la página actual
+  // (la saca de los <link rel="alternate" hreflang> de su <head>).
+  function actualizarSelectorIdioma() {
+    document.querySelectorAll<HTMLAnchorElement>('a[data-set-lang]').forEach((a) => {
+      const alterna = document.head.querySelector<HTMLLinkElement>(
+        `link[rel="alternate"][hreflang="${a.dataset.setLang}"]`
+      );
+      if (alterna) {
+        a.dataset.base = alterna.href;
+        a.href = alterna.href + location.hash;
+      }
+    });
+  }
+  // La sección activa cambia el #hash mientras se scrollea: al hacer clic en el
+  // selector se refresca el href para que la otra versión abra en la misma sección.
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-set-lang]');
+    if (a?.dataset.base) a.href = a.dataset.base + location.hash;
+  }, true);
+
   function configurarPagina() {
+    actualizarSelectorIdioma();
     observerActivo?.disconnect();
 
     const hero = document.querySelector<HTMLElement>('[data-hero]');

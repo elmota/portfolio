@@ -114,7 +114,22 @@ html[data-theme="contacto"] {
   color: var(--page-ink);
 }
 
-.sidebar-top { display: flex; align-items: center; justify-content: space-between; }
+/* Selector de idioma ES/EN: píldora segmentada junto al logo. El idioma activo
+   es un <span> (no navega); el otro es un enlace con recarga completa, porque
+   el sidebar persiste entre páginas y se dibuja en un solo idioma. */
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 2px; margin-left: auto; padding: 2px;
+  border: 1.5px solid var(--page-ink); border-radius: 999px;
+  font-family: var(--font-display); font-weight: 800; font-size: .72rem; letter-spacing: .04em;
+}
+.lang-opt {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 30px; padding: 5px 8px;
+  border-radius: 999px; color: var(--page-ink); text-decoration: none; line-height: 1;
+}
+a.lang-opt:hover { background: color-mix(in srgb, var(--page-ink) 16%, transparent); }
+a.lang-opt:focus-visible { outline: 2px solid var(--page-ink); outline-offset: 1px; }
+.lang-opt.activo { background: var(--page-ink); color: var(--page); }
+.sidebar-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .logo {
   font-family: var(--font-display); font-weight: 800; text-decoration: none; color: var(--page-ink);
   font-size: 1.05rem; padding: 0 6px;
