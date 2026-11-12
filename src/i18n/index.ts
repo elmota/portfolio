@@ -15,8 +15,14 @@ const dicts: Record<Lang, Dict> = { es, en };
 export const getDict = (lang: Lang): Dict => dicts[lang];
 
 // URL de una ruta en un idioma, respetando `base`: es → /ruta, en → /en/ruta.
-export const lurl = (lang: Lang, path = ''): string =>
-  lang === 'es' ? url(path) : url(`en/${path.replace(/^\//, '')}`);
+// Las rutas se escriben siempre en su forma española ('casos/x/'); en inglés el
+// primer segmento se traduce ('/en/cases/x/'), para que ningún URL en inglés
+// lleve una palabra en español.
+export const lurl = (lang: Lang, path = ''): string => {
+  if (lang === 'es') return url(path);
+  const limpia = path.replace(/^\//, '').replace(/^casos\//, 'cases/');
+  return url(`en/${limpia}`);
+};
 
 // Rutas equivalentes de una misma página en cada idioma (para el selector,
 // los <link rel="alternate"> y la redirección por idioma del sistema).

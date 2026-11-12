@@ -67,6 +67,18 @@ GitHub Pages (`elmota/portfolio`, rama `main`; el workflow `deploy.yml` define
   (78%), activo al 100%. Número, título y descripción de cada item siempre
   alineados a la izquierda (`justify-content: flex-start` en la fila móvil). Bloquea el scroll de atrás mientras está abierto.
 
+## Idiomas (ES / EN)
+
+- Español en `/` (por defecto, sin redirección automática) e inglés en `/en/`.
+  Textos en `src/i18n/es.ts` y `en.ts` (mismas claves, forzadas por tipo);
+  casos en `src/content/casos` y `casos-en`.
+- Las rutas internas se escriben en forma española (`casos/x/`) y `lurl()`
+  (`src/i18n/index.ts`) traduce el segmento en inglés: `/en/cases/x/`. Ninguna
+  URL en inglés debe llevar una palabra en español. El ancla `#casos` es el id
+  de la sección y es igual en ambos idiomas.
+- Al cambiar copy en una lengua, actualizar la otra (el tipo avisa de claves
+  faltantes, no de textos desactualizados).
+
 ## Analítica (Microsoft Clarity)
 
 - Paquete `@microsoft/clarity` fijado en 1.0.2 (versión exacta; envoltorio fino
